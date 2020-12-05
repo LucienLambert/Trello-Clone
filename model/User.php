@@ -2,11 +2,11 @@
 require_once "framework/Model.php";
 
 class User extends Model {
-    private $id;
-    private $mail;
-    private $fullName;
-    private $password;
-    private $registeredAt;
+    public $id;
+    public $mail;
+    public $fullName;
+    public $password;
+    public $registeredAt;
 
 
     public function __construct($id, $mail, $fullName, $password, $registeredAt) {
@@ -25,16 +25,16 @@ class User extends Model {
     }
 
     //recupère un user depuis son mail
-    public static function get_member_by_mail($mail) {
+    public static function select_member_by_mail($mail) {
         //cherche l'user par rapport à son mail
-        $query = self::execute("SELECT * FROM User where mail = :mail", array("mail" => $mail));
+        $query = self::execute("SELECT * FROM User where mail = :mail", array("mail"=>$mail));
         //récupère le ou les résultats obtenue par la query
         $data = $query->fetch();
         //si pas résultat alors false sinon créer un user avec les infos récupéré
         if ($query->rowCount() == 0) {
             return false;
         } else {
-            return new User($data["id"], $data["mail"], $data["fullName"], $data["password"], $data["registeredAt"]);
+            return new User($data["ID"], $data["Mail"], $data["FullName"], $data["Password"], $data["RegisteredAt"]);
         }
     }
 
@@ -46,7 +46,7 @@ class User extends Model {
         //check l'email
         if (!isset($mail) || !is_string($mail) || strlen($mail) <= 0) {
             $error[] = "Email is required";
-        } elseif (self::get_member_by_mail($mail)) {
+        } elseif (self::select_member_by_mail($mail)) {
             $error[] = "this Email already exist";
         }
         //check le fullName
@@ -74,20 +74,19 @@ class User extends Model {
         if (!isset($mail) || !is_string($mail) || strlen($mail) <= 0) {
             $error[] = "Email is required";
             //check si email référence un user
-        } elseif(self::get_member_by_mail($mail)) {
+        } elseif(self::select_member_by_mail($mail)) {
             //check si le password n'est pas vide
             if(!isset($password) || !is_string($password) || strlen($password) <= 0){
                 $error[] = "Your password is required";
                 //check si le password entré(hasher) correspond au password hasher de l'utilisateur.
-            } elseif(Tools::my_hash($password) != self::get_member_by_mail($mail)->password) {
+            } elseif(Tools::my_hash($password) != self::select_member_by_mail($mail)->password) {
                 $error [] = "password incorrect";
             }
         } else {
-            $error [] = "'' invalid or does not exist";
+            $error [] = "$mail invalid or does not exist";
         }
         return $error;
     }
-
 }
 
 ?>

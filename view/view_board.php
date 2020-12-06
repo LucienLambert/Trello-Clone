@@ -11,12 +11,30 @@
     </div>
     <h1>Welcome <?php echo $user->fullName ?></h1>
     <h1>Your boards</h1>
-    <form id="addBoardForm" action="board" method="post">
+    <form id="addBoardForm" action="board/listBoard" method="post">
         <tr>
-            <td>ajouter les autres board par la suite</td>
-            <td><input type="text" id="nameBoard" name="nameBoard" size="30" placeholder="add a board"><input type="submit" name="bouton" value="add"></td>
+            <?php foreach ($tableBoard as $board) : ?>
+                <td><input type="button" name="titleBoard" size="15" id="titleBoard" value="<?php echo $board->title ?>"></td>
+            <?php endforeach;?>
+            <td><input type="text" id="title" name="title" size="15" placeholder="add a board">
+                <input type="submit" name="bouton" value="add">
+            </td>
+        </tr>
+        <?php if (count($error) > 0): ?>
+            <p>Please check the errors and correct them :</p>
+            <ul>
+                <?php foreach ($error as $err): ?>
+                    <li><?= $err ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+        <h1>others Boards</h1>
+        <tr>
+            <?php foreach ($tableOthersBoards as $board) : ?>
+                <td><input type="button" name="titleBoard" size="15" id="titleBoard" value="<?php echo $board->title ?>"></td>
+            <?php endforeach;?>
         </tr>
     </form>
-    <h1>Others boards</h1>
+
 </body>
 </html>

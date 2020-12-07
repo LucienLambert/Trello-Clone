@@ -24,8 +24,7 @@ class Router
         return $copy;
     }
 
-    private function sanitize_all_input()
-    {
+    private function sanitize_all_input() {
         $_GET = $this->sanitize_all_array($_GET);
         $_POST = $this->sanitize_all_array($_POST);
         $_REQUEST = $this->sanitize_all_array($_REQUEST);

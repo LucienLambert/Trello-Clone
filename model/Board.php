@@ -33,7 +33,7 @@ class Board extends Model {
         //contiendra les erreurs
         $error = [];
         //recup la liste des board du user
-        $tableBoard = self::select_board_by_user($user);
+        $tableBoard = self::select_all_board($user);
         //check si le titre n'est pas une string vide, si c'est bien une string, si c'est pas null
         if(!isset($title) || strlen($title) <= 0 || !is_string($title)){
             $error [] = "You must enter a title for you board";
@@ -63,7 +63,7 @@ class Board extends Model {
     }
 
     //recup tout les boards de la DB
-    public static function select_board(){
+    public static function select_all_board(){
         $query = self::execute("SELECT * FROM Board", array());
         $data = $query->fetchALl();
         $tableBoard = [];
@@ -73,19 +73,23 @@ class Board extends Model {
         return $tableBoard;
     }
 
-    //recup uniquement les board des autres users
+    //recup les bards de tous le monde sauf du user.
     public static function select_other_board($user){
-        //execute la requete sur (id = $user->id)
-        $query = self::execute("SELECT * FROM Board where owner != :id", array("id" => $user->id));
-        //recup les résultats (ATTENTION utiliser fetchAll() quand on récup plusieurs objets).
-        $data = $query->fetchAll();
-        //table vide
-        $tableBoard = [];
-        //parcoure le resultat et crée un new board pour chaque resultat trouvé
-        foreach ($data as $d){
-            $tableBoard [] = new Board($d['ID'], $d['Title'], $d['Owner'], $d['CreatedAt'], $d['ModifiedAt']);
+        $tableAllBoard = self::select_all_board();
+        $tableOtherBoard = [];
+        foreach($tableAllBoard as $board){
+            if($board->owner != $user->id){
+                $tableOtherBoard[] = $board;
+            }
         }
-        return $tableBoard;
+        return $tableOtherBoard;
+    }
+
+    //recup le board via son titre.
+    public static function select_board_by_title($title){
+        $query = self::execute("SELECT * FROM Board where title = :title", array("title"=>$title));
+        $data = $query->fetch();
+        return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
     }
 
 }

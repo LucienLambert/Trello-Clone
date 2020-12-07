@@ -11,15 +11,18 @@
     </div>
     <h1>Welcome <?php echo $user->fullName ?></h1>
     <h1>Your boards</h1>
-    <form id="addBoardForm" action="board/listBoard" method="post">
+    <form id="boardForm" action="board/listBoard" method="post">
+        <table>
         <tr>
             <?php foreach ($tableBoard as $board) : ?>
-                <td><input type="button" name="titleBoard" size="15" id="titleBoard" value="<?php echo $board->title ?>"></td>
+                <td><input type="submit" name="boutonBoard" size="30" value="<?php echo $board->title ?>"></td>
             <?php endforeach;?>
-            <td><input type="text" id="title" name="title" size="15" placeholder="add a board">
-                <input type="submit" name="bouton" value="add">
+            <td><input type="text" name="title" size="15" placeholder="add a board">
+                <input type="submit" name="boutonAdd" value="add">
             </td>
         </tr>
+        </table>
+        <table>
         <?php if (count($error) > 0): ?>
             <p>Please check the errors and correct them :</p>
             <ul>
@@ -34,7 +37,7 @@
                 <td><input type="button" name="titleBoard" size="15" id="titleBoard" value="<?php echo $board->title ?>"></td>
             <?php endforeach;?>
         </tr>
+        </table>
     </form>
-
 </body>
 </html>

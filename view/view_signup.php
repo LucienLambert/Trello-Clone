@@ -15,19 +15,19 @@
         <table>
             <tr>
                 <td>Email :</td>
-                <td><input type="email" name="mail" id="mail" size="30" value="<?php echo $mail?>" placeholder="Email"></td>
+                <td><input type="email" name="mail" id="mail" size="30" placeholder="Email"></td>
             </tr>
             <tr>
                 <td>Full Name :</td>
-                <td><input type="text" name="fullName" id="fullName" size="30" value="<?php echo $fullName?>" placeholder="Full Name"></td>
+                <td><input type="text" name="fullName" id="fullName" size="30" placeholder="Full Name"></td>
             </tr>
             <tr>
                 <td>Password :</td>
-                <td><input type="password" name="password" id="password" value="<?php echo $password?>" placeholder="Password"></td>
+                <td><input type="password" name="password" id="password" placeholder="Password"></td>
             </tr>
             <tr>
                 <td>Confirm your password :</td>
-                <td><input type="password" name="conf_password" size="30" value="<?php echo $conf_password?>" placeholder="Confirm your password"></td>
+                <td><input type="password" name="conf_password" size="30"  placeholder="Confirm your password"></td>
             </tr>
         </table>
         <input type="submit" id="bouton" value="Sign Up">

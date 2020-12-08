@@ -91,5 +91,16 @@ class Board extends Model {
         $data = $query->fetch();
         return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
     }
+    //recup le board via son titre
+    public static function select_board_by_id($id){
+        $query = self::execute("SELECT * FROM Board where id = :id", array("id"=>$id));
+        $data = $query->fetch();
+        return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
+    }
 
+    public function update_title_board($title, $id, $modifiedAt){
+        self::execute("UPDATE Board SET title = :title, modifiedAt = :modifiedAt WHERE id = :id",
+            array("title"=>$title, "id"=>$id, "modifiedAt"=>$modifiedAt->format('Y-m-d H:i:s')));
+        return true;
+    }
 }

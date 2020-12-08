@@ -43,7 +43,7 @@ class Column extends Model {
     }
 
     //modifie le titre de la colonne selectionnée
-    public function upDate_title_column(){
+    public function update_title_column(){
 
     }
 

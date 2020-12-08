@@ -28,23 +28,23 @@
                 <input type="submit" name="boutonAdd" value="add">
             </td>
         </tr>
-        <?php if (count($error) > 0): ?>
+        <?php if (count($error) > 0) { ?>
             <p>Please check the errors and correct them :</p>
             <ul>
-                <?php foreach ($error as $err): ?>
-                    <li><?= $err ?></li>
-                <?php endforeach; ?>
+                <?php foreach ($error as $err) { ?>
+                    <li><?php echo $err ?></li>
+                <?php } ?>
             </ul>
-        <?php endif; ?>
+        <?php } ?>
     </form>
 
     <h1>others Boards</h1>
     <!-- formulaire qui affiche la liste des boards != user -->
     <form>
         <tr>
-            <?php foreach ($tableOthersBoards as $board) : ?>
+            <?php foreach ($tableOthersBoards as $board) { ?>
                 <td><input type="button" name="titleBoard" size="15" id="titleBoard" value="<?php echo $board->title ?>"></td>
-            <?php endforeach;?>
+            <?php } ?>
         </tr>
     </form>
 </body>

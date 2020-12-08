@@ -2,7 +2,8 @@
 
 require_once "framework/Model.php";
 
-class Board extends Model {
+class Board extends Model
+{
 
     public $id;
     public $title;
@@ -10,7 +11,8 @@ class Board extends Model {
     public $createdAt;
     public $modifiedAt;
 
-    public function __construct($id, $title, $owner, $createdAt,$modifiedAt) {
+    public function __construct($id, $title, $owner, $createdAt, $modifiedAt)
+    {
         $this->id = $id;
         $this->title = $title;
         $this->owner = $owner;
@@ -19,28 +21,31 @@ class Board extends Model {
     }
 
     //ajoute un board dans la DB
-    public function insert_board($user){
+    public function insert_board($user)
+    {
         //insert un board
         //$this->title recup le titre de l'objet            : ref = $board = new Board(null, $title, $user->id, null, null);
         //$this->id recup le id du user qui crée le board   : ref = $board = new Board(null, $title, $user->id, null, null);
-        self::execute("INSERT INTO Board(title,owner) VALUES(:title,:owner)", array("title"=>$this->title, "owner"=>$user->id));
+        self::execute("INSERT INTO Board(title,owner) VALUES(:title,:owner)", array("title" => $this->title, "owner" => $user->id));
 
         return true;
     }
 
     //verifie si l'ajout de la table respect bien les conditions
-    public static function valide_board($title, $user){
+    public static function valide_board($title, $user)
+    {
         //contiendra les erreurs
         $error = [];
         //recup la liste des board du user
         $tableBoard = self::select_all_board($user);
         //check si le titre n'est pas une string vide, si c'est bien une string, si c'est pas null
-        if(!isset($title) || strlen($title) <= 0 || !is_string($title)){
+        if (!isset($title) || strlen($title) <= 0 || !is_string($title)) {
             $error [] = "You must enter a title for you board";
             //parcoure la table
-        } foreach ($tableBoard as $board){
+        }
+        foreach ($tableBoard as $board) {
             //controler si une table ne porte pas déjà un titre identique (convertie les String en minuscule).
-            if(strtolower($board->title) == strtolower($title)){
+            if (strtolower($board->title) == strtolower($title)) {
                 $error [] = "this table title is already used, please choose another title";
             }
         }
@@ -48,7 +53,8 @@ class Board extends Model {
     }
 
     //récup la liste des boards via l'id du user
-    public static function select_board_by_user($user){
+    public static function select_board_by_user($user)
+    {
         //execute la requete sur (id = $user->id)
         $query = self::execute("SELECT * FROM Board where owner = :id", array("id" => $user->id));
         //recup les résultats (ATTENTION utiliser fetchAll() quand on récup plusieurs objets).
@@ -56,29 +62,31 @@ class Board extends Model {
         //table vide
         $tableBoard = [];
         //parcoure le resultat et crée un new board pour chaque resultat trouvé
-        foreach ($data as $d){
+        foreach ($data as $d) {
             $tableBoard [] = new Board($d['ID'], $d['Title'], $d['Owner'], $d['CreatedAt'], $d['ModifiedAt']);
         }
         return $tableBoard;
     }
 
     //recup tout les boards de la DB
-    public static function select_all_board(){
+    public static function select_all_board()
+    {
         $query = self::execute("SELECT * FROM Board", array());
         $data = $query->fetchALl();
         $tableBoard = [];
-        foreach ($data as $d){
+        foreach ($data as $d) {
             $tableBoard [] = new Board($d['ID'], $d['Title'], $d['Owner'], $d['CreatedAt'], $d['ModifiedAt']);
         }
         return $tableBoard;
     }
 
     //recup les bards de tous le monde sauf du user.
-    public static function select_other_board($user){
+    public static function select_other_board($user)
+    {
         $tableAllBoard = self::select_all_board();
         $tableOtherBoard = [];
-        foreach($tableAllBoard as $board){
-            if($board->owner != $user->id){
+        foreach ($tableAllBoard as $board) {
+            if ($board->owner != $user->id) {
                 $tableOtherBoard[] = $board;
             }
         }
@@ -86,21 +94,25 @@ class Board extends Model {
     }
 
     //recup le board via son titre.
-    public static function select_board_by_title($title){
-        $query = self::execute("SELECT * FROM Board where title = :title", array("title"=>$title));
-        $data = $query->fetch();
-        return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
-    }
-    //recup le board via son titre
-    public static function select_board_by_id($id){
-        $query = self::execute("SELECT * FROM Board where id = :id", array("id"=>$id));
+    public static function select_board_by_title($title)
+    {
+        $query = self::execute("SELECT * FROM Board where title = :title", array("title" => $title));
         $data = $query->fetch();
         return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
     }
 
-    public function update_title_board($title, $id, $modifiedAt){
+    //recup le board via son titre
+    public static function select_board_by_id($id)
+    {
+        $query = self::execute("SELECT * FROM Board where id = :id", array("id" => $id));
+        $data = $query->fetch();
+        return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
+    }
+
+    public function update_title_board($title, $id, $modifiedAt)
+    {
         self::execute("UPDATE Board SET title = :title, modifiedAt = :modifiedAt WHERE id = :id",
-            array("title"=>$title, "id"=>$id, "modifiedAt"=>$modifiedAt->format('Y-m-d H:i:s')));
+            array("title" => $title, "id" => $id, "modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
         return true;
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
 
-class Card extends Model {
+class Card extends Model
+{
 
     public $id;
     public $title;
@@ -12,7 +13,8 @@ class Card extends Model {
     public $author;
     public $column;
 
-    public function __construct($id, $title ,$body ,$position ,$createdAt ,$modifiedAt ,$author ,$column) {
+    public function __construct($id, $title, $body, $position, $createdAt, $modifiedAt, $author, $column)
+    {
         $this->id = $id;
         $this->title = $title;
         $this->body = $body;
@@ -24,7 +26,8 @@ class Card extends Model {
     }
 
     //ajoute un carte dans la BD.
-    public function insert_card(){
+    public function insert_card()
+    {
 
     }
 

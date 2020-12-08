@@ -28,9 +28,12 @@
         </form>
         <?php endif; ?>
         <p>
-            Créated <?php echo $diffDate ?> <?php echo $messageTime ?>
-            ago by <?php echo $fullName ?>
-            . <?php echo $modifiedAt ?>
+            <?php echo "Créated ".$diffDate." ".$messageTime." ago by ".$fullName."." ?>
+            <?php if(!$modifDate){
+                echo "Modified ".$messageTimeModif;
+            } else {
+                echo "Modified ".$diffDateModif." ".$messageTimeModif." ago";
+            }?>
         </p>
         <?php foreach ($tableColumn as $column) : ?>
             <form class="FormColumn">
@@ -43,14 +46,14 @@
             <td><input type="text" name="title" size="15" placeholder="Add a column">
             <input type="submit" name="boutonAddColumn" value="Add">
             </td>
-            <?php if (count($error) > 0): ?>
+            <?php if (count($error) > 0) { ?>
                 <p>Please check the errors and correct them :</p>
                 <ul>
-                    <?php foreach ($error as $err): ?>
-                        <li><?= $err ?></li>
-                    <?php endforeach; ?>
+                    <?php foreach ($error as $err) { ?>
+                        <li><?php echo $err ?></li>
+                    <?php } ?>
                 </ul>
-            <?php endif; ?>
+            <?php } ?>
         </form>
     </body>
 </html>

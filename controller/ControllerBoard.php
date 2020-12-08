@@ -80,24 +80,37 @@ class ControllerBoard extends Controller
         $user = $this->get_user_or_redirect();
         //recup le fullName
         $fullName = $user->fullName;
-        //recup la date de modif du board
-        $modifiedAt = $board->modifiedAt;
+        //recup la date de creation du board.
+        $createdAt = $board->createdAt;
         //recup une table contenant les formats des date du board(va servir pour l'affichage)
-        $tableFormatDate = $this->diffDateFormat($board);
-        $diffDate = $tableFormatDate[0];
-        $messageTime = $tableFormatDate[1];
+        $tableFormatDateCreation = $this->diffDateFormat($createdAt);
+        //crée un tableau vide pour contenire la date et le format d'affichage de la date.
+        $tableFormatDateModif = [];
+        //recup la date de modif du board
+        $diffDateModif = $board->modifiedAt;
+        $messageTimeModif = "";
+        $diffDate = $tableFormatDateCreation[0];
+        $messageTime = $tableFormatDateCreation[1];
         //recup les colonnes du board selectionné
         $tableColumn = Column::select_all_column_by_id_board($board);
-        if (!isset($modifiedAt)) {
-            $modifiedAt = "Never modified";
+        $modifDate = "";
+        if (!isset($diffDateModif)) {
+            $modifDate = false;
+            $messageTimeModif = "Never modified";
+        } else {
+            $modifDate = true;
+            $tableFormatDateModif = $this->diffDateFormat($diffDateModif);
+            $diffDateModif = $tableFormatDateModif[0];
+            $messageTimeModif = $tableFormatDateModif[1];
         }
         if (isset($_POST["openViewModifTitle"])) {
             $viewEditTitle = true;
         }
 
         (new View("edit_board"))->show(array("board" => $board, "diffDate" => $diffDate, "messageTime" => $messageTime,
-            "fullName" => $fullName, "modifiedAt" => $modifiedAt, "tableColumn" => $tableColumn,
-            "viewEditTitle" => $viewEditTitle, "error" => $error));
+            "diffDateModif" => $diffDateModif, "messageTimeModif" => $messageTimeModif,
+            "fullName" => $fullName, "tableColumn" => $tableColumn,
+            "viewEditTitle" => $viewEditTitle, "modifDate" => $modifDate, "error" => $error));
     }
 
     public function edit_title_board()
@@ -126,7 +139,6 @@ class ControllerBoard extends Controller
     {
         //check si le param1 n'est pas null ou vide (param1 = 1er paramètre dans l'url)
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
-            var_dump($_GET["param1"]);
             //recup le board depuis si titre
             $board = Board::select_board_by_id($_GET["param1"]);
         }
@@ -164,14 +176,14 @@ class ControllerBoard extends Controller
 
     }
 
-    //calcule la différence de temps entre l'ajout et le dernière modif du board
+    //calcule la différence de temps entre l'ajout et maintenant
     //return un tableau avec 2 valeurs.
     //[0] = diffTime = la différence de temps.
-    //[1] = en fonction de la différence de temps convertie l'affichage pour correspondre au bon format.
-    private function diffDateFormat($board)
+    //[1] = format sur lequel elle doit s'afficher.
+    private function diffDateFormat($date)
     {
         $tableFormatDate = [];
-        $createdAt = new DateTime($board->createdAt);
+        $createdAt = new DateTime($date);
         $diffDate = $createdAt->diff(new DateTime("now"));
         if ($diffDate->m == 0) {
             if ($diffDate->d == 0) {

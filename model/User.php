@@ -20,7 +20,8 @@ class User extends Model
     }
 
     //ajoute un user à la DB
-    public function insert_user() {
+    public function insert_user()
+    {
         self::execute("INSERT INTO User(mail,fullName,password) VALUES(:mail,:fullName,:password)",
             array("mail" => $this->mail, "fullName" => $this->fullName, "password" => $this->password));
         return $this;

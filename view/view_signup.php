@@ -32,14 +32,14 @@
         </table>
         <input type="submit" id="bouton" value="Sign Up">
     </form>
-        <?php if (count($error) > 0): ?>
-            <p>Please check the errors and correct them :</p>
-            <ul>
-                <?php foreach ($error as $err): ?>
-                    <li><?= $err ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
+    <?php if (count($error) > 0) { ?>
+        <p>Please check the errors and correct them :</p>
+        <ul>
+            <?php foreach ($error as $err) { ?>
+                <li><?php echo $err ?></li>
+            <?php } ?>
+        </ul>
+    <?php } ?>
     </body>
 </html>
 

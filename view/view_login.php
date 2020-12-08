@@ -24,13 +24,13 @@
             </table>
             <input type="submit" name="bouton" value="Login">
         </form>
-    <?php if (count($error) > 0): ?>
+    <?php if (count($error) > 0) { ?>
         <p>Please check the errors and correct them :</p>
         <ul>
-            <?php foreach ($error as $err): ?>
-                <li><?= $err ?></li>
-            <?php endforeach; ?>
+            <?php foreach ($error as $err) { ?>
+                <li><?php echo $err ?></li>
+            <?php } ?>
         </ul>
-    <?php endif; ?>
+    <?php } ?>
     </body>
 </html>

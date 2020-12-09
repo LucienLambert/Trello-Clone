@@ -4,14 +4,14 @@
 class Card extends Model
 {
 
-    public $id;
-    public $title;
-    public $body;   //unique
-    public $position;
-    public $createdAt;
-    public $modifiedAt; //unique
-    public $author;
-    public $column;
+    private $id;
+    private $title;
+    private $body;   //unique
+    private $position;
+    private $createdAt;
+    private $modifiedAt; //unique
+    private $author;
+    private $column;
 
     public function __construct($id, $title, $body, $position, $createdAt, $modifiedAt, $author, $column)
     {
@@ -25,10 +25,42 @@ class Card extends Model
         $this->column = $column;
     }
 
-    //ajoute un carte dans la BD.
-    public function insert_card()
+    public function getId()
     {
-
+       return $this->id;
     }
 
+    public function gettitle()
+    {
+        return $this->title;
+    }
+
+    public function getbody()
+    {
+        return $this->body;
+    }
+
+    public function getposition()
+    {
+        return $this->position;
+    }
+
+    public function getcreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function getModifiedAt()
+    {
+        return $this->modifiedAt;
+    }
+
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    public function getColumn(){
+        return $this->Column;
+    }
 }

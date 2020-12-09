@@ -102,4 +102,8 @@ class Column extends Model
         }
         return $error;
     }
+
+    public function test(){
+        return false;
+    }
 }

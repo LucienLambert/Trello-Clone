@@ -30,7 +30,7 @@ class Card extends Model
        return $this->id;
     }
 
-    public function gettitle()
+    public function getTitle()
     {
         return $this->title;
     }
@@ -61,11 +61,11 @@ class Card extends Model
     }
 
     public function getColumn(){
-        return $this->Column;
+        return $this->column;
     }
 
-    public function select_all_card_by_id_column_ASC($idColumn){
-        $Cards = self::execute("SELECT * FROM Card WHERE column = :column ORDER BY position",array("column"=>$idColumn));
+    public static function select_all_card_by_id_column_ASC($idColumn){
+        $Cards = self::execute("SELECT * FROM Card WHERE `column` = :column ORDER BY position",array("column"=>$idColumn));
         $data = $Cards->fetchAll();
         $tableCards = [];
         foreach($data as $d){
@@ -74,3 +74,4 @@ class Card extends Model
         return $tableCards;
     }
 }
+?>

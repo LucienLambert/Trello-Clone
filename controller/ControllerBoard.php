@@ -3,6 +3,7 @@
 require_once 'model/User.php';
 require_once 'model/Board.php';
 require_once 'model/Column.php';
+require_once 'model/Card.php';
 require_once 'framework/View.php';
 require_once 'framework/Controller.php';
 
@@ -84,7 +85,12 @@ class ControllerBoard extends Controller
         $diffDateModif = $board->modifiedAt;
         $diffDate = $tableFormatDateCreation[0];
         $messageTime = $tableFormatDateCreation[1];
+        //table à deux dimenssion [la colonnes][les cartes de la colonnes]
         $tableColumn = Column::select_all_column_by_id_board_ASC($board);
+        $tableCardColumn = [];
+        foreach ($tableColumn as $column){
+            $tableCardColumn [$column->position] = Card::select_all_card_by_id_column_ASC($column->id);
+        }
         if (!isset($board->modifiedAt)) {
             $modifDate = false;
             $messageTimeModif = "Never modified";
@@ -100,7 +106,8 @@ class ControllerBoard extends Controller
         (new View("edit_board"))->show(array("board" => $board, "diffDate" => $diffDate, "messageTime" => $messageTime,
             "diffDateModif" => $diffDateModif, "messageTimeModif" => $messageTimeModif,
             "fullName" => $user->fullName, "tableColumn" => $tableColumn,
-            "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate, "error" => $error));
+            "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate,
+            "tableCardColumn"=> $tableCardColumn, "error" => $error));
     }
 
     //change le titre du board sur le quel on est

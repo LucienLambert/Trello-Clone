@@ -37,7 +37,6 @@
             </ul>
         <?php } ?>
     </form>
-
     <h1>others Boards</h1>
     <!-- formulaire qui affiche la liste des boards != user -->
     <form>

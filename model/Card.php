@@ -63,4 +63,14 @@ class Card extends Model
     public function getColumn(){
         return $this->Column;
     }
+
+    public function select_all_card_by_id_column_ASC($idColumn){
+        $Cards = self::execute("SELECT * FROM Card WHERE column = :column ORDER BY position",array("column"=>$idColumn));
+        $data = $Cards->fetchAll();
+        $tableCards = [];
+        foreach($data as $d){
+            $tableCards[] = new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"]);
+        }
+        return $tableCards;
+    }
 }

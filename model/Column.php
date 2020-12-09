@@ -83,6 +83,7 @@ class Column extends Model
         return $error;
     }
 
+    //recup la column en fonction de son board et de sa position
     public function select_column_by_board_and_position($idBoard, $postionColumn){
         $column = self::execute("SELECT * FROM `Column` where board = :board AND position = :positionColumn ",
             array("board"=>$idBoard, "positionColumn" =>$postionColumn));
@@ -97,5 +98,15 @@ class Column extends Model
         self::execute("UPDATE `Column` SET position = :position WHERE id = :id"
             ,array("position" =>$columnR->position, "id" =>$columnL->id));
         return true;
+    }
+    //recup toutes les colonnes d'un board->id mais trié par position
+    public static function select_all_column_by_id_board_ASC($board){
+        $query = self::execute("SELECT * FROM `Column` where board = :id ORDER BY position ", array("id" => $board->id));
+        $data = $query->fetchAll();
+        $tableColumn = [];
+        foreach ($data as $d) {
+            $tableColumn [] = new Column($d["ID"], $d["Title"], $d["Position"], $d["CreatedAt"], $d["ModifiedAt"], $d["Board"]);
+        }
+        return $tableColumn;
     }
 }

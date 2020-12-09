@@ -84,7 +84,7 @@ class ControllerBoard extends Controller
         $diffDateModif = $board->modifiedAt;
         $diffDate = $tableFormatDateCreation[0];
         $messageTime = $tableFormatDateCreation[1];
-        $tableColumn = Column::select_all_column_by_id_board($board);
+        $tableColumn = Column::select_all_column_by_id_board_ASC($board);
         if (!isset($board->modifiedAt)) {
             $modifDate = false;
             $messageTimeModif = "Never modified";
@@ -186,8 +186,6 @@ class ControllerBoard extends Controller
         $column = Column::select_column_by_id($_GET["param2"]);
         //recup la colonne de gauche.
         $columnToLeft = $column->select_column_by_board_and_position($column->board, $column->position+1);
-        var_dump($column);
-        var_dump($columnToLeft);
         //appel la function move_column
         $this->move_column($column, $columnToLeft);
     }

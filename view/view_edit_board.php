@@ -78,9 +78,19 @@
                         </tr>
                     </tbody>
                 <?php } ?>
+                <tfoot>
+                    <tr>
+                        <form action="board/add_Card/<?php echo $board->id?>/<?php echo $column->id?>" method="post">
+                            <td><input type="text" name="titleCard" size="15" placeholder="Add Card">
+                                <input type="submit" name="boutonAddCard" value="Add">
+                            </td>
+                        </form>
+
+                    </tr>
+                </tfoot>
         </table>
         <?php } ?>
-
+        <!--formulaire qui s'occupe d'ajouter une colonne au baurd-->
         <form class="FormColumn" action="board/add_column/<?php echo $board->id?>" method="post">
             <td>
                 <input type="text" name="title" size="15" placeholder="Add a column">

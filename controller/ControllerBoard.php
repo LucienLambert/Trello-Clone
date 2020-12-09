@@ -207,6 +207,9 @@ class ControllerBoard extends Controller
         $this->move_column($columnToRight, $column);
     }
 
+    public function add_card(){
+    }
+
     public function delete_board()
     {
 

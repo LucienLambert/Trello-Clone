@@ -73,5 +73,12 @@ class Card extends Model
         }
         return $tableCards;
     }
+    /*
+     * Title doit avoir au minimum une longueur de 3 caractères. Le nom d'une carte doit être unique au sein d'un même tableau.
+     *
+     */
+    public static function valide_card(){
+
+    }
 }
 ?>

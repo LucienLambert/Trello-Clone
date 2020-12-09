@@ -48,16 +48,26 @@
                                 <input type="text" name="newTitleColumn" size="15" placeholder="Enter a new Title">
                                 <input type="submit" name="modifTitle" value="Apply">
                             </form>
-                            <forma action="board/move_column/<?php echo $column->board?>/<?php echo $column->id?>" methode="post">
                                 <?php if($column->position == 0) { ?>
-                                <input type="submit" name="<?php echo $column->id?>>" value="->">
+                                    <!-- formulaire déplacement à droite -->
+                                    <form action="board/move_right_column<?php echo $column->board ?>/<?php echo $column->id ?>" method="get">
+                                        <input type="submit" name="<?php echo $column->id?>" value="->">
+                                    </form>
                                 <?php } elseif($column->position < count($tableColumn)-1) { ?>
-                                    <input type="submit" name="<?php echo $column->id?>" value="<-">
-                                    <input type="submit" name="<?php echo $column->id?>" value="->">
+                                    <!-- formulaire déplacement à gauche -->
+                                    <form action="board/move_left_column/<?php echo $column->board ?>/<?php echo $column->id ?>" method="get">
+                                        <input type="submit" name="<?php echo $column->id?>" value="<-">
+                                    </form>
+                                    <!-- formulaire déplacement à droite -->
+                                    <form action="board/move_right_column<?php echo $column->board ?>/<?php echo $column->id ?>" method="get">
+                                        <input type="submit" name="<?php echo $column->id?>" value="->">
+                                    </form>
                                 <?php } else { ?>
-                                    <input type="submit" name="<?php echo $column->id?>" value="<-">
+                                    <!-- formulaire déplacement à gauche -->
+                                    <form action="board/move_left_column/<?php echo $column->board ?>/<?php echo $column->id ?>" method="get">
+                                        <input type="submit" name="<?php echo $column->id?>" value="<-">
+                                    </form>
                                 <?php }?>
-                            </forma>
                         </th>
                     </tr>
             </thead>

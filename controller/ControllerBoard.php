@@ -172,27 +172,32 @@ class ControllerBoard extends Controller
     }
 
 
-    //change la position de la colonne du board
-    private function move_column($columnRigth = "", $columnLeft = "") {
-
+    //switch les deux colonnes passé en paramètre.
+    private function move_column($columnRigth = "", $columnLeft = "")
+    {
+        self::move_column($columnRigth,$columnLeft);
+        $this->redirect("board", "edit_board");
     }
 
     //déplace la colonne sur laquelle on est vers la droite.
-    public function move_right_column(){
-        $column = Column::select_column_by_id($_GET["param1"]);
+    public function move_right_column()
+    {
+        $column = Column::select_column_by_id($_GET["param2"]);
         $columnToMoveLeft = $column->select_column_by_board_and_position($column->board, $column->position-1);
 
     }
 
-    public function move_left_column(){
-        if(isset($_GET["param1"])){
-            $column = Column::select_column_by_id($_GET["param1"]);
+    public function move_left_column()
+    {
+        if(isset($_GET["param2"])){
+            $column = Column::select_column_by_id($_GET["param2"]);
             $columnToMoveLeft = $column->select_column_by_board_and_position($column->board, $column->position+1);
             $columnToMoveRight = $column->move_column();
         }
     }
 
-    public function delete_board() {
+    public function delete_board()
+    {
 
     }
 
@@ -200,7 +205,6 @@ class ControllerBoard extends Controller
     {
 
     }
-
 
     //calcule la différence de temps entre l'ajout et maintenant
     //return un tableau avec 2 valeurs.

@@ -103,6 +103,7 @@ class ControllerBoard extends Controller
             "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate, "error" => $error));
     }
 
+    //change le titre du board sur le quel on est
     public function edit_title_board()
     {
         $user = $this->get_user_or_redirect();
@@ -124,6 +125,7 @@ class ControllerBoard extends Controller
         }
     }
 
+    //ajout d'une nouveau colonne au board sur lequel on est.
     public function add_column()
     {
         //check si le param1 n'est pas null ou vide (param1 = 1er paramètre dans l'url)
@@ -145,6 +147,7 @@ class ControllerBoard extends Controller
         }
     }
 
+    //change le titre de la colonne sur laquelle on à cliqué.
     public function edit_Title_column()
     {
         $error = [];
@@ -168,8 +171,12 @@ class ControllerBoard extends Controller
         }
     }
 
-    public function delete_board()
-    {
+    //change la position de la colonne du board
+    public function move_column() {
+
+    }
+
+    public function delete_board() {
 
     }
 

@@ -50,9 +50,19 @@ class Column extends Model
     }
 
     //modifie la position de la colonne selectionnée
-    public function update_position_column()
+    //1 = retenir la position de la column à déplacer
+    //2 = deplacer la column à ça nouvelle position
+    //3 = deplacer la column qui se trouve à pas la position de déplacement vers l'ancienne position de la colonne à déplacer.
+    public function update_position_column($newPosition)
     {
+        //1 = retenir la position de la column à déplacer
+        $oldPosotion = $this->position;
+        //2 = deplacer la column selectionné à ça nouvelle position
+        self::execute("UPDATE `Column` SET position = : position WHERE id = :id",array("id"=>$this->id, "position"=>$newPosition));
+        self::execute("UPDATE `Column` SET",array());
 
+
+        return true;
     }
 
     //modifie le titre de la colonne selectionnée

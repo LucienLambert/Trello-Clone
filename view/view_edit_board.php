@@ -46,16 +46,16 @@
                             <!-- formulaire pour modifier le title de la colonne -->
                             <form action="board/edit_title_column/<?php echo $column->board ?>/<?php echo $column->id ?>" method="post">
                                 <input type="text" name="newTitleColumn" size="15" placeholder="Enter a new Title">
-                                <input type="submit" name="modifTitle" value="Aplly">
+                                <input type="submit" name="modifTitle" value="Apply">
                             </form>
                             <forma action="board/move_column/<?php echo $column->board?>/<?php echo $column->id?>" methode="post">
                                 <?php if($column->position == 0) { ?>
-                                <input type="submit" name="deplacerColumn<?php $column->id?>>" value="->">
+                                <input type="submit" name="<?php echo $column->id?>>" value="->">
                                 <?php } elseif($column->position < count($tableColumn)-1) { ?>
-                                    <input type="submit" name="deplacerColumn<?php $column->id?>" value="<-">
-                                    <input type="submit" name="deplacerColumn<?php $column->id?>" value="->">
+                                    <input type="submit" name="<?php echo $column->id?>" value="<-">
+                                    <input type="submit" name="<?php echo $column->id?>" value="->">
                                 <?php } else { ?>
-                                    <input type="submit" name="deplacerColumn<?php $column->id?>" value="<-">
+                                    <input type="submit" name="<?php echo $column->id?>" value="<-">
                                 <?php }?>
                             </forma>
                         </th>
@@ -78,6 +78,7 @@
                 <input type="submit" name="boutonAddColumn" value="Add">
             </td>
         </form>
+
         <?php if (count($error) > 0) { ?>
             <p>Please check the errors and correct them :</p>
             <ul>
@@ -86,22 +87,5 @@
                 <?php } ?>
             </ul>
         <?php } ?>
-
-        <!--
-        <table>
-            <tr>
-                <th>Colonne 1</th>
-                <th>Colonne 2</th>
-            </tr>
-            <tr>
-                <td>carte colonne 1</td>
-                <td>carte colonne 2</td>
-            </tr>
-            <tr>
-                <td>carte colonne 1</td>
-                <td>carte colonne 2</td>
-            </tr>
-        </table>
-        -->
     </body>
 </html>

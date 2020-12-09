@@ -95,7 +95,22 @@ class Column extends Model
         return $error;
     }
 
-    public function test(){
-        return false;
+    public function select_column_by_board_and_position($idBoard, $postionColumn){
+        $column = self::execute("SELECT * FROM `Column` where board = :board AND position = :positionColumn ",
+            array("board"=>$idBoard->id, "positionColumn" =>$postionColumn));
+        if(!isset($column)){
+          return null;
+        }
+        return new Column($column["ID"], $column["Title"], $column["Position"], $column["CreatedAt"], $column["ModifiedAt"], $column["Board"]);
+    }
+
+    public static function move_column($columnR, $columnL) {
+        self::execute("UPDATE `Column` SET position = :position WHERE id = :id"
+            ,array("position" =>$columnR->position, "array" =>$columnR->id));
+
+        self::execute("UPDATE `Column` SET position = :position WHERE id = :id"
+            ,array("position" =>$columnL->position, "array" =>$columnL->id));
+
+        return true;
     }
 }

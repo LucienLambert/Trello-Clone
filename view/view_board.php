@@ -14,13 +14,13 @@
 
     <h1>Your boards</h1>
     <!-- formulaire qui gère l'affichage et l'ouverture des boards -->
-    <?php foreach ($tableBoard as $board) : ?>
-    <form class="boardForm" action="board/open_Board/<?php echo $board->id ?>" method="post">
+    <?php for($i = 0; $i < count($tableBoard); $i++) { ?>
+    <form class="boardForm" action="board/open_Board/<?php echo $tableBoard[$i]->id ?>" method="post">
         <tr>
-            <td><input type="submit" name="boutonBoard" size="30" value="<?php echo $board->title ?>"></td>
+            <td><input type="submit" name="boutonBoard" size="30" value="<?php echo $tableBoard[$i]->title." (".$tableNbColumn[$i]."Column)" ?>"></td>
         </tr>
     </form>
-    <?php endforeach;?>
+    <?php }?>
     <!-- formulaire d'ajout d'un nouveau board -->
     <form class="boardForm" action="board/add_board" method="post">
         <tr>

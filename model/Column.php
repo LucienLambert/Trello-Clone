@@ -29,6 +29,14 @@ class Column extends Model
             array("title" => $this->title, "position" => $this->position, "board" => $board->id));
     }
 
+    public static function select_column_by_id($id){
+        $query = self::execute("SELECT * FROM `Column` WHERE id = :id", array("id"=>$id));
+        $data = $query->fetch();
+        return new Column($data["ID"], $data["Title"], $data["Position"], $data["CreatedAt"], $data["ModifiedAt"], $data["Board"]);
+
+
+    }
+
     //selectionne une  colonne via l'ID du board entré en paramètre
     public static function select_all_column_by_id_board($board)
     {
@@ -48,9 +56,10 @@ class Column extends Model
     }
 
     //modifie le titre de la colonne selectionnée
-    public function update_title_column()
-    {
-
+    public function update_title_column($idColumn, $newtitle, $modifiedAt){
+        self::execute("UPDATE `Column` SET title = :title, modifiedAt = :modifiedAt WHERE id = :id",
+            array("title"=>$newtitle, "modifiedAt"=>$modifiedAt->format('Y-m-d H:i:s'), "id"=>$idColumn));
+        return true;
     }
 
     //supprime la colonne selectionnée (doit également supprimer les cartes contenues dans la colonne)
@@ -60,17 +69,24 @@ class Column extends Model
     }
 
     //verifie si l'ajout de la colonne respect bien les conditions
-    public function valide_column($board)
+    //upDateTitle est utilisier unique dans le cas d'une modification de titre.
+    public function valide_column($board, $upDateTitle = "")
     {
         $error = [];
-        if (!isset($this->title) || strlen($this->title) <= 0 || !is_string($this->title)) {
+        //si le test passe alors on fait tout les tests suivant depuis le nouveau title sinon on on les fait sur le titre de la colonne
+        if(isset($upDateTitle)){
+            $title = $upDateTitle;
+        }else{
+            $title = $this->title;
+        }
+        if (!isset($title) || strlen($title) <= 0 || !is_string($title)) {
             $error [] = "you must enter a title.";
-        } elseif (strlen($this->title) < 3) {
+        } elseif (strlen($title) < 3) {
             $error [] = "Your title must contain 3 characters minimum.";
         }
         $tableColumn = self::select_all_column_by_id_board($board);
         foreach ($tableColumn as $column) {
-            if (strtolower($column->title) == strtolower($this->title)) {
+            if (strtolower($column->title) == strtolower($title)) {
                 $error [] = "this board contain already a column with that title.";
             }
         }

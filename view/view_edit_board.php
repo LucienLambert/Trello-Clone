@@ -16,13 +16,13 @@
             <input type="submit" name="delBoard" value="Delete Board">
         </form>
         <!-- formulaire pour afficher l'option modifier le titre du board -->
-        <?php if(!$viewEditTitle) :?>
-        <form class="FormColumn" action="board/edit_board/<?php echo $board->title?>" method="post">
+        <?php if(!$viewEditTitleBoard) :?>
+        <form class="FormColumn" action="board/edit_board/<?php echo $board->id ?>" method="post">
             <input type="submit" name="openViewModifTitle" value="modify Board">
         </form>
         <?php else: ?>
         <!-- formulaire pour modifier le titre du board -->
-        <form class="FormColumn" action="board/edit_title_board/<?php echo $board->title?>" method="post">
+        <form class="FormColumn" action="board/edit_title_board/<?php echo $board->id ?>" method="post">
             <input type="text" name="newTitleBoard" size="15" placeholder="Enter a new Title">
             <input type="submit" name="modifTitle" value="apply">
         </form>
@@ -35,25 +35,62 @@
                 echo "Modified ".$diffDateModif." ".$messageTimeModif." ago";
             }?>
         </p>
-        <?php foreach ($tableColumn as $column) : ?>
-            <form class="FormColumn">
+        <?php foreach ($tableColumn as $column) { ?>
+            <table style="display:inline" >
+                <thead>
+                    <tr>
+                        <th>
+                            <?php echo $column->title ?>
+                            <!-- formulaire pour modifier le title de la colonne -->
+                            <form action="board/edit_title_column/<?php echo $column->board ?>/<?php echo $column->id ?>" method="post">
+                                <input type="text" name="newTitleColumn" size="15" placeholder="Enter a new Title">
+                                <input type="submit" name="modifTitle" value="Aplly">
+                            </form>
+
+                        </th>
+                    </tr>
+            </thead>
+            <tbody>
                 <tr>
-                    <td><?php echo $column->title ?></td>
+                    <td>carte</td>
                 </tr>
-            </form>
-        <?php endforeach;?>
+                <tr>
+                    <td>carte</td>
+                </tr>
+            </tbody>
+        </table>
+        <?php } ?>
+
         <form class="FormColumn" action="board/add_column/<?php echo $board->id?>" method="post">
-            <td><input type="text" name="title" size="15" placeholder="Add a column">
-            <input type="submit" name="boutonAddColumn" value="Add">
+            <td>
+                <input type="text" name="title" size="15" placeholder="Add a column">
+                <input type="submit" name="boutonAddColumn" value="Add">
             </td>
-            <?php if (count($error) > 0) { ?>
-                <p>Please check the errors and correct them :</p>
-                <ul>
-                    <?php foreach ($error as $err) { ?>
-                        <li><?php echo $err ?></li>
-                    <?php } ?>
-                </ul>
-            <?php } ?>
         </form>
+        <?php if (count($error) > 0) { ?>
+            <p>Please check the errors and correct them :</p>
+            <ul>
+                <?php foreach ($error as $err) { ?>
+                    <li><?php echo $err ?></li>
+                <?php } ?>
+            </ul>
+        <?php } ?>
+
+        <!--
+        <table>
+            <tr>
+                <th>Colonne 1</th>
+                <th>Colonne 2</th>
+            </tr>
+            <tr>
+                <td>carte colonne 1</td>
+                <td>carte colonne 2</td>
+            </tr>
+            <tr>
+                <td>carte colonne 1</td>
+                <td>carte colonne 2</td>
+            </tr>
+        </table>
+        -->
     </body>
 </html>

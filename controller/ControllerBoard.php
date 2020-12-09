@@ -28,9 +28,14 @@ class ControllerBoard extends Controller
         $tableBoard = Board::select_board_by_user($user);
         //recup la liste des boards de TOUS LE MONDE
         $tableOthersBoards = Board::select_other_board($user);
-
+        //table vide pour contenir le nombre de colonne de chaque table
+        $tableNbColumn = [];
+        foreach($tableBoard as $board){
+            $tableNbColumn [] = count(Column::select_all_column_by_id_board($board));
+        }
         (new View("board"))->show(array("user" => $user, "tableBoard" => $tableBoard,
-            "tableOthersBoards" => $tableOthersBoards, "error" => $error));
+            "tableOthersBoards" => $tableOthersBoards, "tableNbColumn" => $tableNbColumn,
+            "error" => $error));
     }
 
     //ajoute un board à la liste.
@@ -70,52 +75,36 @@ class ControllerBoard extends Controller
     //se chargera d'afficher les contenues du board sur le quel on est
     public function edit_board($error = [])
     {
-        //check si le param1 n'est pas null ou vide (param1 = 1er paramètre dans l'url)
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
-            //recup le board depuis si titre
             $board = Board::select_board_by_id($_GET["param1"]);
         }
-        $viewEditTitle = false;
-        //recup l'user connecté
+        $viewEditTitleBoard = false;
         $user = $this->get_user_or_redirect();
-        //recup le fullName
-        $fullName = $user->fullName;
-        //recup la date de creation du board.
-        $createdAt = $board->createdAt;
-        //recup une table contenant les formats des date du board(va servir pour l'affichage)
-        $tableFormatDateCreation = $this->diffDateFormat($createdAt);
-        //crée un tableau vide pour contenire la date et le format d'affichage de la date.
-        $tableFormatDateModif = [];
-        //recup la date de modif du board
+        $tableFormatDateCreation = $this->diffDateFormat($board->createdAt);
         $diffDateModif = $board->modifiedAt;
-        $messageTimeModif = "";
         $diffDate = $tableFormatDateCreation[0];
         $messageTime = $tableFormatDateCreation[1];
-        //recup les colonnes du board selectionné
         $tableColumn = Column::select_all_column_by_id_board($board);
-        $modifDate = "";
-        if (!isset($diffDateModif)) {
+        if (!isset($board->modifiedAt)) {
             $modifDate = false;
             $messageTimeModif = "Never modified";
         } else {
             $modifDate = true;
-            $tableFormatDateModif = $this->diffDateFormat($diffDateModif);
+            $tableFormatDateModif = $this->diffDateFormat($board->modifiedAt);
             $diffDateModif = $tableFormatDateModif[0];
             $messageTimeModif = $tableFormatDateModif[1];
         }
         if (isset($_POST["openViewModifTitle"])) {
-            $viewEditTitle = true;
+            $viewEditTitleBoard = true;
         }
-
         (new View("edit_board"))->show(array("board" => $board, "diffDate" => $diffDate, "messageTime" => $messageTime,
             "diffDateModif" => $diffDateModif, "messageTimeModif" => $messageTimeModif,
-            "fullName" => $fullName, "tableColumn" => $tableColumn,
-            "viewEditTitle" => $viewEditTitle, "modifDate" => $modifDate, "error" => $error));
+            "fullName" => $user->fullName, "tableColumn" => $tableColumn,
+            "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate, "error" => $error));
     }
 
     public function edit_title_board()
     {
-        $error = [];
         $user = $this->get_user_or_redirect();
         //check si le param1 n'est pas null ou vide (param1 = 1er paramètre dans l'url)
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
@@ -128,7 +117,7 @@ class ControllerBoard extends Controller
 
             if (count($error) == 0) {
                 $board->update_title_board($newTitle, $board->id, new DateTime("now"));
-                $this->redirect("board", "edit_board");
+                $this->redirect("board", "edit_board", $_GET["param1"]);
             } else {
                 $this->edit_board($error);
             }
@@ -156,14 +145,27 @@ class ControllerBoard extends Controller
         }
     }
 
-    public function add_card()
+    public function edit_Title_column()
     {
+        $error = [];
+        if(isset($_GET["param2"]) && $_GET["param2"] != 0){
+            $column = Column::select_column_by_id($_GET["param2"]);
+            $board = Board::select_board_by_id($_GET["param1"]);
+        }
 
-    }
-
-    public function edit_column()
-    {
-
+        if(isset($_POST["modifTitle"])){
+            if(isset($_POST["newTitleColumn"])){
+                $title = $_POST["newTitleColumn"];
+                $error = $column->valide_column($board, $_POST["newTitleColumn"]);
+                if(count($error) == 0){
+                    $column->update_title_column($column->id, $title, new DateTime("now"));
+                    var_dump($column);
+                    $this->redirect("board", "edit_board", $_GET["param1"]);
+                } else {
+                    $this->edit_board($error);
+                }
+            }
+        }
     }
 
     public function delete_board()
@@ -189,22 +191,24 @@ class ControllerBoard extends Controller
             if ($diffDate->d == 0) {
                 if ($diffDate->h == 0) {
                     if ($diffDate->i == 0) {
-                        $tableFormatDate[0] = $diffDate = $diffDate->s;
-                        $tableFormatDate[1] = $messageTime = "Second";
+                        if($diffDate->s < 0){
+                            $tableFormatDate[0] = $diffDate->s;
+                            $tableFormatDate[1] = "Second";
+                        }
                     }
-                    $tableFormatDate[0] = $diffDate = $diffDate->i;
-                    $tableFormatDate[1] = $messageTime = "min";
+                    $tableFormatDate[0] = $diffDate->i;
+                    $tableFormatDate[1] = "min";
                 } else {
-                    $tableFormatDate[0] = $diffDate = $diffDate->h;
-                    $tableFormatDate[1] = $messageTime = "Hour";
+                    $tableFormatDate[0] = $diffDate->h;
+                    $tableFormatDate[1] = "Hour";
                 }
             } else {
-                $tableFormatDate[0] = $diffDate = $diffDate->d;
-                $tableFormatDate[1] = $messageTime = "Day";
+                $tableFormatDate[0] = $diffDate->d;
+                $tableFormatDate[1] = "Day";
             }
         } else {
-            $tableFormatDate[0] = $diffDate = $diffDate->m;
-            $tableFormatDate[1] = $messageTime = "Month";
+            $tableFormatDate[0] = $diffDate->m;
+            $tableFormatDate[1] = "Month";
         }
         return $tableFormatDate;
     }

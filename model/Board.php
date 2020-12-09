@@ -23,9 +23,6 @@ class Board extends Model
     //ajoute un board dans la DB
     public function insert_board($user)
     {
-        //insert un board
-        //$this->title recup le titre de l'objet            : ref = $board = new Board(null, $title, $user->id, null, null);
-        //$this->id recup le id du user qui crée le board   : ref = $board = new Board(null, $title, $user->id, null, null);
         self::execute("INSERT INTO Board(title,owner) VALUES(:title,:owner)", array("title" => $this->title, "owner" => $user->id));
 
         return true;
@@ -114,5 +111,9 @@ class Board extends Model
         self::execute("UPDATE Board SET title = :title, modifiedAt = :modifiedAt WHERE id = :id",
             array("title" => $title, "id" => $id, "modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
         return true;
+    }
+
+    public static function delete_board(){
+        self::execute("SELECT * FORM ", array());
     }
 }

@@ -50,21 +50,21 @@
                             </form>
                                 <?php if($column->position == 0) { ?>
                                     <!-- formulaire déplacement à droite -->
-                                    <form action="board/move_right_column<?php echo $column->board ?>/<?php echo $column->id ?>" method="get">
+                                    <form action="board/move_right_column/<?php echo $column->board?>/<?php echo $column->id?>" method="post">
                                         <input type="submit" name="<?php echo $column->id?>" value="->">
                                     </form>
                                 <?php } elseif($column->position < count($tableColumn)-1) { ?>
                                     <!-- formulaire déplacement à gauche -->
-                                    <form action="board/move_left_column/<?php echo $column->board ?>/<?php echo $column->id ?>" method="get">
+                                    <form action="board/move_left_column/<?php echo $column->board?>/<?php echo $column->id?>" method="post">
                                         <input type="submit" name="<?php echo $column->id?>" value="<-">
                                     </form>
                                     <!-- formulaire déplacement à droite -->
-                                    <form action="board/move_right_column<?php echo $column->board ?>/<?php echo $column->id ?>" method="get">
+                                    <form action="board/move_right_column/<?php echo $column->board?>/<?php echo $column->id?>" method="post">
                                         <input type="submit" name="<?php echo $column->id?>" value="->">
                                     </form>
                                 <?php } else { ?>
                                     <!-- formulaire déplacement à gauche -->
-                                    <form action="board/move_left_column/<?php echo $column->board ?>/<?php echo $column->id ?>" method="get">
+                                    <form action="board/move_left_column/<?php echo $column->board?>/<?php echo $column->id?>" method="post">
                                         <input type="submit" name="<?php echo $column->id?>" value="<-">
                                     </form>
                                 <?php }?>

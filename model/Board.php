@@ -112,8 +112,4 @@ class Board extends Model
             array("title" => $title, "id" => $id, "modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
         return true;
     }
-
-    public static function delete_board(){
-        self::execute("SELECT * FORM ", array());
-    }
 }

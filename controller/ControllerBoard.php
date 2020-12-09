@@ -107,9 +107,9 @@ class ControllerBoard extends Controller
     public function edit_title_board()
     {
         $user = $this->get_user_or_redirect();
-        //check si le param1 n'est pas null ou vide (param1 = 1er paramètre dans l'url)
+        //check si le param1 n'est pas null ou vide
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
-            //recup le board depuis si titre
+            //recup le board depuis son titre
             $board = Board::select_board_by_id($_GET["param1"]);
         }
         if (isset($_POST["modifTitle"])) {
@@ -138,7 +138,7 @@ class ControllerBoard extends Controller
             $positionColumn = count($tableColumn);
             $title = $_POST["title"];
             $column = new Column(null, $title, $positionColumn, null, null, $board->id);
-            $error = $column->valide_column($board);
+            $error = Column::valide_column($board, $column->title);
 
             if (count($error) == 0) {
                 $column->inset_column($board);
@@ -159,10 +159,9 @@ class ControllerBoard extends Controller
         if(isset($_POST["modifTitle"])){
             if(isset($_POST["newTitleColumn"])){
                 $title = $_POST["newTitleColumn"];
-                $error = $column->valide_column($board, $_POST["newTitleColumn"]);
+                $error = Column::valide_column($board, $title);
                 if(count($error) == 0){
                     $column->update_title_column($column->id, $title, new DateTime("now"));
-                    var_dump($column);
                     $this->redirect("board", "edit_board", $_GET["param1"]);
                 } else {
                     $this->edit_board($error);
@@ -175,25 +174,32 @@ class ControllerBoard extends Controller
     //switch les deux colonnes passé en paramètre.
     private function move_column($columnRigth = "", $columnLeft = "")
     {
-        self::move_column($columnRigth,$columnLeft);
-        $this->redirect("board", "edit_board");
+        Column::move_column($columnRigth,$columnLeft);
+        $this->redirect("board", "edit_board", $_GET["param1"]);
+
     }
 
     //déplace la colonne sur laquelle on est vers la droite.
     public function move_right_column()
     {
+        //recup l'objet sur lequel on est
         $column = Column::select_column_by_id($_GET["param2"]);
-        $columnToMoveLeft = $column->select_column_by_board_and_position($column->board, $column->position-1);
-
+        //recup la colonne de gauche.
+        $columnToLeft = $column->select_column_by_board_and_position($column->board, $column->position+1);
+        var_dump($column);
+        var_dump($columnToLeft);
+        //appel la function move_column
+        $this->move_column($column, $columnToLeft);
     }
 
     public function move_left_column()
     {
-        if(isset($_GET["param2"])){
-            $column = Column::select_column_by_id($_GET["param2"]);
-            $columnToMoveLeft = $column->select_column_by_board_and_position($column->board, $column->position+1);
-            $columnToMoveRight = $column->move_column();
-        }
+        //recup l'objet sur lequel on est
+        $column = Column::select_column_by_id($_GET["param2"]);
+        //recup la colonne de droite
+        $columnToRight = $column->select_column_by_board_and_position($column->board, $column->position-1);
+        //appel la function move_column
+        $this->move_column($columnToRight, $column);
     }
 
     public function delete_board()

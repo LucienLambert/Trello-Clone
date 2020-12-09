@@ -49,14 +49,6 @@ class Column extends Model
         return $tableColumn;
     }
 
-    //modifie la position de la colonne selectionnée
-    //recup les deux colonnes à déplacer
-    //faire un upDate des deux colonne en switchant leurs position l'une avec l'autre.
-    public function update_position_column($newPosition)
-    {
-
-    }
-
     //modifie le titre de la colonne selectionnée
     public function update_title_column($idColumn, $newtitle, $modifiedAt){
         self::execute("UPDATE `Column` SET title = :title, modifiedAt = :modifiedAt WHERE id = :id",
@@ -71,22 +63,18 @@ class Column extends Model
     }
 
     //verifie si l'ajout de la colonne respect bien les conditions
-    //upDateTitle est utilisier unique dans le cas d'une modification de titre.
-    public function valide_column($board, $upDateTitle = "")
+    public static function valide_column($board, $title = "")
     {
         $error = [];
-        //si le test passe alors on fait tout les tests suivant depuis le nouveau title sinon on on les fait sur le titre de la colonne
-        if(isset($upDateTitle)){
-            $title = $upDateTitle;
-        }else{
-            $title = $this->title;
-        }
         if (!isset($title) || strlen($title) <= 0 || !is_string($title)) {
             $error [] = "you must enter a title.";
         } elseif (strlen($title) < 3) {
             $error [] = "Your title must contain 3 characters minimum.";
         }
         $tableColumn = self::select_all_column_by_id_board($board);
+        if(count($tableColumn) == 0){
+            return $error;
+        }
         foreach ($tableColumn as $column) {
             if (strtolower($column->title) == strtolower($title)) {
                 $error [] = "this board contain already a column with that title.";
@@ -97,20 +85,17 @@ class Column extends Model
 
     public function select_column_by_board_and_position($idBoard, $postionColumn){
         $column = self::execute("SELECT * FROM `Column` where board = :board AND position = :positionColumn ",
-            array("board"=>$idBoard->id, "positionColumn" =>$postionColumn));
-        if(!isset($column)){
-          return null;
-        }
-        return new Column($column["ID"], $column["Title"], $column["Position"], $column["CreatedAt"], $column["ModifiedAt"], $column["Board"]);
+            array("board"=>$idBoard, "positionColumn" =>$postionColumn));
+        $data = $column->fetch();
+        return new Column($data["ID"], $data["Title"], $data["Position"], $data["CreatedAt"], $data["ModifiedAt"], $data["Board"]);
     }
 
     public static function move_column($columnR, $columnL) {
         self::execute("UPDATE `Column` SET position = :position WHERE id = :id"
-            ,array("position" =>$columnR->position, "array" =>$columnR->id));
+            ,array("position" =>$columnL->position, "id" =>$columnR->id));
 
         self::execute("UPDATE `Column` SET position = :position WHERE id = :id"
-            ,array("position" =>$columnL->position, "array" =>$columnL->id));
-
+            ,array("position" =>$columnR->position, "id" =>$columnL->id));
         return true;
     }
 }

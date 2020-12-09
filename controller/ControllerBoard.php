@@ -173,7 +173,7 @@ class ControllerBoard extends Controller
 
     //change la position de la colonne du board
     public function move_column() {
-
+        
     }
 
     public function delete_board() {

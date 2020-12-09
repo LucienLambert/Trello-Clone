@@ -35,7 +35,9 @@
                 echo "Modified ".$diffDateModif." ".$messageTimeModif." ago";
             }?>
         </p>
+
         <?php foreach ($tableColumn as $column) { ?>
+            <!-- ajout condition  -->
             <table style="display:inline" >
                 <thead>
                     <tr>
@@ -46,7 +48,16 @@
                                 <input type="text" name="newTitleColumn" size="15" placeholder="Enter a new Title">
                                 <input type="submit" name="modifTitle" value="Aplly">
                             </form>
-
+                            <forma action="board/move_column/<?php echo $column->board?>/<?php echo $column->id?>" methode="post">
+                                <?php if($column->position == 0) { ?>
+                                <input type="submit" name="deplacerColumn<?php $column->id?>>" value="->">
+                                <?php } elseif($column->position < count($tableColumn)-1) { ?>
+                                    <input type="submit" name="deplacerColumn<?php $column->id?>" value="<-">
+                                    <input type="submit" name="deplacerColumn<?php $column->id?>" value="->">
+                                <?php } else { ?>
+                                    <input type="submit" name="deplacerColumn<?php $column->id?>" value="<-">
+                                <?php }?>
+                            </forma>
                         </th>
                     </tr>
             </thead>

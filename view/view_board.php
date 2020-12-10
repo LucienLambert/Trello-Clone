@@ -39,12 +39,12 @@
     </form>
     <h1>others Boards</h1>
     <!-- formulaire qui affiche la liste des boards != user -->
-    <form>
+    <?php for ($i = 0; $i < count($tableOthersBoards); $i++) { ?>
+    <form class="boardForm" action="board/open_Board/<?php echo $tableOthersBoards[$i]->id ?>" method="post">
         <tr>
-            <?php foreach ($tableOthersBoards as $board) { ?>
-                <td><input type="button" name="titleBoard" size="15" id="titleBoard" value="<?php echo $board->title ?>"></td>
-            <?php } ?>
+            <td><input type="submit" name="boutonBoard" size="30" value="<?php echo $tableOthersBoards[$i]->title." (".$tableNbColumnOther[$i]."Column)" ?>"></td>
         </tr>
     </form>
+    <?php } ?>
 </body>
 </html>

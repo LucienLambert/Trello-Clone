@@ -31,12 +31,16 @@ class ControllerBoard extends Controller
         $tableOthersBoards = Board::select_other_board($user);
         //table vide pour contenir le nombre de colonne de chaque table
         $tableNbColumn = [];
+        $tableNbColumnOther = [];
         foreach($tableBoard as $board){
             $tableNbColumn [] = count(Column::select_all_column_by_id_board($board));
         }
+        foreach($tableOthersBoards as $board){
+            $tableNbColumnOther [] = count(Column::select_all_column_by_id_board($board));
+        }
         (new View("board"))->show(array("user" => $user, "tableBoard" => $tableBoard,
             "tableOthersBoards" => $tableOthersBoards, "tableNbColumn" => $tableNbColumn,
-            "error" => $error));
+            "tableNbColumnOther" => $tableNbColumnOther,"error" => $error));
     }
 
     //ajoute un board à la liste.
@@ -204,15 +208,16 @@ class ControllerBoard extends Controller
 
     public function add_card(){
         $user = $this->get_user_or_false();
-        $idColumn = $_GET["param1"];
+        $idColumn = $_GET["param2"];
         //contient les cartes de la colunne
         $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
-        $nbCarte = count($tableCard);
+        $positionCard = count($tableCard);
         $title = $_POST["titleCard"];
-        $card = new Card(null, $title, null, $nbCarte, new DateTime("now"), null, $user->id, $idColumn);
         $error = Card::valide_card($idColumn, $title);
         if (count($error) == 0) {
-            $card->inset_card($idColumn, $title);
+            $card = new Card(null, $title, null, $positionCard, null, null, $user->id, $idColumn);
+            $card->insert_card();
+            $this->redirect("board", "edit_board", $_GET["param1"]);
         }
         $this->edit_board($error);
     }

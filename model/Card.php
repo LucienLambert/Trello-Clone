@@ -35,17 +35,17 @@ class Card extends Model
         return $this->title;
     }
 
-    public function getbody()
+    public function getBody()
     {
         return $this->body;
     }
 
-    public function getposition()
+    public function getPosition()
     {
         return $this->position;
     }
 
-    public function getcreatedAt()
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
@@ -62,6 +62,18 @@ class Card extends Model
 
     public function getColumn(){
         return $this->column;
+    }
+
+    public function insert_card(){
+        self::execute("INSERT INTO Card(title,position,author,`column`) VALUES(:title,:position,:author,:column)",
+            array("title"=>$this->getTitle(), "position"=>$this->getPosition(),
+                "author"=>$this->getAuthor(), "column"=>$this->getColumn()));
+        return true;
+    }
+    public function inset_column($board)
+    {
+        self::execute("INSERT INTO `Column`(title,position,board) VALUES(:title,:position,:board)",
+            array("title" => $this->title, "position" => $this->position, "board" => $board->id));
     }
 
     public static function select_all_card_by_id_column_ASC($idColumn){

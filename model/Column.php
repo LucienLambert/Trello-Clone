@@ -33,8 +33,6 @@ class Column extends Model
         $query = self::execute("SELECT * FROM `Column` WHERE id = :id", array("id"=>$id));
         $data = $query->fetch();
         return new Column($data["ID"], $data["Title"], $data["Position"], $data["CreatedAt"], $data["ModifiedAt"], $data["Board"]);
-
-
     }
 
     //selectionne une  colonne via l'ID du board entré en paramètre

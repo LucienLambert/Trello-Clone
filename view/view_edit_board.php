@@ -79,7 +79,7 @@
         <?php foreach ($tableCardColumn[$column->position] as $card) { ?>
             <tbody>
                 <!-- formulaire pour ouvire une carte-->
-                <form action="board/open_Card/<?php echo $card->getColumn()?>" method="post">
+                <form action="board/view_card/<?php echo $card->getColumn()?>" method="post">
                     <tr>
                         <td><input type="submit" name="openCard" value="<?php echo $card->getTitle() ?>"></td>
                     </tr>

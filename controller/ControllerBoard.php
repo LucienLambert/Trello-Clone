@@ -222,6 +222,13 @@ class ControllerBoard extends Controller
         $this->edit_board($error);
     }
 
+    public function view_card(){
+        if (isset($_GET["param1"]) && $_GET["param1"] != 0) {
+            $card = Card::select_card_by_id($_GET["param1"]);
+        }
+
+    }
+
     public function delete_board()
     {
 

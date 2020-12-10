@@ -70,11 +70,6 @@ class Card extends Model
                 "author"=>$this->getAuthor(), "column"=>$this->getColumn()));
         return true;
     }
-    public function inset_column($board)
-    {
-        self::execute("INSERT INTO `Column`(title,position,board) VALUES(:title,:position,:board)",
-            array("title" => $this->title, "position" => $this->position, "board" => $board->id));
-    }
 
     public static function select_all_card_by_id_column_ASC($idColumn){
         $Cards = self::execute("SELECT * FROM Card WHERE `column` = :column ORDER BY position",array("column"=>$idColumn));
@@ -84,6 +79,12 @@ class Card extends Model
             $tableCards[] = new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"]);
         }
         return $tableCards;
+    }
+
+    public static function select_card_by_id($idCard){
+        $card = self::execute("SELECT * FROM Card WHERE id = :id",array("id"=>$idCard));
+        $data = $card->fetch();
+        return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"]);
     }
 
     public static function valide_card($idColumn, $title){

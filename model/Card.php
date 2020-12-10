@@ -65,8 +65,8 @@ class Card extends Model
     }
 
     public function insert_card(){
-        self::execute("INSERT INTO Card(title,position,author,`column`) VALUES(:title,:position,:author,:column)",
-            array("title"=>$this->getTitle(), "position"=>$this->getPosition(),
+        self::execute("INSERT INTO Card(title,body,position,author,`column`) VALUES(:title,:body,:position,:author,:column)",
+            array("title"=>$this->getTitle(), "body"=>$this->body,"position"=>$this->getPosition(),
                 "author"=>$this->getAuthor(), "column"=>$this->getColumn()));
         return true;
     }

@@ -42,6 +42,16 @@ class User extends Model
         }
     }
 
+    public static function select_user_by_id($idUser){
+        $query = self::execute("SELECT * FROM User where id = :id", array("id" => $idUser));
+        $data = $query->fetch();
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return new User($data["ID"], $data["Mail"], $data["FullName"], $data["Password"], $data["RegisteredAt"]);
+        }
+    }
+
     //check les erreurs possible
     //return un tableau contenant les erreurs.
     //sinon un tableau vide

@@ -19,7 +19,7 @@ class ControllerBoard extends Controller
     }
 
     //affiche tous les board
-    public function list_board($error = [])
+    private function list_board($error = [])
     {
         //recup le user connecté
         $user = $this->get_user_or_redirect();
@@ -38,9 +38,13 @@ class ControllerBoard extends Controller
         foreach($tableOthersBoards as $board){
             $tableNbColumnOther [] = count(Column::select_all_column_by_id_board($board));
         }
-        (new View("board"))->show(array("user" => $user, "tableBoard" => $tableBoard,
-            "tableOthersBoards" => $tableOthersBoards, "tableNbColumn" => $tableNbColumn,
-            "tableNbColumnOther" => $tableNbColumnOther,"error" => $error));
+        try {
+            (new View("board"))->show(array("user" => $user, "tableBoard" => $tableBoard,
+                "tableOthersBoards" => $tableOthersBoards, "tableNbColumn" => $tableNbColumn,
+                "tableNbColumnOther" => $tableNbColumnOther, "error" => $error));
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     //ajoute un board à la liste.
@@ -53,11 +57,11 @@ class ControllerBoard extends Controller
             $title = $_POST["title"];
             //check si le fomulaire répond aux conditions d'ajout
             $error = Board::valide_board($title, $user);
-            //check si pas eu d'erreur
+            //check si pas error
             if (count($error) == 0) {
                 $board = new Board(null, $title, $user, null, null);
                 $board->insert_board($user);
-                //retourne sur list_board pour réafficher la liste des boards rafraîchir.
+                //return sur list_board pour réafficher la liste des boards rafraîchir.
                 $this->redirect("board", "list_board");
             } else {
                 //rappel la function list_board pour affichier les erreur si besoin.
@@ -72,13 +76,13 @@ class ControllerBoard extends Controller
         //check le boutonBoard pour voir si on selectionne un board.
         if (isset($_POST["boutonBoard"])) {
             if (isset($_GET["param1"]) && $_GET["param1"] != 0) {
-                $this->redirect("board", "edit_board", $_GET["param1"]);
+                $this->redirect("board", "board", $_GET["param1"]);
             }
         }
     }
 
     //se chargera d'afficher les contenues du board sur le quel on est
-    public function edit_board($error = [])
+    public function board($error = [])
     {
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $board = Board::select_board_by_id($_GET["param1"]);
@@ -107,11 +111,92 @@ class ControllerBoard extends Controller
         if (isset($_POST["openViewModifTitle"])) {
             $viewEditTitleBoard = true;
         }
-        (new View("edit_board"))->show(array("board" => $board, "diffDate" => $diffDate, "messageTime" => $messageTime,
-            "diffDateModif" => $diffDateModif, "messageTimeModif" => $messageTimeModif,
-            "fullName" => $user->fullName, "tableColumn" => $tableColumn,
-            "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate,
-            "tableCardColumn"=> $tableCardColumn, "error" => $error));
+        try {
+            (new View("edit_board"))->show(array("board" => $board, "diffDate" => $diffDate, "messageTime" => $messageTime,
+                "diffDateModif" => $diffDateModif, "messageTimeModif" => $messageTimeModif,
+                "fullName" => $user->fullName, "tableColumn" => $tableColumn,
+                "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate,
+                "tableCardColumn" => $tableCardColumn, "error" => $error));
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+    }
+
+    public function view_card(){
+        if (isset($_GET["param1"]) && $_GET["param1"] != 0 && isset($_GET["param2"]) && $_GET["param2"] != 0) {
+            $card = Card::select_card_by_id($_GET["param2"]);
+            $column = Column::select_column_by_id($_GET["param1"]);
+        }
+        $board = Board::select_board_by_id($column->board);
+        $fullName = User::select_user_by_id($card->getAuthor())->fullName;
+        $viewEditTitleCard = false;
+        $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
+        $diffDateModif = $card->getModifiedAt();
+        $diffDate = $tableFormatDateCreation[0];
+        $messageTime = $tableFormatDateCreation[1];
+        if (!isset($diffDateModif)) {
+            $modifDate = false;
+            $messageTimeModif = "Never modified";
+        } else {
+            $modifDate = true;
+            $tableFormatDateModif = $this->diffDateFormat($card->getModifiedAt());
+            $diffDateModif = $tableFormatDateModif[0];
+            $messageTimeModif = $tableFormatDateModif[1];
+        }
+        if (isset($_POST["openViewModifTitle"])) {
+            $viewEditTitleCard = true;
+        }
+        try {
+            (new View("view_card"))->show(array("card" => $card, "fullName" => $fullName, "viewEditTitleCard" => $viewEditTitleCard,
+                "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
+                "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif));
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function affichage_info_card(){
+
+    }
+
+    public function edit_card(){
+        if (isset($_GET["param1"]) && $_GET["param1"] != 0 && isset($_GET["param2"]) && $_GET["param2"] != 0) {
+            $card = Card::select_card_by_id($_GET["param2"]);
+            $column = Column::select_column_by_id($_GET["param1"]);
+        }
+        $error = [];
+        $board = Board::select_board_by_id($column->board);
+        $fullName = User::select_user_by_id($card->getAuthor())->fullName;
+        $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
+        $diffDateModif = $card->getModifiedAt();
+        $diffDate = $tableFormatDateCreation[0];
+        $messageTime = $tableFormatDateCreation[1];
+        if (!isset($diffDateModif)) {
+            $modifDate = false;
+            $messageTimeModif = "Never modified";
+        } else {
+            $modifDate = true;
+            $tableFormatDateModif = $this->diffDateFormat($card->getModifiedAt());
+            $diffDateModif = $tableFormatDateModif[0];
+            $messageTimeModif = $tableFormatDateModif[1];
+        }
+        try {
+            (new View("edit_card"))->show(array("card" => $card, "fullName" => $fullName,
+                "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
+                "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "error" => $error));
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function modif_card(){
+        if(isset($_POST["boutonCancel"])){
+            $this->redirect("board", "view_card", $_GET["param1"], $_GET["param2"]);
+        } elseif(isset($_POST["boutonApply"])){
+            $card = Card::select_card_by_id($_GET["param2"]);
+            if(isset($_POST["titleCard"]) && $card->getTitle() != $_POST["titleCard"]){}
+                Card::valide_card($_GET["param1"], $_POST["titleCard"]);
+        }
     }
 
     //change le titre du board sur le quel on est
@@ -129,9 +214,9 @@ class ControllerBoard extends Controller
 
             if (count($error) == 0) {
                 $board->update_title_board($newTitle, $board->id, new DateTime("now"));
-                $this->redirect("board", "edit_board", $_GET["param1"]);
+                $this->redirect("board", "board", $_GET["param1"]);
             } else {
-                $this->edit_board($error);
+                $this->board($error);
             }
         }
     }
@@ -153,8 +238,9 @@ class ControllerBoard extends Controller
 
             if (count($error) == 0) {
                 $column->inset_column($board);
+                $this->redirect("board", "board", $_GET["param1"]);
             }
-            $this->edit_board($error);
+            $this->board($error);
         }
     }
 
@@ -170,9 +256,9 @@ class ControllerBoard extends Controller
         $error = Column::valide_column($board, $title);
         if(count($error) == 0){
             $column->update_title_column($column->id, $title, new DateTime("now"));
-            $this->redirect("board", "edit_board", $_GET["param1"]);
+            $this->redirect("board", "board", $_GET["param1"]);
         } else {
-            $this->edit_board($error);
+            $this->board($error);
         }
     }
 
@@ -181,7 +267,7 @@ class ControllerBoard extends Controller
     private function move_column($columnRigth = "", $columnLeft = "")
     {
         Column::move_column($columnRigth,$columnLeft);
-        $this->redirect("board", "edit_board", $_GET["param1"]);
+        $this->redirect("board", "board", $_GET["param1"]);
 
     }
 
@@ -215,18 +301,11 @@ class ControllerBoard extends Controller
         $title = $_POST["titleCard"];
         $error = Card::valide_card($idColumn, $title);
         if (count($error) == 0) {
-            $card = new Card(null, $title, null, $positionCard, null, null, $user->id, $idColumn);
+            $card = new Card(null, $title, '', $positionCard, null, null, $user->id, $idColumn);
             $card->insert_card();
-            $this->redirect("board", "edit_board", $_GET["param1"]);
+            $this->redirect("board", "board", $_GET["param1"]);
         }
-        $this->edit_board($error);
-    }
-
-    public function view_card(){
-        if (isset($_GET["param1"]) && $_GET["param1"] != 0) {
-            $card = Card::select_card_by_id($_GET["param1"]);
-        }
-
+        $this->board($error);
     }
 
     public function delete_board()

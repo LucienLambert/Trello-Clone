@@ -17,7 +17,7 @@
 </form>
 <!-- formulaire pour afficher l'option modifier le titre du board -->
 <?php if (!$viewEditTitleBoard) : ?>
-    <form class="FormColumn" action="board/edit_board/<?php echo $board->id ?>" method="post">
+    <form class="FormColumn" action="board/board/<?php echo $board->id ?>" method="post">
         <input type="submit" name="openViewModifTitle" value="modify Board">
     </form>
 <?php else: ?>
@@ -30,7 +30,7 @@
 <p>
     <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by " . $fullName . "." ?>
     <?php if (!$modifDate) {
-        echo "Modified " . $messageTimeModif;
+        echo $messageTimeModif;
     } else {
         echo "Modified " . $diffDateModif . " " . $messageTimeModif . " ago";
     } ?>
@@ -78,8 +78,8 @@
         </thead>
         <?php foreach ($tableCardColumn[$column->position] as $card) { ?>
             <tbody>
-                <!-- formulaire pour ouvire une carte-->
-                <form action="board/view_card/<?php echo $card->getColumn()?>" method="post">
+                <!-- formulaire pour ouvrir une carte-->
+                <form action="board/view_card/<?php echo $column->id?>/<?php echo $card->getId()?>" method="post">
                     <tr>
                         <td><input type="submit" name="openCard" value="<?php echo $card->getTitle() ?>"></td>
                     </tr>
@@ -94,7 +94,6 @@
                     <input type="submit" name="boutonAddCard" value="Add">
                 </td>
             </form>
-
         </tr>
         </tfoot>
     </table>
@@ -102,7 +101,7 @@
 <!--formulaire qui s'occupe d'ajouter une colonne au baurd-->
 <form class="FormColumn" action="board/add_column/<?php echo $board->id ?>" method="post">
     <td>
-        <input type="text" name="titleCard" size="15" placeholder="Add a column">
+        <input type="text" name="title" size="15" placeholder="Add a column">
         <input type="submit" name="boutonAddColumn" value="Add">
     </td>
 </form>

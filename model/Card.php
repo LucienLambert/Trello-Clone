@@ -73,12 +73,24 @@ class Card extends Model
         }
         return $tableCards;
     }
-    /*
-     * Title doit avoir au minimum une longueur de 3 caractères. Le nom d'une carte doit être unique au sein d'un même tableau.
-     *
-     */
-    public static function valide_card(){
 
+    public static function valide_card($idColumn, $title){
+        $error = [];
+        if (!isset($title) || strlen($title) <= 0 || !is_string($title)) {
+            $error [] = "you must enter a title.";
+        } elseif (strlen($title) < 3) {
+            $error [] = "Your title's card must contain 3 characters minimum.";
+        }
+        $tableCardColumn = self::select_all_card_by_id_column_ASC($idColumn);
+        if(count($tableCardColumn) == 0){
+            return $error;
+        }
+        foreach ($tableCardColumn as $column) {
+            if (strtolower($column->title) == strtolower($title)) {
+                $error [] = "this collumn contain already a card with that title.";
+            }
+        }
+        return $error;
     }
 }
 ?>

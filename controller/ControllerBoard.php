@@ -162,18 +162,13 @@ class ControllerBoard extends Controller
             $column = Column::select_column_by_id($_GET["param2"]);
             $board = Board::select_board_by_id($_GET["param1"]);
         }
-
-        if(isset($_POST["modifTitle"])){
-            if(isset($_POST["newTitleColumn"])){
-                $title = $_POST["newTitleColumn"];
-                $error = Column::valide_column($board, $title);
-                if(count($error) == 0){
-                    $column->update_title_column($column->id, $title, new DateTime("now"));
-                    $this->redirect("board", "edit_board", $_GET["param1"]);
-                } else {
-                    $this->edit_board($error);
-                }
-            }
+        $title = $_POST["newTitleColumn"];
+        $error = Column::valide_column($board, $title);
+        if(count($error) == 0){
+            $column->update_title_column($column->id, $title, new DateTime("now"));
+            $this->redirect("board", "edit_board", $_GET["param1"]);
+        } else {
+            $this->edit_board($error);
         }
     }
 
@@ -208,6 +203,18 @@ class ControllerBoard extends Controller
     }
 
     public function add_card(){
+        $user = $this->get_user_or_false();
+        $idColumn = $_GET["param1"];
+        //contient les cartes de la colunne
+        $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
+        $nbCarte = count($tableCard);
+        $title = $_POST["titleCard"];
+        $card = new Card(null, $title, null, $nbCarte, new DateTime("now"), null, $user->id, $idColumn);
+        $error = Card::valide_card($idColumn, $title);
+        if (count($error) == 0) {
+            $card->inset_card($idColumn, $title);
+        }
+        $this->edit_board($error);
     }
 
     public function delete_board()

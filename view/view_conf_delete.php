@@ -12,14 +12,14 @@
 <body>
         <div>
             <h1>Are you sure ?</h1>
-            <p>Do you really want to delete this <?php echo $object ?> ?</p>
+            <p>Do you really want to delete this <?php echo $objectNotif ?> ?</p>
             <p>This process cannot be undone.</p>
             <!-- formulaire pour cancel l'action (annuler la suppression) -->
             <form action="board/delete_card/" method="post">
                 <input type="submit" name="butonCancel" value="Cancel">
             </form>
             <!-- formulaire pour accepter l'action (supprime le board, card ou column)-->
-            <form action="board/delete_card/<?php echo $card->getId()?>" method="post">
+            <form action="board/delete_<?php echo $function?>/<?php echo $object->getId()?>" method="post">
                 <input type="submit" name="butonDelete" value="Delete">
             </form>
             <p><?php echo $resultat ?> </p>

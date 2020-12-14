@@ -49,8 +49,7 @@
                     <input type="text" name="newTitleColumn" size="15" placeholder="Enter a new Title">
                     <input type="submit" name="modifTitle" value="Apply">
                 </form>
-                <form action="board/delete_column/<?php echo $column->board ?>/<?php echo $column->id ?>"
-                      method="post">
+                <form action="board/delete_column/<?php echo $column->id ?>" method="post">
                     <input type="submit" name="butonDelColumn" value="Delete">
                 </form>
                 <?php if ($column->position == 0) { ?>

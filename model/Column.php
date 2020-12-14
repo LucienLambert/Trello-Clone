@@ -22,6 +22,37 @@ class Column extends Model
         $this->board = $board;
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function getModifiedAt()
+    {
+        return $this->modifiedAt;
+    }
+
+    public function getBoard()
+    {
+        return $this->board;
+    }
+
+
     //ajoute une colonne dans le board entré en paramètre
     public function inset_column($board)
     {
@@ -55,9 +86,14 @@ class Column extends Model
     }
 
     //supprime la colonne selectionnée (doit également supprimer les cartes contenues dans la colonne)
-    public function delete_column()
+    public static function delete_column($idColumn)
     {
-
+        if(isset($idColumn)){
+            Card::delete_all_card_by_Column($idColumn);
+            self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$idColumn));
+            return true;
+        }
+        return false;
     }
 
     //verifie si l'ajout de la colonne respect bien les conditions

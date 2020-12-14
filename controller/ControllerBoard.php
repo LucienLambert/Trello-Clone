@@ -320,15 +320,32 @@ class ControllerBoard extends Controller
 
     public function delete_column()
     {
-
+        $function = "column";
+        $objectNotif = "column (the cards will be deleted too)";
+        $resultat = "";
+        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
+            $object = Column::select_column_by_id($_GET["param1"]);
+        }
+        if (isset($_POST["butonCancel"])) {
+            $this->redirect("board", "index");
+        } elseif (isset($_POST["butonDelete"])) {
+            if (Column::delete_column($_GET["param1"])) {
+                $resultat = "successful deletion.";
+            } else {
+                $resultat = "the column hasn't been deleted.";
+            }
+        }
+        (new View("conf_delete"))->show(array("function"=>$function, "resultat" => $resultat,
+            "object" => $object, "objectNotif" => $objectNotif));
     }
 
     public function delete_card()
     {
-        $objetc = "card";
+        $function = "card";
+        $objectNotif = "card";
         $resultat = "";
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
-            $card = Card::select_card_by_id($_GET["param1"]);
+            $object = Card::select_card_by_id($_GET["param1"]);
         }
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
@@ -339,7 +356,7 @@ class ControllerBoard extends Controller
                 $resultat = "the card hasn't been deleted.";
             }
         }
-        (new View("conf_delete"))->show(array("resultat" => $resultat, "card" => $card, "object" => $objetc));
+        (new View("conf_delete"))->show(array("function"=>$function,"resultat" => $resultat, "object" => $object, "objectNotif" => $objectNotif));
     }
 
     private function diffDateFormat($date)

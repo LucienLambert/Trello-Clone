@@ -134,9 +134,9 @@ class Card extends Model
     public static function delete_all_card_by_Column($idColumn){
         if(isset($idColumn)){
             self::execute("DELETE FROM Card WHERE `column` = :column",array("column"=>$idColumn));
-        } else{
-            return false;
+            return true;
         }
+        return false;
     }
 }
 ?>

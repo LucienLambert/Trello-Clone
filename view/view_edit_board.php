@@ -12,7 +12,7 @@
 <body>
 <h1>Board "<?php echo $board->title ?>"</h1>
 <!-- formulaire pour supprimer le board -->
-<form class="FormColumn" action="board/delete_board" method="post">
+<form class="FormColumn" action="board/delete_board/<?php echo $board->getId()?>" method="post">
     <input type="submit" name="delBoard" value="Delete Board">
 </form>
 <!-- formulaire pour afficher l'option modifier le titre du board -->

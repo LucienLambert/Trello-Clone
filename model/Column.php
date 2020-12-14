@@ -86,14 +86,25 @@ class Column extends Model
     }
 
     //supprime la colonne selectionnée (doit également supprimer les cartes contenues dans la colonne)
-    public static function delete_column($idColumn)
+    public static function delete_column_by_id($idColumn)
     {
         if(isset($idColumn)){
-            Card::delete_all_card_by_Column($idColumn);
-            self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$idColumn));
-            return true;
+            if(Card::delete_all_card_by_Column($idColumn)){
+                self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$idColumn));
+                return true;
+            }
         }
         return false;
+    }
+
+    public static function delete_all_column_by_id_board($idBoard){
+        $column = Column::select_all_column_by_id_board_ASC($idBoard);
+        foreach ($column as $c){
+            Card::delete_all_card_by_Column($c->getId());
+            var_dump($c);
+        }
+        self::execute("DELETE FROM `Column` WHERE board= :board", array("board"=>$idBoard));
+        return true;
     }
 
     //verifie si l'ajout de la colonne respect bien les conditions

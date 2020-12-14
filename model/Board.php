@@ -20,6 +20,32 @@ class Board extends Model
         $this->modifiedAt = $modifiedAt;
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function getModifiedAt()
+    {
+        return $this->modifiedAt;
+    }
+
+
     //ajoute un board dans la DB
     public function insert_board($user)
     {
@@ -113,5 +139,16 @@ class Board extends Model
         self::execute("UPDATE Board SET title = :title, modifiedAt = :modifiedAt WHERE id = :id",
             array("title" => $title, "id" => $id, "modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
         return true;
+    }
+
+    public static function delete_board_by_id($idBoard){
+        if(isset($idBoard)){
+            if(Column::delete_all_column_by_id_board($idBoard)){
+                var_dump("OK ligne 147 board!");
+                self::execute("DELETE FROM Board WHERE id= :id",array("id"=>$idBoard));
+                return true;
+            }
+        }
+        return false;
     }
 }

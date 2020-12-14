@@ -315,7 +315,24 @@ class ControllerBoard extends Controller
 
     public function delete_board()
     {
-
+        $function = "board";
+        $objectNotif = "board (the columns and cards will be deleted too)";
+        $resultat = "";
+        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
+            $object = Board::select_board_by_id($_GET["param1"]);
+        }
+        var_dump($object);
+        if (isset($_POST["butonCancel"])) {
+            $this->redirect("board", "index");
+        } elseif (isset($_POST["butonDelete"])) {
+            if (Board::delete_board_by_id($_GET["param1"])) {
+                $resultat = "successful deletion.";
+            } else {
+                $resultat = "the board hasn't been deleted.";
+            }
+        }
+        (new View("conf_delete"))->show(array("function"=>$function, "resultat" => $resultat,
+            "object" => $object, "objectNotif" => $objectNotif));
     }
 
     public function delete_column()
@@ -329,7 +346,7 @@ class ControllerBoard extends Controller
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
         } elseif (isset($_POST["butonDelete"])) {
-            if (Column::delete_column($_GET["param1"])) {
+            if (Column::delete_column_by_id($_GET["param1"])) {
                 $resultat = "successful deletion.";
             } else {
                 $resultat = "the column hasn't been deleted.";

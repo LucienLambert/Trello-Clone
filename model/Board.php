@@ -39,6 +39,8 @@ class Board extends Model
         if (!isset($title) || strlen($title) <= 0 || !is_string($title)) {
             $error [] = "You must enter a title for you board";
             //parcoure la table
+        } elseif(strlen($title) < 3){
+            $error [] = "Your title must contain 3 characters minimum.";
         }
         foreach ($tableBoard as $board) {
             //controler si une table ne porte pas déjà un titre identique (convertie les String en minuscule).

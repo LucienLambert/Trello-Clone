@@ -32,10 +32,10 @@ class ControllerBoard extends Controller
         //table vide pour contenir le nombre de colonne de chaque table
         $tableNbColumn = [];
         $tableNbColumnOther = [];
-        foreach($tableBoard as $board){
+        foreach ($tableBoard as $board) {
             $tableNbColumn [] = count(Column::select_all_column_by_id_board($board));
         }
-        foreach($tableOthersBoards as $board){
+        foreach ($tableOthersBoards as $board) {
             $tableNbColumnOther [] = count(Column::select_all_column_by_id_board($board));
         }
         try {
@@ -94,9 +94,9 @@ class ControllerBoard extends Controller
         $diffDate = $tableFormatDateCreation[0];
         $messageTime = $tableFormatDateCreation[1];
         //table à deux dimenssion [la colonnes][les cartes de la colonnes]
-        $tableColumn = Column::select_all_column_by_id_board_ASC($board);
+        $tableColumn = Column::select_all_column_by_id_board_ASC($board->id);
         $tableCardColumn = [];
-        foreach ($tableColumn as $column){
+        foreach ($tableColumn as $column) {
             $tableCardColumn [$column->position] = Card::select_all_card_by_id_column_ASC($column->id);
         }
         if (!isset($board->modifiedAt)) {
@@ -122,7 +122,9 @@ class ControllerBoard extends Controller
         }
     }
 
-    public function view_card(){
+    public function view_card()
+    {
+        var_dump("testttttt");
         if (isset($_GET["param1"]) && $_GET["param1"] != 0 && isset($_GET["param2"]) && $_GET["param2"] != 0) {
             $card = Card::select_card_by_id($_GET["param2"]);
             $column = Column::select_column_by_id($_GET["param1"]);
@@ -130,6 +132,7 @@ class ControllerBoard extends Controller
         $board = Board::select_board_by_id($column->board);
         $fullName = User::select_user_by_id($card->getAuthor())->fullName;
         $viewEditTitleCard = false;
+        //TODO: CODE DUPLIQUE, DOIT ETRE MODIFIE! 134 -> 146
         $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
         $diffDateModif = $card->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
@@ -155,11 +158,8 @@ class ControllerBoard extends Controller
         }
     }
 
-    public function affichage_info_card(){
-
-    }
-
-    public function edit_card(){
+    public function edit_card()
+    {
         if (isset($_GET["param1"]) && $_GET["param1"] != 0 && isset($_GET["param2"]) && $_GET["param2"] != 0) {
             $card = Card::select_card_by_id($_GET["param2"]);
             $column = Column::select_column_by_id($_GET["param1"]);
@@ -167,6 +167,7 @@ class ControllerBoard extends Controller
         $error = [];
         $board = Board::select_board_by_id($column->board);
         $fullName = User::select_user_by_id($card->getAuthor())->fullName;
+        //TODO: CODE DUPLIQUE, DOIT ETRE MODIFIE! 171- 184
         $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
         $diffDateModif = $card->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
@@ -189,13 +190,15 @@ class ControllerBoard extends Controller
         }
     }
 
-    public function modif_card(){
-        if(isset($_POST["boutonCancel"])){
+    public function modif_card()
+    {
+        if (isset($_POST["boutonCancel"])) {
             $this->redirect("board", "view_card", $_GET["param1"], $_GET["param2"]);
-        } elseif(isset($_POST["boutonApply"])){
+        } elseif (isset($_POST["boutonApply"])) {
             $card = Card::select_card_by_id($_GET["param2"]);
-            if(isset($_POST["titleCard"]) && $card->getTitle() != $_POST["titleCard"]){}
-                Card::valide_card($_GET["param1"], $_POST["titleCard"]);
+            if (isset($_POST["titleCard"]) && $card->getTitle() != $_POST["titleCard"]) {
+            }
+            Card::valide_card($_GET["param1"], $_POST["titleCard"]);
         }
     }
 
@@ -248,13 +251,13 @@ class ControllerBoard extends Controller
     public function edit_Title_column()
     {
         $error = [];
-        if(isset($_GET["param2"]) && $_GET["param2"] != 0 && isset($_GET["param1"]) && $_GET["param1"] != ""){
+        if (isset($_GET["param2"]) && $_GET["param2"] != 0 && isset($_GET["param1"]) && $_GET["param1"] != "") {
             $column = Column::select_column_by_id($_GET["param2"]);
             $board = Board::select_board_by_id($_GET["param1"]);
         }
         $title = $_POST["newTitleColumn"];
         $error = Column::valide_column($board, $title);
-        if(count($error) == 0){
+        if (count($error) == 0) {
             $column->update_title_column($column->id, $title, new DateTime("now"));
             $this->redirect("board", "board", $_GET["param1"]);
         } else {
@@ -266,7 +269,7 @@ class ControllerBoard extends Controller
     //switch les deux colonnes passé en paramètre.
     private function move_column($columnRigth = "", $columnLeft = "")
     {
-        Column::move_column($columnRigth,$columnLeft);
+        Column::move_column($columnRigth, $columnLeft);
         $this->redirect("board", "board", $_GET["param1"]);
 
     }
@@ -277,7 +280,7 @@ class ControllerBoard extends Controller
         //recup l'objet sur lequel on est
         $column = Column::select_column_by_id($_GET["param2"]);
         //recup la colonne de gauche.
-        $columnToLeft = $column->select_column_by_board_and_position($column->board, $column->position+1);
+        $columnToLeft = $column->select_column_by_board_and_position($column->board, $column->position + 1);
         //appel la function move_column
         $this->move_column($column, $columnToLeft);
     }
@@ -287,19 +290,21 @@ class ControllerBoard extends Controller
         //recup l'objet sur lequel on est
         $column = Column::select_column_by_id($_GET["param2"]);
         //recup la colonne de droite
-        $columnToRight = $column->select_column_by_board_and_position($column->board, $column->position-1);
+        $columnToRight = $column->select_column_by_board_and_position($column->board, $column->position - 1);
         //appel la function move_column
         $this->move_column($columnToRight, $column);
     }
 
-    public function add_card(){
+    public function add_card()
+    {
         $user = $this->get_user_or_false();
-        $idColumn = $_GET["param2"];
+        $column = Column::select_column_by_id($_GET["param2"]);
+        $idColumn = $column->id;
         //contient les cartes de la colunne
         $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
         $positionCard = count($tableCard);
         $title = $_POST["titleCard"];
-        $error = Card::valide_card($idColumn, $title);
+        $error = Card::valide_card($column, $title);
         if (count($error) == 0) {
             $card = new Card(null, $title, '', $positionCard, null, null, $user->id, $idColumn);
             $card->insert_card();
@@ -318,10 +323,25 @@ class ControllerBoard extends Controller
 
     }
 
-    //calcule la différence de temps entre l'ajout et maintenant
-    //return un tableau avec 2 valeurs.
-    //[0] = diffTime = la différence de temps.
-    //[1] = format sur lequel elle doit s'afficher.
+    public function delete_card()
+    {
+        $objetc = "card";
+        $resultat = "";
+        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
+            $card = Card::select_card_by_id($_GET["param1"]);
+        }
+        if (isset($_POST["butonCancel"])) {
+            $this->redirect("board", "index");
+        } elseif (isset($_POST["butonDelete"])) {
+            if (Card::delete_card_by_id($_GET["param1"])) {
+                $resultat = "successful deletion.";
+            } else {
+                $resultat = "the card hasn't been deleted.";
+            }
+        }
+        (new View("conf_delete"))->show(array("resultat" => $resultat, "card" => $card, "object" => $objetc));
+    }
+
     private function diffDateFormat($date)
     {
         $tableFormatDate = [];
@@ -331,7 +351,7 @@ class ControllerBoard extends Controller
             if ($diffDate->d == 0) {
                 if ($diffDate->h == 0) {
                     if ($diffDate->i == 0) {
-                        if($diffDate->s < 0){
+                        if ($diffDate->s < 0) {
                             $tableFormatDate[0] = $diffDate->s;
                             $tableFormatDate[1] = "Second";
                         }

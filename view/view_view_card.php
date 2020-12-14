@@ -13,9 +13,9 @@
         <p><a href="board/index">Home</a> <a href="board/board/<?php echo $column->board?>">Board</a></p>
     </div>
     <h1>Card "<?php echo $card->getTitle() ?>"</h1>
-    <!-- formulaire pour supprimer le board -->
-    <form class="FormColumn" action="board/delete_card" method="post">
-        <input type="submit" name="delBoard" value="Delete Board">
+    <!-- formulaire pour supprimer la carte -->
+    <form class="FormColumn" action="board/delete_card/<?php echo $card->getId()?>" method="post">
+        <input type="submit" name="delCard" value="Delete Card">
     </form>
     <!-- formulaire pour afficher l'option modifier la carte -->
     <?php if (!$viewEditTitleCard) : ?>

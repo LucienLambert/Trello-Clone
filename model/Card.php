@@ -138,5 +138,12 @@ class Card extends Model
         }
         return false;
     }
+
+    public static function move_card_and_add_last_position($card , $newColumn){
+        $lastPositionCardColumn = count(Card::select_all_card_by_id_column_ASC($newColumn->getId()));
+        self::execute("UPDATE Card SET `column` = :column, position = :position WHERE id = :id",
+            array("column"=>$newColumn->getId(), "id"=>$card->getId(), "position"=>$lastPositionCardColumn));
+        return true;
+    }
 }
 ?>

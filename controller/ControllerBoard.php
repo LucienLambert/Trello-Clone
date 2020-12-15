@@ -47,29 +47,6 @@ class ControllerBoard extends Controller
         }
     }
 
-    //ajoute un board à la liste.
-    public function add_board()
-    {
-        $user = $this->get_user_or_redirect();
-        $error = [];
-        //check le boutonAdd pour voir si on a cliqué dessus
-        if (isset($_POST["boutonAdd"])) {
-            $title = $_POST["title"];
-            //check si le fomulaire répond aux conditions d'ajout
-            $error = Board::valide_board($title, $user);
-            //check si pas error
-            if (count($error) == 0) {
-                $board = new Board(null, $title, $user, null, null);
-                $board->insert_board($user);
-                //return sur list_board pour réafficher la liste des boards rafraîchir.
-                $this->redirect("board", "list_board");
-            } else {
-                //rappel la function list_board pour affichier les erreur si besoin.
-                $this->list_board($error);
-            }
-        }
-    }
-
     //ouvre le board selectionné
     public function open_board()
     {
@@ -122,9 +99,72 @@ class ControllerBoard extends Controller
         }
     }
 
+    //ajoute un board à la liste.
+    public function add_board()
+    {
+        $user = $this->get_user_or_redirect();
+        $error = [];
+        //check le boutonAdd pour voir si on a cliqué dessus
+        if (isset($_POST["boutonAdd"])) {
+            $title = $_POST["title"];
+            //check si le fomulaire répond aux conditions d'ajout
+            $error = Board::valide_board($title, $user);
+            //check si pas error
+            if (count($error) == 0) {
+                $board = new Board(null, $title, $user, null, null);
+                $board->insert_board($user);
+                //return sur list_board pour réafficher la liste des boards rafraîchir.
+                $this->redirect("board", "list_board");
+            } else {
+                //rappel la function list_board pour affichier les erreur si besoin.
+                $this->list_board($error);
+            }
+        }
+    }
+
+    //ajout d'une nouveau colonne au board sur lequel on est.
+    public function add_column()
+    {
+        //check si le param1 n'est pas null ou vide (param1 = 1er paramètre dans l'url)
+        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
+            //recup le board depuis si titre
+            $board = Board::select_board_by_id($_GET["param1"]);
+        }
+        $tableColumn = Column::select_all_column_by_id_board($board);
+        if (isset($_POST["boutonAddColumn"])) {
+            $positionColumn = count($tableColumn);
+            $title = $_POST["title"];
+            $column = new Column(null, $title, $positionColumn, null, null, $board->id);
+            $error = Column::valide_column($board, $column->title);
+
+            if (count($error) == 0) {
+                $column->inset_column($board);
+                $this->redirect("board", "board", $_GET["param1"]);
+            }
+            $this->board($error);
+        }
+    }
+
+    public function add_card()
+    {
+        $user = $this->get_user_or_false();
+        $column = Column::select_column_by_id($_GET["param2"]);
+        $idColumn = $column->id;
+        //contient les cartes de la colunne
+        $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
+        $positionCard = count($tableCard);
+        $title = $_POST["titleCard"];
+        $error = Card::valide_card($column, $title);
+        if (count($error) == 0) {
+            $card = new Card(null, $title, '', $positionCard, null, null, $user->id, $idColumn);
+            $card->insert_card();
+            $this->redirect("board", "board", $_GET["param1"]);
+        }
+        $this->board($error);
+    }
+
     public function view_card()
     {
-        var_dump("testttttt");
         if (isset($_GET["param1"]) && $_GET["param1"] != 0 && isset($_GET["param2"]) && $_GET["param2"] != 0) {
             $card = Card::select_card_by_id($_GET["param2"]);
             $column = Column::select_column_by_id($_GET["param1"]);
@@ -190,18 +230,6 @@ class ControllerBoard extends Controller
         }
     }
 
-    public function modif_card()
-    {
-        if (isset($_POST["boutonCancel"])) {
-            $this->redirect("board", "view_card", $_GET["param1"], $_GET["param2"]);
-        } elseif (isset($_POST["boutonApply"])) {
-            $card = Card::select_card_by_id($_GET["param2"]);
-            if (isset($_POST["titleCard"]) && $card->getTitle() != $_POST["titleCard"]) {
-            }
-            Card::valide_card($_GET["param1"], $_POST["titleCard"]);
-        }
-    }
-
     //change le titre du board sur le quel on est
     public function edit_title_board()
     {
@@ -224,29 +252,6 @@ class ControllerBoard extends Controller
         }
     }
 
-    //ajout d'une nouveau colonne au board sur lequel on est.
-    public function add_column()
-    {
-        //check si le param1 n'est pas null ou vide (param1 = 1er paramètre dans l'url)
-        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
-            //recup le board depuis si titre
-            $board = Board::select_board_by_id($_GET["param1"]);
-        }
-        $tableColumn = Column::select_all_column_by_id_board($board);
-        if (isset($_POST["boutonAddColumn"])) {
-            $positionColumn = count($tableColumn);
-            $title = $_POST["title"];
-            $column = new Column(null, $title, $positionColumn, null, null, $board->id);
-            $error = Column::valide_column($board, $column->title);
-
-            if (count($error) == 0) {
-                $column->inset_column($board);
-                $this->redirect("board", "board", $_GET["param1"]);
-            }
-            $this->board($error);
-        }
-    }
-
     //change le titre de la colonne sur laquelle on à cliqué.
     public function edit_Title_column()
     {
@@ -265,52 +270,16 @@ class ControllerBoard extends Controller
         }
     }
 
-
-    //switch les deux colonnes passé en paramètre.
-    private function move_column($columnRigth = "", $columnLeft = "")
+    public function modif_card()
     {
-        Column::move_column($columnRigth, $columnLeft);
-        $this->redirect("board", "board", $_GET["param1"]);
-
-    }
-
-    //déplace la colonne sur laquelle on est vers la droite.
-    public function move_right_column()
-    {
-        //recup l'objet sur lequel on est
-        $column = Column::select_column_by_id($_GET["param2"]);
-        //recup la colonne de gauche.
-        $columnToLeft = $column->select_column_by_board_and_position($column->board, $column->position + 1);
-        //appel la function move_column
-        $this->move_column($column, $columnToLeft);
-    }
-
-    public function move_left_column()
-    {
-        //recup l'objet sur lequel on est
-        $column = Column::select_column_by_id($_GET["param2"]);
-        //recup la colonne de droite
-        $columnToRight = $column->select_column_by_board_and_position($column->board, $column->position - 1);
-        //appel la function move_column
-        $this->move_column($columnToRight, $column);
-    }
-
-    public function add_card()
-    {
-        $user = $this->get_user_or_false();
-        $column = Column::select_column_by_id($_GET["param2"]);
-        $idColumn = $column->id;
-        //contient les cartes de la colunne
-        $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
-        $positionCard = count($tableCard);
-        $title = $_POST["titleCard"];
-        $error = Card::valide_card($column, $title);
-        if (count($error) == 0) {
-            $card = new Card(null, $title, '', $positionCard, null, null, $user->id, $idColumn);
-            $card->insert_card();
-            $this->redirect("board", "board", $_GET["param1"]);
+        if (isset($_POST["boutonCancel"])) {
+            $this->redirect("board", "view_card", $_GET["param1"], $_GET["param2"]);
+        } elseif (isset($_POST["boutonApply"])) {
+            $card = Card::select_card_by_id($_GET["param2"]);
+            if (isset($_POST["titleCard"]) && $card->getTitle() != $_POST["titleCard"]) {
+            }
+            Card::valide_card($_GET["param1"], $_POST["titleCard"]);
         }
-        $this->board($error);
     }
 
     public function delete_board()
@@ -374,6 +343,68 @@ class ControllerBoard extends Controller
             }
         }
         (new View("conf_delete"))->show(array("function"=>$function,"resultat" => $resultat, "object" => $object, "objectNotif" => $objectNotif));
+    }
+
+    //switch les deux colonnes passé en paramètre.
+    private function move_column($columnRigth = "", $columnLeft = "")
+    {
+        Column::move_column($columnRigth, $columnLeft);
+        $this->redirect("board", "board", $_GET["param1"]);
+
+    }
+
+    //déplace la colonne sur laquelle on est vers la droite.
+    public function move_right_column()
+    {
+        //recup l'objet sur lequel on est
+        $column = Column::select_column_by_id($_GET["param2"]);
+        //recup la colonne de gauche.
+        $columnToLeft = $column->select_column_by_board_and_position($column->board, $column->position + 1);
+        //appel la function move_column
+        $this->move_column($column, $columnToLeft);
+    }
+
+    public function move_left_column()
+    {
+        //recup l'objet sur lequel on est
+        $column = Column::select_column_by_id($_GET["param2"]);
+        //recup la colonne de droite
+        $columnToRight = $column->select_column_by_board_and_position($column->board, $column->position - 1);
+        //appel la private function move_column
+        $this->move_column($columnToRight, $column);
+    }
+
+    public function move_card($card = "", $newColonne = ""){
+        Card::move_card_and_add_last_position($card, $newColonne);
+        $this->redirect("board","board", $_GET["param1"]);
+    }
+
+    public function move_right_card(){
+        //recup la colonne de la carte
+        $column = Column::select_column_by_id($_GET["param2"]);
+        //recup la carte de la colonne
+        $card = Card::select_card_by_id($_GET["param3"]);
+        //recup la colonne suivante (position + 1)
+        $columnToRight = $column->select_column_by_board_and_position($column->getBoard(), $column->getPosition() + 1);
+        $this->move_card($card, $columnToRight);
+    }
+
+    public function move_left_card(){
+        //recup la colonne de la carte
+        $column = Column::select_column_by_id($_GET["param2"]);
+        //recup la carte de la colonne
+        $card = Card::select_card_by_id($_GET["param3"]);
+        //recup la colonne suivante (position + 1)
+        $columnToLeft = $column->select_column_by_board_and_position($column->getBoard(), $column->getPosition() - 1);
+        $this->move_card($card, $columnToLeft);
+    }
+
+    public function move_up_card(){
+
+    }
+
+    public function move_down_card(){
+
     }
 
     private function diffDateFormat($date)

@@ -374,37 +374,57 @@ class ControllerBoard extends Controller
         $this->move_column($columnToRight, $column);
     }
 
-    public function move_card($card = "", $newColonne = ""){
-        Card::move_card_and_add_last_position($card, $newColonne);
+    private function move_card_right_or_left($card = "", $newColonne = ""){
+        var_dump("move_card");
+        Card::move_card_and_add_last_position_right_or_left($card, $newColonne);
         $this->redirect("board","board", $_GET["param1"]);
     }
 
     public function move_right_card(){
+        var_dump("move_right_card");
         //recup la colonne de la carte
         $column = Column::select_column_by_id($_GET["param2"]);
         //recup la carte de la colonne
         $card = Card::select_card_by_id($_GET["param3"]);
         //recup la colonne suivante (position + 1)
         $columnToRight = $column->select_column_by_board_and_position($column->getBoard(), $column->getPosition() + 1);
-        $this->move_card($card, $columnToRight);
+        $this->move_card_right_or_left($card, $columnToRight);
     }
 
     public function move_left_card(){
+        var_dump("move_left_card");
         //recup la colonne de la carte
         $column = Column::select_column_by_id($_GET["param2"]);
         //recup la carte de la colonne
         $card = Card::select_card_by_id($_GET["param3"]);
         //recup la colonne suivante (position + 1)
         $columnToLeft = $column->select_column_by_board_and_position($column->getBoard(), $column->getPosition() - 1);
-        $this->move_card($card, $columnToLeft);
+        $this->move_card_right_or_left($card, $columnToLeft);
+    }
+
+    private function move_card_up_or_down($oldPosition, $newPosition){
+        Card::move_card_up_or_down($oldPosition, $newPosition);
+        $this->redirect("board", "board", $_GET["param1"]);
     }
 
     public function move_up_card(){
-
+        //recup la colonne de la carte
+        $column = Column::select_column_by_id($_GET["param2"]);
+        //recup la carte sur laquel on est
+        $card = Card::select_card_by_id($_GET["param3"]);
+        //recup la carte juste en haut.
+        $cardAbove = $card->select_card_by_position_and_id_column($card->getPosition() - 1, $column);
+        $this->move_card_up_or_down($card, $cardAbove);
     }
 
     public function move_down_card(){
-
+//recup la colonne de la carte
+        $column = Column::select_column_by_id($_GET["param2"]);
+        //recup la carte sur laquel on est
+        $card = Card::select_card_by_id($_GET["param3"]);
+        //recup la carte juste en haut.
+        $cardUnder = $card->select_card_by_position_and_id_column($card->getPosition() + 1, $column);
+        $this->move_card_up_or_down($card, $cardUnder);
     }
 
     private function diffDateFormat($date)

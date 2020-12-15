@@ -89,21 +89,21 @@
                     </form>
                     <?php if ($column->position == 0) { ?>
                         <!-- formulaire déplacement à droite -->
-                        <form action="board/move_right_card/<?php echo $column->board ?>/<?php echo $column->id ?>/<?php $card->getId()?>" method="post">
+                        <form action="board/move_right_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>" method="post">
                             <input type="submit" name="move" value="->">
                         </form>
                     <?php } elseif ($column->position < count($tableColumn) - 1) { ?>
                         <!-- formulaire déplacement à gauche -->
-                        <form action="board/move_left_card/<?php echo $column->board ?>/<?php echo $column->id ?>/<?php $card->getId()?>" method="post">
+                        <form action="board/move_left_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>" method="post">
                             <input type="submit" name="move" value="<-">
                         </form>
                         <!-- formulaire déplacement à droite -->
-                        <form action="board/move_right_card/<?php echo $column->board ?>/<?php echo $column->id ?>/<?php $card->getId()?>" method="post">
+                        <form action="board/move_right_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>" method="post">
                             <input type="submit" name="move" value="->">
                         </form>
                     <?php } else { ?>
                         <!-- formulaire déplacement à gauche -->
-                        <form action="board/move_left_card/<?php echo $column->board ?>/<?php echo $column->id ?>/<?php $card->getId()?>" method="post">
+                        <form action="board/move_left_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>" method="post">
                             <input type="submit" name="move" value="<-">
                         </form>
                     <?php } ?>

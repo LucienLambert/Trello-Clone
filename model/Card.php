@@ -139,10 +139,27 @@ class Card extends Model
         return false;
     }
 
-    public static function move_card_and_add_last_position($card , $newColumn){
+    public static function move_card_and_add_last_position_right_or_left($card , $newColumn){
+        var_dump("query move_card_and_add_last_position");
         $lastPositionCardColumn = count(Card::select_all_card_by_id_column_ASC($newColumn->getId()));
         self::execute("UPDATE Card SET `column` = :column, position = :position WHERE id = :id",
             array("column"=>$newColumn->getId(), "id"=>$card->getId(), "position"=>$lastPositionCardColumn));
+        return true;
+    }
+
+    public function select_card_by_position_and_id_column($cardPosition, $column){
+        $card = self::execute("SELECT * FROM Card WHERE position = :position AND `column` = :column",
+            array("position"=>$cardPosition, "column"=>$column->getId()));
+        $data = $card->fetch();
+        return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"]);
+    }
+
+    public static function move_card_up_or_down($oldPositionCard, $newPositionCard){
+        self::execute("UPDATE Card SET position = :position WHERE id= :id",
+            array("id"=>$oldPositionCard->getId(), "position"=>$newPositionCard->getPosition()));
+
+        self::execute("UPDATE Card SET position = :position WHERE id= :id",
+            array("id"=>$newPositionCard->getId(), "position"=>$oldPositionCard->getPosition()));
         return true;
     }
 }

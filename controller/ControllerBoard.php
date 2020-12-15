@@ -102,6 +102,7 @@ class ControllerBoard extends Controller
     //ajoute un board à la liste.
     public function add_board()
     {
+        var_dump("test add board");
         $user = $this->get_user_or_redirect();
         $error = [];
         //check le boutonAdd pour voir si on a cliqué dessus
@@ -114,7 +115,7 @@ class ControllerBoard extends Controller
                 $board = new Board(null, $title, $user, null, null);
                 $board->insert_board($user);
                 //return sur list_board pour réafficher la liste des boards rafraîchir.
-                $this->redirect("board", "list_board");
+                $this->redirect("board", "index");
             } else {
                 //rappel la function list_board pour affichier les erreur si besoin.
                 $this->list_board($error);

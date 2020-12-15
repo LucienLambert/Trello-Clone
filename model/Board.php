@@ -50,7 +50,6 @@ class Board extends Model
     public function insert_board($user)
     {
         self::execute("INSERT INTO Board(title,owner) VALUES(:title,:owner)", array("title" => $this->title, "owner" => $user->id));
-
         return true;
     }
 

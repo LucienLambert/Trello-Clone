@@ -64,6 +64,10 @@ class Card extends Model
         return $this->column;
     }
 
+    public function setPosition($position){
+        $this->position = $position;
+    }
+
     public function insert_card(){
         self::execute("INSERT INTO Card(title,body,position,author,`column`) VALUES(:title,:body,:position,:author,:column)",
             array("title"=>$this->getTitle(), "body"=>$this->body,"position"=>$this->getPosition(),
@@ -101,6 +105,7 @@ class Card extends Model
         $data = $card->fetch();
         return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"]);
     }
+
     //param1 = objet Colonne
     //param2 = String title
     public static function valide_card($column, $title){
@@ -130,6 +135,7 @@ class Card extends Model
         }
         return false;
     }
+
     //supprime toutes les cartes d'une colonne par rapport à l'id de la colonne.
     public static function delete_all_card_by_Column($idColumn){
         if(isset($idColumn)){
@@ -139,12 +145,51 @@ class Card extends Model
         return false;
     }
 
-    public static function move_card_and_add_last_position_right_or_left($card , $newColumn){
-        var_dump("query move_card_and_add_last_position");
-        $lastPositionCardColumn = count(Card::select_all_card_by_id_column_ASC($newColumn->getId()));
-        self::execute("UPDATE Card SET `column` = :column, position = :position WHERE id = :id",
-            array("column"=>$newColumn->getId(), "id"=>$card->getId(), "position"=>$lastPositionCardColumn));
+    //update la carte current
+    private function update_card(){
+        self::execute("UPDATE Card SET title = :title, body = :body, position = :position, createdAt = :createdAt, modifiedAt = :createdAt, author = :author, `column` = :column WHERE id = :id",array(
+            "id"=>$this->getId(),
+            "title"=>$this->getTitle(),
+            "body"=>$this->getBody(),
+            "position"=>$this->getPosition(),
+            "createdAt"=>$this->getCreatedAt(),
+            "modifiedAt"=>$this->getModifiedAt(),
+            "author"=>$this->getAuthor(),
+            "column"=>$this->getColumn()
+        ));
         return true;
+    }
+
+    public static function move_card_and_add_last_position_right_or_left($card , $newColumn){
+        //recup le nombre de carte de la colonne
+        $nbCardColumn = count(Card::select_all_card_by_id_column_ASC($newColumn->getId()));
+        //recup toutes les cartes à partir de la position de la carte à déplacer
+        $table = Card::select_all_card_from_position_modif($card);
+
+        //déplace la carte vers l'autre colonne
+        self::execute("UPDATE Card SET `column` = :column, position = :position WHERE id = :id",
+            array("column"=>$newColumn->getId(), "id"=>$card->getId(), "position"=>$nbCardColumn));
+        //parcours le tableau avec les cartes à update.
+        for ($i = 0 ; $i < count($table); $i++){
+            $currentCard = $table[$i];
+            $currentCard->setPosition($currentCard->getPosition()-1);
+            $currentCard->update_card();
+        }
+        return true;
+    }
+
+    //return tableObject
+    public static function select_all_card_from_position_modif($card){
+        $query = self::execute("select * FROM Card WHERE position > :position AND `column` = :column", array(
+            "position"=>$card->getPosition(),
+            "column"=>$card->getColumn()
+        ));
+        $data = $query->fetchAll();
+        $tableCard = [];
+        foreach ($data as $d){
+            $tableCard [] = new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"]);
+        }
+        return $tableCard;
     }
 
     public function select_card_by_position_and_id_column($cardPosition, $column){

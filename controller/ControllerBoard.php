@@ -102,8 +102,8 @@ class ControllerBoard extends Controller
     //ajoute un board à la liste.
     public function add_board()
     {
-        var_dump("test add board");
         $user = $this->get_user_or_redirect();
+        $user = User::select_member_by_mail($user->mail);
         $error = [];
         //check le boutonAdd pour voir si on a cliqué dessus
         if (isset($_POST["boutonAdd"])) {
@@ -149,6 +149,7 @@ class ControllerBoard extends Controller
     public function add_card()
     {
         $user = $this->get_user_or_false();
+        $user = User::select_member_by_mail($user->mail);
         $column = Column::select_column_by_id($_GET["param2"]);
         $idColumn = $column->id;
         //contient les cartes de la colunne
@@ -291,7 +292,6 @@ class ControllerBoard extends Controller
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Board::select_board_by_id($_GET["param1"]);
         }
-        var_dump($object);
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
         } elseif (isset($_POST["butonDelete"])) {
@@ -376,13 +376,15 @@ class ControllerBoard extends Controller
     }
 
     private function move_card_right_or_left($card = "", $newColonne = ""){
-        var_dump("move_card");
         Card::move_card_and_add_last_position_right_or_left($card, $newColonne);
-        $this->redirect("board","board", $_GET["param1"]);
+        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
+            $this->redirect("board","board", $_GET["param1"]);
+        } else {
+            $this->index();
+        }
     }
 
     public function move_right_card(){
-        var_dump("move_right_card");
         //recup la colonne de la carte
         $column = Column::select_column_by_id($_GET["param2"]);
         //recup la carte de la colonne
@@ -393,7 +395,6 @@ class ControllerBoard extends Controller
     }
 
     public function move_left_card(){
-        var_dump("move_left_card");
         //recup la colonne de la carte
         $column = Column::select_column_by_id($_GET["param2"]);
         //recup la carte de la colonne

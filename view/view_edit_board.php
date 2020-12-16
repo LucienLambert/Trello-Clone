@@ -52,7 +52,8 @@
                 <form action="board/delete_column/<?php echo $column->id ?>" method="post">
                     <input type="submit" name="butonDelColumn" value="Delete">
                 </form>
-                <?php if ($column->position == 0) { ?>
+                <?php if(count($tableColumn) > 1){?>
+                <?php if ($column->position == 0 && count($tableColumn)) { ?>
                     <!-- formulaire déplacement à droite -->
                     <form action="board/move_right_column/<?php echo $column->board ?>/<?php echo $column->id ?>"
                           method="post">
@@ -77,6 +78,7 @@
                     </form>
                 <?php } ?>
             </th>
+                <?php }?>
         </tr>
         </thead>
         <?php foreach ($tableCardColumn[$column->position] as $card) { ?>
@@ -87,26 +89,36 @@
                     <form action="board/view_card/<?php echo $column->id?>/<?php echo $card->getId()?>" method="post">
                         <input type="submit" name="openCard" value="<?php echo $card->getTitle() ?>">
                     </form>
-                    <?php if ($column->position == 0) { ?>
-                        <!-- formulaire déplacement à droite -->
-                        <form action="board/move_right_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>" method="post">
-                            <input type="submit" name="move" value="->">
-                        </form>
-                    <?php } elseif ($column->position < count($tableColumn) - 1) { ?>
-                        <!-- formulaire déplacement à gauche -->
-                        <form action="board/move_left_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>" method="post">
-                            <input type="submit" name="move" value="<-">
-                        </form>
-                        <!-- formulaire déplacement à droite -->
-                        <form action="board/move_right_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>" method="post">
-                            <input type="submit" name="move" value="->">
-                        </form>
-                    <?php } else { ?>
-                        <!-- formulaire déplacement à gauche -->
-                        <form action="board/move_left_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>" method="post">
-                            <input type="submit" name="move" value="<-">
-                        </form>
-                    <?php } ?>
+                        <?php if ($column->position == 0) { ?>
+                            <!-- formulaire déplacement à droite -->
+                            <form action="board/move_right_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                  method="post">
+                                <input type="submit" name="move" value="->">
+                                <?php echo $card->getPosition()?>
+                            </form>
+                            <!-- formulaire déplacement en bas -->
+                        <?php } elseif ($column->position < count($tableColumn) - 1) { ?>
+                            <!-- formulaire déplacement à gauche -->
+                            <form action="board/move_left_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                  method="post">
+                                <input type="submit" name="move" value="<-">
+                            </form>
+                            <!-- formulaire déplacement à droite -->
+                            <form action="board/move_right_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                  method="post">
+                                <input type="submit" name="move" value="->">
+                                <?php echo $card->getPosition()?>
+                            </form>
+                            <!-- formulaire déplacement en bas -->
+                        <?php } else { ?>
+                            <!-- formulaire déplacement à gauche -->
+                            <form action="board/move_left_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                  method="post">
+                                <input type="submit" name="move" value="<-">
+                                <?php echo $card->getPosition()?>
+                            </form>
+                            <!-- formulaire déplacement en bas -->
+                        <?php } ?>
                 </td>
             </tr>
             </tbody>

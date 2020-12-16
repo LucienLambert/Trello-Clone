@@ -143,7 +143,6 @@ class Board extends Model
     public static function delete_board_by_id($idBoard){
         if(isset($idBoard)){
             if(Column::delete_all_column_by_id_board($idBoard)){
-                var_dump("OK ligne 147 board!");
                 self::execute("DELETE FROM Board WHERE id= :id",array("id"=>$idBoard));
                 return true;
             }

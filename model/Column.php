@@ -101,7 +101,6 @@ class Column extends Model
         $column = Column::select_all_column_by_id_board_ASC($idBoard);
         foreach ($column as $c){
             Card::delete_all_card_by_Column($c->getId());
-            var_dump($c);
         }
         self::execute("DELETE FROM `Column` WHERE board= :board", array("board"=>$idBoard));
         return true;

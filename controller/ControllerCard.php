@@ -163,7 +163,8 @@ class ControllerCard extends Controller {
                 $resultat = "the card hasn't been deleted.";
             }
         }
-        (new View("conf_delete"))->show(array("function"=>$function,"resultat" => $resultat, "object" => $object, "objectNotif" => $objectNotif));
+        (new View("conf_delete"))->show(array("function"=>$function,"resultat" => $resultat,
+            "object" => $object, "objectNotif" => $objectNotif));
     }
 
     private function diffDateFormat($date)

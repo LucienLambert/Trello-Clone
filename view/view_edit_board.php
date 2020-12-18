@@ -92,38 +92,78 @@
                     <form action="card/delete_card/<?php echo $card->getId()?>" method="post">
                         <input type="submit" name="deleteCard" value="&#128465;">
                     </form>
-                    <?php if(count($tableColumn) > 1) { ?>
                         <?php if ($column->position == 0) { ?>
-                            <!-- formulaire déplacement à droite -->
+                            <?php if(count($tableColumn) > 1) { ?>
+                <!-- formulaire déplacement en haut -->
+                                <?php if($card->getPosition() > 0) { ?>
+                                    <form action="card/move_up_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                          method="post">
+                                        <input type="submit" name="move" value="↑">
+                                    </form>
+                                <?php } ?>
+                <!-- formulaire déplacement en bas -->
+                                <?php if ($card->getPosition() < count($tableCardColumn[$column->getPosition()]) -1) { ?>
+                                    <form action="card/move_down_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                          method="post">
+                                        <input type="submit" name="move" value="↓">
+                                    </form>
+                                <?php }?>
+                <!-- formulaire déplacement en haut -->
                             <form action="card/move_right_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
                                   method="post">
                                 <input type="submit" name="move" value="→">
                                 <?php echo $card->getPosition()?>
                             </form>
-                            <!-- formulaire déplacement en bas -->
+                            <?php } ?>
+                <!-- formulaire déplacement en bas -->
                         <?php } elseif ($column->position < count($tableColumn) - 1) { ?>
+                            <!-- formulaire déplacement en haut -->
+                            <?php if($card->getPosition() > 0) { ?>
+                                <form action="card/move_up_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                      method="post">
+                                    <input type="submit" name="move" value="↑">
+                                </form>
+                            <?php } ?>
+                            <!-- formulaire déplacement en bas -->
+                            <?php if ($card->getPosition() < count($tableCardColumn[$column->getPosition()]) -1) { ?>
+                                <form action="card/move_down_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                      method="post">
+                                    <input type="submit" name="move" value="↓">
+                                </form>
+                            <?php }?>
                             <!-- formulaire déplacement à gauche -->
                             <form action="card/move_left_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
                                   method="post">
                                 <input type="submit" name="move" value="←">
                             </form>
-                            <!-- formulaire déplacement à droite -->
+                <!-- formulaire déplacement à droite -->
                             <form action="card/move_right_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
                                   method="post">
                                 <input type="submit" name="move" value="→">
                                 <?php echo $card->getPosition()?>
                             </form>
+                        <?php } elseif(count($tableColumn) > 1) { ?>
+                            <!-- formulaire déplacement en haut -->
+                            <?php if($card->getPosition() > 0) { ?>
+                                <form action="card/move_up_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                      method="post">
+                                    <input type="submit" name="move" value="↑">
+                                </form>
+                            <?php } ?>
                             <!-- formulaire déplacement en bas -->
-                        <?php } else { ?>
-                            <!-- formulaire déplacement à gauche -->
+                            <?php if ($card->getPosition() < count($tableCardColumn[$column->getPosition()]) -1) { ?>
+                                <form action="card/move_down_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
+                                      method="post">
+                                    <input type="submit" name="move" value="↓">
+                                </form>
+                            <?php }?>
+                <!-- formulaire déplacement à gauche -->
                             <form action="card/move_left_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
                                   method="post">
                                 <input type="submit" name="move" value="←">
                                 <?php echo $card->getPosition()?>
                             </form>
-                            <!-- formulaire déplacement en bas -->
                         <?php } ?>
-                    <?php } ?>
                 </td>
             </tr>
             </tbody>

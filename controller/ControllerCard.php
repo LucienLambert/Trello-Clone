@@ -157,7 +157,7 @@ class ControllerCard extends Controller {
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
         } elseif (isset($_POST["butonDelete"])) {
-            if (Card::delete_card_by_id($_GET["param1"])) {
+            if (Card::delete_card_by_id($object)) {
                 $resultat = "successful deletion.";
             } else {
                 $resultat = "the card hasn't been deleted.";

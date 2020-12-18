@@ -6,7 +6,6 @@ require_once 'model/Column.php';
 require_once 'model/Card.php';
 require_once 'framework/View.php';
 require_once 'framework/Controller.php';
-require_once 'controller/ControllerBoard.php';
 
 class ControllerColumn extends Controller {
 
@@ -39,7 +38,6 @@ class ControllerColumn extends Controller {
     {
         Column::move_column($columnRigth, $columnLeft);
         $this->redirect("board", "board", $_GET["param1"]);
-
     }
 
     //déplace la colonne sur laquelle on est vers la droite.

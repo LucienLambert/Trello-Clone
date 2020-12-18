@@ -127,14 +127,7 @@ class Card extends Model
         return $error;
     }
 
-    //supprime la carte selectionné depuis son id et return la card supprimer si ok sinon false.
-    public static function delete_card_by_id($idCard){
-        if(isset($idCard)){
-            self::execute("DELETE FROM Card WHERE id= :id",array("id"=>$idCard));
-            return true;
-        }
-        return false;
-    }
+
 
     //supprime toutes les cartes d'une colonne par rapport à l'id de la colonne.
     public static function delete_all_card_by_Column($idColumn){
@@ -176,6 +169,21 @@ class Card extends Model
             $currentCard->update_card();
         }
         return true;
+    }
+
+    //supprime la carte selectionné depuis son id et return la card supprimer si ok sinon false.
+    public static function delete_card_by_id($card){
+        $table = Card::select_all_card_from_position_modif($card);
+        if(isset($card)){
+            self::execute("DELETE FROM Card WHERE id= :id",array("id"=>$card->getId()));
+            for ($i = 0 ; $i < count($table); $i++){
+                $currentCard = $table[$i];
+                $currentCard->setPosition($currentCard->getPosition()-1);
+                $currentCard->update_card();
+            }
+            return true;
+        }
+        return false;
     }
 
     //return tableObject

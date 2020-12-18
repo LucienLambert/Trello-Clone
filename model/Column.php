@@ -89,10 +89,9 @@ class Column extends Model
     public static function delete_column_by_id($idColumn)
     {
         if(isset($idColumn)){
-            if(Card::delete_all_card_by_Column($idColumn)){
-                self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$idColumn));
-                return true;
-            }
+            Card::delete_all_card_by_Column($idColumn);
+            self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$idColumn));
+            return true;
         }
         return false;
     }

@@ -93,7 +93,6 @@
                         <input type="submit" name="deleteCard" value="&#128465;">
                     </form>
                         <?php if ($column->position == 0) { ?>
-                            <?php if(count($tableColumn) > 1) { ?>
                 <!-- formulaire déplacement en haut -->
                                 <?php if($card->getPosition() > 0) { ?>
                                     <form action="card/move_up_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
@@ -109,6 +108,7 @@
                                     </form>
                                 <?php }?>
                 <!-- formulaire déplacement en haut -->
+                            <?php if(count($tableColumn) > 1) { ?>
                             <form action="card/move_right_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
                                   method="post">
                                 <input type="submit" name="move" value="→">
@@ -124,14 +124,14 @@
                                     <input type="submit" name="move" value="↑">
                                 </form>
                             <?php } ?>
-                            <!-- formulaire déplacement en bas -->
+                <!-- formulaire déplacement en bas -->
                             <?php if ($card->getPosition() < count($tableCardColumn[$column->getPosition()]) -1) { ?>
                                 <form action="card/move_down_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
                                       method="post">
                                     <input type="submit" name="move" value="↓">
                                 </form>
                             <?php }?>
-                            <!-- formulaire déplacement à gauche -->
+                <!-- formulaire déplacement à gauche -->
                             <form action="card/move_left_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
                                   method="post">
                                 <input type="submit" name="move" value="←">
@@ -143,14 +143,14 @@
                                 <?php echo $card->getPosition()?>
                             </form>
                         <?php } elseif(count($tableColumn) > 1) { ?>
-                            <!-- formulaire déplacement en haut -->
+                <!-- formulaire déplacement en haut -->
                             <?php if($card->getPosition() > 0) { ?>
                                 <form action="card/move_up_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
                                       method="post">
                                     <input type="submit" name="move" value="↑">
                                 </form>
                             <?php } ?>
-                            <!-- formulaire déplacement en bas -->
+                <!-- formulaire déplacement en bas -->
                             <?php if ($card->getPosition() < count($tableCardColumn[$column->getPosition()]) -1) { ?>
                                 <form action="card/move_down_card/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>/<?php echo $card->getId()?>"
                                       method="post">

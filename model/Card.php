@@ -127,8 +127,6 @@ class Card extends Model
         return $error;
     }
 
-
-
     //supprime toutes les cartes d'une colonne par rapport à l'id de la colonne.
     public static function delete_all_card_by_Column($idColumn){
         if(isset($idColumn)){

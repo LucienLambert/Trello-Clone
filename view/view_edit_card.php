@@ -12,7 +12,7 @@
 <div>
     <p><a href="board/index">Home</a>
         <a href="board/board/<?php echo $board->id?>">Board</a>
-        <a href="board/view_card/<?php echo $column->id ?>/<?php echo $card->getId()?>">Card</a>
+        <a href="card/view_card/<?php echo $column->id ?>/<?php echo $card->getId()?>">Card</a>
     </p>
 </div>
 <h1>Edit a card</h1>
@@ -25,7 +25,7 @@
     } ?>
 </p>
 <h4>Title</h4>
-<form action="board/modif_card/<?php echo $column->id?>/<?php echo $card->getId()?>" method="post">
+<form action="card/modif_card/<?php echo $column->id?>/<?php echo $card->getId()?>" method="post">
     <input type="text" name="titleCard" value="<?php echo $card->getTitle() ?>">
     <h4>Body</h4>
     <textarea name="bodyCard" rows="10" cols="50"><?php echo $card->getBody() ?></textarea>
@@ -35,7 +35,7 @@
     <textarea name="titleColumn" disabled="disabled" rows="2" cols="100"><?php echo $column->title?></textarea></br>
     <input type="submit" name="boutonApply" value="Edit this card">
 </form>
-<form action="board/modif_card/<?php echo $column->id?>/<?php echo $card->getId()?>" method="post">
+<form action="card/modif_card/<?php echo $column->id?>/<?php echo $card->getId()?>" method="post">
     <input type="submit" name="boutonCancel" value="Cancel">
 </form>
 </body>

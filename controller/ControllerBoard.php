@@ -146,92 +146,6 @@ class ControllerBoard extends Controller
         }
     }
 
-    public function add_card()
-    {
-        $user = $this->get_user_or_false();
-        $user = User::select_member_by_mail($user->mail);
-        $column = Column::select_column_by_id($_GET["param2"]);
-        $idColumn = $column->id;
-        //contient les cartes de la colunne
-        $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
-        $positionCard = count($tableCard);
-        $title = $_POST["titleCard"];
-        $error = Card::valide_card($column, $title);
-        if (count($error) == 0) {
-            $card = new Card(null, $title, '', $positionCard, null, null, $user->id, $idColumn);
-            $card->insert_card();
-            $this->redirect("board", "board", $_GET["param1"]);
-        }
-        $this->board($error);
-    }
-
-    public function view_card()
-    {
-        if (isset($_GET["param1"]) && $_GET["param1"] != 0 && isset($_GET["param2"]) && $_GET["param2"] != 0) {
-            $card = Card::select_card_by_id($_GET["param2"]);
-            $column = Column::select_column_by_id($_GET["param1"]);
-        }
-        $board = Board::select_board_by_id($column->board);
-        $fullName = User::select_user_by_id($card->getAuthor())->fullName;
-        $viewEditTitleCard = false;
-        //TODO: CODE DUPLIQUE, DOIT ETRE MODIFIE! 134 -> 146
-        $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
-        $diffDateModif = $card->getModifiedAt();
-        $diffDate = $tableFormatDateCreation[0];
-        $messageTime = $tableFormatDateCreation[1];
-        if (!isset($diffDateModif)) {
-            $modifDate = false;
-            $messageTimeModif = "Never modified";
-        } else {
-            $modifDate = true;
-            $tableFormatDateModif = $this->diffDateFormat($card->getModifiedAt());
-            $diffDateModif = $tableFormatDateModif[0];
-            $messageTimeModif = $tableFormatDateModif[1];
-        }
-        if (isset($_POST["openViewModifTitle"])) {
-            $viewEditTitleCard = true;
-        }
-        try {
-            (new View("view_card"))->show(array("card" => $card, "fullName" => $fullName, "viewEditTitleCard" => $viewEditTitleCard,
-                "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
-                "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif));
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
-
-    public function edit_card()
-    {
-        if (isset($_GET["param1"]) && $_GET["param1"] != 0 && isset($_GET["param2"]) && $_GET["param2"] != 0) {
-            $card = Card::select_card_by_id($_GET["param2"]);
-            $column = Column::select_column_by_id($_GET["param1"]);
-        }
-        $error = [];
-        $board = Board::select_board_by_id($column->board);
-        $fullName = User::select_user_by_id($card->getAuthor())->fullName;
-        //TODO: CODE DUPLIQUE, DOIT ETRE MODIFIE! 171- 184
-        $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
-        $diffDateModif = $card->getModifiedAt();
-        $diffDate = $tableFormatDateCreation[0];
-        $messageTime = $tableFormatDateCreation[1];
-        if (!isset($diffDateModif)) {
-            $modifDate = false;
-            $messageTimeModif = "Never modified";
-        } else {
-            $modifDate = true;
-            $tableFormatDateModif = $this->diffDateFormat($card->getModifiedAt());
-            $diffDateModif = $tableFormatDateModif[0];
-            $messageTimeModif = $tableFormatDateModif[1];
-        }
-        try {
-            (new View("edit_card"))->show(array("card" => $card, "fullName" => $fullName,
-                "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
-                "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "error" => $error));
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
-
     //change le titre du board sur le quel on est
     public function edit_title_board()
     {
@@ -272,18 +186,6 @@ class ControllerBoard extends Controller
         }
     }
 
-    public function modif_card()
-    {
-        if (isset($_POST["boutonCancel"])) {
-            $this->redirect("board", "view_card", $_GET["param1"], $_GET["param2"]);
-        } elseif (isset($_POST["boutonApply"])) {
-            $card = Card::select_card_by_id($_GET["param2"]);
-            if (isset($_POST["titleCard"]) && $card->getTitle() != $_POST["titleCard"]) {
-            }
-            Card::valide_card($_GET["param1"], $_POST["titleCard"]);
-        }
-    }
-
     public function delete_board()
     {
         $function = "board";
@@ -305,128 +207,23 @@ class ControllerBoard extends Controller
             "object" => $object, "objectNotif" => $objectNotif));
     }
 
-    public function delete_column()
+    public function add_card()
     {
-        $function = "column";
-        $objectNotif = "column (the cards will be deleted too)";
-        $resultat = "";
-        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
-            $object = Column::select_column_by_id($_GET["param1"]);
+        $user = $this->get_user_or_false();
+        $user = User::select_member_by_mail($user->mail);
+        $column = Column::select_column_by_id($_GET["param2"]);
+        $idColumn = $column->id;
+        //contient les cartes de la colunne
+        $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
+        $positionCard = count($tableCard);
+        $title = $_POST["titleCard"];
+        $error = Card::valide_card($column, $title);
+        if (count($error) == 0) {
+            $card = new Card(null, $title, '', $positionCard, null, null, $user->id, $idColumn);
+            $card->insert_card();
+            $this->redirect("board", "board", $_GET["param1"]);
         }
-        if (isset($_POST["butonCancel"])) {
-            $this->redirect("board", "index");
-        } elseif (isset($_POST["butonDelete"])) {
-            if (Column::delete_column_by_id($_GET["param1"])) {
-                $resultat = "successful deletion.";
-            } else {
-                $resultat = "the column hasn't been deleted.";
-            }
-        }
-        (new View("conf_delete"))->show(array("function"=>$function, "resultat" => $resultat,
-            "object" => $object, "objectNotif" => $objectNotif));
-    }
-
-    public function delete_card()
-    {
-        $function = "card";
-        $objectNotif = "card";
-        $resultat = "";
-        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
-            $object = Card::select_card_by_id($_GET["param1"]);
-        }
-        if (isset($_POST["butonCancel"])) {
-            $this->redirect("board", "index");
-        } elseif (isset($_POST["butonDelete"])) {
-            if (Card::delete_card_by_id($_GET["param1"])) {
-                $resultat = "successful deletion.";
-            } else {
-                $resultat = "the card hasn't been deleted.";
-            }
-        }
-        (new View("conf_delete"))->show(array("function"=>$function,"resultat" => $resultat, "object" => $object, "objectNotif" => $objectNotif));
-    }
-
-    //switch les deux colonnes passé en paramètre.
-    private function move_column($columnRigth = "", $columnLeft = "")
-    {
-        Column::move_column($columnRigth, $columnLeft);
-        $this->redirect("board", "board", $_GET["param1"]);
-
-    }
-
-    //déplace la colonne sur laquelle on est vers la droite.
-    public function move_right_column()
-    {
-        //recup l'objet sur lequel on est
-        $column = Column::select_column_by_id($_GET["param2"]);
-        //recup la colonne de gauche.
-        $columnToLeft = $column->select_column_by_board_and_position($column->board, $column->position + 1);
-        //appel la function move_column
-        $this->move_column($column, $columnToLeft);
-    }
-
-    public function move_left_column()
-    {
-        //recup l'objet sur lequel on est
-        $column = Column::select_column_by_id($_GET["param2"]);
-        //recup la colonne de droite
-        $columnToRight = $column->select_column_by_board_and_position($column->board, $column->position - 1);
-        //appel la private function move_column
-        $this->move_column($columnToRight, $column);
-    }
-
-    private function move_card_right_or_left($card = "", $newColonne = ""){
-        Card::move_card_and_add_last_position_right_or_left($card, $newColonne);
-        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
-            $this->redirect("board","board", $_GET["param1"]);
-        } else {
-            $this->index();
-        }
-    }
-
-    public function move_right_card(){
-        //recup la colonne de la carte
-        $column = Column::select_column_by_id($_GET["param2"]);
-        //recup la carte de la colonne
-        $card = Card::select_card_by_id($_GET["param3"]);
-        //recup la colonne suivante (position + 1)
-        $columnToRight = $column->select_column_by_board_and_position($column->getBoard(), $column->getPosition() + 1);
-        $this->move_card_right_or_left($card, $columnToRight);
-    }
-
-    public function move_left_card(){
-        //recup la colonne de la carte
-        $column = Column::select_column_by_id($_GET["param2"]);
-        //recup la carte de la colonne
-        $card = Card::select_card_by_id($_GET["param3"]);
-        //recup la colonne suivante (position + 1)
-        $columnToLeft = $column->select_column_by_board_and_position($column->getBoard(), $column->getPosition() - 1);
-        $this->move_card_right_or_left($card, $columnToLeft);
-    }
-
-    private function move_card_up_or_down($oldPosition, $newPosition){
-        Card::move_card_up_or_down($oldPosition, $newPosition);
-        $this->redirect("board", "board", $_GET["param1"]);
-    }
-
-    public function move_up_card(){
-        //recup la colonne de la carte
-        $column = Column::select_column_by_id($_GET["param2"]);
-        //recup la carte sur laquel on est
-        $card = Card::select_card_by_id($_GET["param3"]);
-        //recup la carte juste en haut.
-        $cardAbove = $card->select_card_by_position_and_id_column($card->getPosition() - 1, $column);
-        $this->move_card_up_or_down($card, $cardAbove);
-    }
-
-    public function move_down_card(){
-//recup la colonne de la carte
-        $column = Column::select_column_by_id($_GET["param2"]);
-        //recup la carte sur laquel on est
-        $card = Card::select_card_by_id($_GET["param3"]);
-        //recup la carte juste en haut.
-        $cardUnder = $card->select_card_by_position_and_id_column($card->getPosition() + 1, $column);
-        $this->move_card_up_or_down($card, $cardUnder);
+        $this->board($error);
     }
 
     private function diffDateFormat($date)

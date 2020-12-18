@@ -35,8 +35,16 @@
     <textarea name="titleColumn" disabled="disabled" rows="2" cols="100"><?php echo $column->title?></textarea></br>
     <input type="submit" name="boutonApply" value="Edit this card">
 </form>
-<form action="card/modif_card/<?php echo $column->id?>/<?php echo $card->getId()?>" method="post">
+<form action="card/modif_card/<?php $column->id?>/<?php echo $card->getId()?>" method="post">
     <input type="submit" name="boutonCancel" value="Cancel">
 </form>
+<?php if (count($error) > 0) { ?>
+    <p>Please check the errors and correct them :</p>
+    <ul>
+        <?php foreach ($error as $err) { ?>
+            <li><?php echo $err ?></li>
+        <?php } ?>
+    </ul>
+<?php } ?>
 </body>
 </html>

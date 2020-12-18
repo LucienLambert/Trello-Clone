@@ -86,7 +86,7 @@
             <tr>
                 <td>
                     <!-- formulaire pour ouvrir une carte-->
-                    <form action="card/view_card/<?php echo $column->id?>/<?php echo $card->getId()?>" method="post">
+                    <form action="card/view_card/<?php echo $card->getId()?>" method="post">
                         <input type="submit" name="openCard" value="<?php echo $card->getTitle() ?>">
                     </form>
                     <form action="card/delete_card/<?php echo $card->getId()?>" method="post">

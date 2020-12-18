@@ -19,7 +19,7 @@
     </form>
     <!-- formulaire pour afficher l'option modifier la carte -->
     <?php if (!$viewEditTitleCard) : ?>
-        <form class="FormColumn" action="card/edit_card/<?php echo $column->id ?>/<?php echo $card->getId() ?>" method="post">
+        <form class="FormColumn" action="card/edit_card/<?php echo $card->getId() ?>" method="post">
             <input type="submit" name="openViewModifCard" value="modify Card">
         </form>
     <?php endif; ?>

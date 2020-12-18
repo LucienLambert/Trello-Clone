@@ -15,9 +15,9 @@ class ControllerCard extends Controller {
 
     public function view_card()
     {
-        if (isset($_GET["param1"]) && $_GET["param1"] != 0 && isset($_GET["param2"]) && $_GET["param2"] != 0) {
-            $card = Card::select_card_by_id($_GET["param2"]);
-            $column = Column::select_column_by_id($_GET["param1"]);
+        if (isset($_GET["param1"]) && $_GET["param1"] != 0) {
+            $card = Card::select_card_by_id($_GET["param1"]);
+            $column = Column::select_column_by_id($card->getColumn());
         }
         $board = Board::select_board_by_id($column->board);
         $fullName = User::select_user_by_id($card->getAuthor())->fullName;
@@ -48,11 +48,11 @@ class ControllerCard extends Controller {
         }
     }
 
-    public function edit_card()
+    public function edit_card($error = "")
     {
-        if (isset($_GET["param1"]) && $_GET["param1"] != 0 && isset($_GET["param2"]) && $_GET["param2"] != 0) {
-            $card = Card::select_card_by_id($_GET["param2"]);
-            $column = Column::select_column_by_id($_GET["param1"]);
+        if (isset($_GET["param1"]) && $_GET["param1"] != 0) {
+            $card = Card::select_card_by_id($_GET["param1"]);
+            $column = Column::select_column_by_id($card->getColumn());
         }
         $error = [];
         $board = Board::select_board_by_id($column->board);
@@ -137,12 +137,18 @@ class ControllerCard extends Controller {
     public function modif_card()
     {
         if (isset($_POST["boutonCancel"])) {
-            $this->redirect("board", "view_card", $_GET["param1"], $_GET["param2"]);
+            $this->redirect("card", "view_card", $_GET["param1"], $_GET["param2"]);
         } elseif (isset($_POST["boutonApply"])) {
             $card = Card::select_card_by_id($_GET["param2"]);
-            if (isset($_POST["titleCard"]) && $card->getTitle() != $_POST["titleCard"]) {
+            $error = Card::valide_card($_GET["param1"], $_POST["titleCard"]);
+            if(count($error) == 0){
+                $card->setTitle($_POST["titleCard"]);
+                $card->setBody($_POST["bodyCard"]);
+                $card->update_card();
+                $this->redirect("card", "view_card", $_GET["param2"]);
+            } else {
+                $this->edit_card($error);
             }
-            Card::valide_card($_GET["param1"], $_POST["titleCard"]);
         }
     }
 

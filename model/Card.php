@@ -68,6 +68,14 @@ class Card extends Model
         $this->position = $position;
     }
 
+    public function setTitle($title){
+        $this->title = $title;
+    }
+
+    public function setBody($body){
+        $this->body = $body;
+    }
+
     public function insert_card(){
         self::execute("INSERT INTO Card(title,body,position,author,`column`) VALUES(:title,:body,:position,:author,:column)",
             array("title"=>$this->getTitle(), "body"=>$this->body,"position"=>$this->getPosition(),
@@ -137,7 +145,7 @@ class Card extends Model
     }
 
     //update la carte current
-    private function update_card(){
+    public function update_card(){
         self::execute("UPDATE Card SET title = :title, body = :body, position = :position, createdAt = :createdAt, modifiedAt = :createdAt, author = :author, `column` = :column WHERE id = :id",array(
             "id"=>$this->getId(),
             "title"=>$this->getTitle(),

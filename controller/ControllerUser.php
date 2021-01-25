@@ -52,7 +52,6 @@ class ControllerUser extends Controller {
             $mail = $_POST['mail'];
             $password = $_POST['password'];
             $conf_password = $_POST['conf_password'];
-
             $user = new User(null, $mail, $fullName, Tools::my_hash($password), null);
             $error = array_merge($error, $user->validate_signup($mail,$password,$conf_password, $fullName));
             //si pas d'erreur
@@ -63,6 +62,7 @@ class ControllerUser extends Controller {
                 $this->log_user($user);
             }
         }
-        (new View("signup"))->show(array("mail" => $mail, "fullName" => $fullName, "password" => $password, "conf_password" => $conf_password, "error" => $error));
+        (new View("signup"))->show(
+            array("mail" => $mail, "fullName" => $fullName, "password" => $password, "conf_password" => $conf_password, "error" => $error));
     }
 }

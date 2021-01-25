@@ -93,14 +93,13 @@ class Card extends Model
         return $tableCards;
     }
 
-    //TODO : TROUVER MEILLEUR SOLUTION SI POSSIBLE
     //faire un appel DB pour récup toutes les colonnes du board -> faire un appel DB sur chaque colonne pour regarder si une carte avec le titre existe
     private static function check_card_with_title_exists_in_board($titleCard, $idBoard){
         $board = Board::select_board_by_id($idBoard);
         //j'ai recup toutes mes colonnes du board en question.
         $tableAllColumnBoard = Column::select_all_column_by_id_board_ASC($idBoard);
         foreach ($tableAllColumnBoard as $column){
-            $checkCardTitle = self::execute("SELECT * FROM Card WHERE title = :title AND `column` = :column",array("title"=>$titleCard, "column"=>$column->id));
+            $checkCardTitle = self::execute("SELECT * FROM Card WHERE title = :title AND `column` = :column",array("title"=>$titleCard, "column"=>$column->getId()));
             if($checkCardTitle->rowCount() != 0){
                 return true;
             }
@@ -117,22 +116,50 @@ class Card extends Model
     //param1 = objet Colonne
     //param2 = String title
     public static function valide_card($column, $title){
+        $cardTitle = Card::select_card_by_title($title, $column);
         $error = [];
         if (!isset($title) || strlen($title) <= 0 || !is_string($title)) {
             $error [] = "you must enter a title.";
         } elseif (strlen($title) < 3) {
             $error [] = "Your title's card must contain 3 characters minimum.";
         }
-        $tableCardColumn = self::select_all_card_by_id_column_ASC($column->id);
-        if(count($tableCardColumn) == 0){
-            return $error;
-        }
-        $trouverCard = Card::check_card_with_title_exists_in_board($title, $column->board);
-        if ($trouverCard) {
-            $error [] = "this board contain already a card with that title.";
+
+        $trouverCard = Card::check_equals_title_card_by_column($cardTitle);
+        if($trouverCard){
+            $error [] ="the Column contains already a card with this title !!!!!!!!!!!!!!!!!";
+        } else {
+            $tableCardColumn = self::select_all_card_by_id_column_ASC($column->getId());
+            foreach ($tableCardColumn as $card){
+                if(strcasecmp($card->getTitle(),$title) == 0){
+                    $error [] ="the Column contains already a card with this title";
+                }
+            }
         }
 
+        /*
+        $tableCardColumn = self::select_all_card_by_id_column_ASC($column->getId());
+        foreach ($tableCardColumn as $card){
+            if(strcasecmp($card->getTitle(),$_POST["titleCard"])){
+                $error [] ="the Column contains already a card with this title";
+            }
+        }
+        */
         return $error;
+    }
+
+    public static function select_card_by_title($title, $column){
+        $query = self::execute("SELECT * FROM Card WHERE title=:title AND `column`=:column", array("title"=>$title, "column"=>$column->getId()));
+        $d = $query->fetch();
+        return new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"]);
+    }
+
+    public static function check_equals_title_card_by_column($card){
+        $query = self::execute("SELECT * FROM Card WHERE title=:title AND id != :id AND `column`= :column", array("title"=>$card->getTitle(), "id"=>$card->getId(), "column"=>$card->getColumn()));
+        $data = $query->fetchAll();
+        if(count($data) == 0){
+            return false;
+        }
+        return true;
     }
 
     //supprime toutes les cartes d'une colonne par rapport à l'id de la colonne.

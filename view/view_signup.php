@@ -2,44 +2,47 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Sign Up</title>
+        <title>Edit board</title>
         <base href="<?= $web_root ?>"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
+
     <div>
-        <a href="index">Home</a>
-        <a href="user/login">Login</a>
+        <p><?php include("menu.html")?></p>
     </div>
-        <h1>Sign Up</h1>
-    <form id="signupForm" action="user/signup" method="post">
+    <h1 class="form-signup">Sign Up</h1>
+    <main class="form-signup">
+    <form class="blocktext" action="user/signup" method="post">
         <table>
             <tr>
-                <td>Email :</td>
-                <td><input type="email" name="mail" id="mail" size="30" placeholder="Email"></td>
+                <td>@</td>
+                <td><input type="email" name="mail" placeholder="Email"></td>
             </tr>
             <tr>
-                <td>Full Name :</td>
-                <td><input type="text" name="fullName" id="fullName" size="30" placeholder="Full Name"></td>
+                <td>&#x1F610;</td>
+                <td><input type="text" name="fullName" placeholder="Full Name"></td>
             </tr>
             <tr>
-                <td>Password :</td>
-                <td><input type="password" name="password" id="password" placeholder="Password"></td>
+                <td>&#x1F512;</td>
+                <td><input type="password" name="password" placeholder="Password"></td>
             </tr>
             <tr>
-                <td>Confirm your password :</td>
-                <td><input type="password" name="conf_password" size="30"  placeholder="Confirm your password"></td>
+                <td>&#x1F512;</td>
+                <td><input type="password" name="conf_password" placeholder="Confirm your password"></td>
             </tr>
         </table>
-        <input type="submit" id="bouton" value="Sign Up">
+        <input class="submit" type="submit" value="Sign Up">
     </form>
-    <?php if (count($error) > 0) { ?>
-        <p>Please check the errors and correct them :</p>
-        <ul>
+    </main>
+    <div class="error">
+        <?php if (count($error) > 0) { ?>
+            <p>Please check the errors and correct them :</p>
             <?php foreach ($error as $err) { ?>
-                <li><?php echo $err ?></li>
+                <p><?php echo $err ?></p>
             <?php } ?>
-        </ul>
-    <?php } ?>
+        <?php } ?>
+    </div>
     </body>
 </html>
 

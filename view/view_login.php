@@ -4,33 +4,39 @@
     <meta charset="UTF-8">
     <title>Trello!</title>
     <base href="<?= $web_root ?>"/>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+
     <div>
-        <a href="index">Home</a>
-        <a href="user/signup">Sign Up</a>
+        <p><?php include("menu.html")?></p>
     </div>
-    <h1>Login</h1>
-        <form id="loginForm" action="user/login" method="post">
+
+    <h1 class="form-signup">Sign In</h1>
+    <main class="form-signup">
+        <form class="blocktext" action="user/login" method="post">
             <table>
             <tr>
-                <td>Email :</td>
-                <td><input type="email" id="mail" name="mail" size="30" value="<?= $mail ?>" placeholder="Email"></td>
+                <td>@</td>
+                <td><input type="email" name="mail" size="30" value="<?= $mail ?>" placeholder="Email"></td>
             </tr>
             <tr>
-                <td>Password :</td>
-                <td><input type="password" id="password" name="password" size="30" value="<?= $password ?>" placeholder="**********"></td>
+                <td>&#x1F512;</td>
+                <td><input type="password" name="password" size="30" value="<?= $password ?>" placeholder="**********"></td>
             </tr>
             </table>
-            <input type="submit" name="bouton" value="Login">
+            <input class="submit" type="submit" name="bouton" value="Login">
         </form>
-    <?php if (count($error) > 0) { ?>
-        <p>Please check the errors and correct them :</p>
-        <ul>
+    </main>
+
+    <div class="error">
+        <?php if (count($error) > 0) { ?>
+            <p>Please check the errors and correct them :</p>
             <?php foreach ($error as $err) { ?>
-                <li><?php echo $err ?></li>
+                <p><?php echo $err ?></p>
             <?php } ?>
-        </ul>
-    <?php } ?>
+        <?php } ?>
+    </div>
+
     </body>
 </html>

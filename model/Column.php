@@ -5,12 +5,12 @@ require_once "framework/Model.php";
 class Column extends Model
 {
 
-    public $id;
-    public $title;
-    public $position;
-    public $createdAt;
-    public $modifiedAt;
-    public $board;
+    private $id;
+    private $title;
+    private $position;
+    private $createdAt;
+    private $modifiedAt;
+    private $board;
 
     public function __construct($id, $title, $position, $createdAt, $modifiedAt, $board)
     {
@@ -52,12 +52,27 @@ class Column extends Model
         return $this->board;
     }
 
+    public function setPosition($position){
+        $this->position = $position;
+    }
+
+    private function update_column(){
+        self::execute("UPDATE `Column` SET title= :title, position= :position, createdAt= :createdAt, modifiedAt= :modifiedAt, board= :board WHERE id= :id", array(
+            "id"=>$this->getId(),
+            "title"=>$this->getTitle(),
+            "position"=>$this->getPosition(),
+            "createdAt"=>$this->getCreatedAt(),
+            "modifiedAt"=>$this->getModifiedAt(),
+            "board"=>$this->getBoard()
+        ));
+        return true;
+    }
 
     //ajoute une colonne dans le board entré en paramètre
     public function inset_column($board)
     {
         self::execute("INSERT INTO `Column`(title,position,board) VALUES(:title,:position,:board)",
-            array("title" => $this->title, "position" => $this->position, "board" => $board->id));
+            array("title" => $this->getTitle(), "position" => $this->getPosition(), "board" => $board->getId()));
     }
 
     public static function select_column_by_id($id){
@@ -69,13 +84,24 @@ class Column extends Model
     //selectionne une  colonne via l'ID du board entré en paramètre
     public static function select_all_column_by_id_board($board)
     {
-        $query = self::execute("SELECT * FROM `Column` where board = :id", array("id" => $board->id));
+        $query = self::execute("SELECT * FROM `Column` where board = :id", array("id" => $board->getId()));
         $data = $query->fetchAll();
         $tableColumn = [];
         foreach ($data as $d) {
             $tableColumn [] = new Column($d["ID"], $d["Title"], $d["Position"], $d["CreatedAt"], $d["ModifiedAt"], $d["Board"]);
         }
         return $tableColumn;
+    }
+
+    private static function select_all_column_from_position($column){
+        $query = self::execute("SELECT * FROM `Column` WHERE position > :position AND board= :board",
+            array("board"=>$column->getBoard(), "position"=>$column->getPosition()));
+        $data = $query->fetchAll();
+        $table = [];
+        foreach ($data as $d){
+            $table [] = new Column($d["ID"], $d["Title"], $d["Position"], $d["CreatedAt"], $d["ModifiedAt"], $d["Board"]);
+        }
+        return $table;
     }
 
     //modifie le titre de la colonne selectionnée
@@ -88,9 +114,16 @@ class Column extends Model
     //supprime la colonne selectionnée (doit également supprimer les cartes contenues dans la colonne)
     public static function delete_column_by_id($idColumn)
     {
+        $column = Column::select_column_by_id($idColumn);
+        $table = Column::select_all_column_from_position($column);
         if(isset($idColumn)){
             Card::delete_all_card_by_Column($idColumn);
-            self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$idColumn));
+            self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$column->getId()));
+            for($i = 0; $i < count($table); $i++){
+                $current = $table[$i];
+                $current->setPosition($current->getPosition() -1);
+                $current->update_column();
+            }
             return true;
         }
         return false;
@@ -119,7 +152,7 @@ class Column extends Model
             return $error;
         }
         foreach ($tableColumn as $column) {
-            if (strtolower($column->title) == strtolower($title)) {
+            if (strtolower($column->getTitle()) == strtolower($title)) {
                 $error [] = "this board contain already a column with that title.";
             }
         }

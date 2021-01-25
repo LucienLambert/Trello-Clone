@@ -3,11 +3,11 @@ require_once "framework/Model.php";
 
 class User extends Model
 {
-    public $id;
-    public $mail;
-    public $fullName;
-    public $password;
-    public $registeredAt;
+    private $id;
+    private $mail;
+    private $fullName;
+    private $password;
+    private $registeredAt;
 
 
     public function __construct($id, $mail, $fullName, $password, $registeredAt)
@@ -19,11 +19,36 @@ class User extends Model
         $this->registeredAt = $registeredAt;
     }
 
+    public function getFullName()
+    {
+        return $this->fullName;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getMail()
+    {
+        return $this->mail;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function getRegisteredAt()
+    {
+        return $this->registeredAt;
+    }
+
     //ajoute un user à la DB
     public function insert_user()
     {
         self::execute("INSERT INTO User(mail,fullName,password) VALUES(:mail,:fullName,:password)",
-            array("mail" => $this->mail, "fullName" => $this->fullName, "password" => $this->password));
+            array("mail" => $this->getMail(), "fullName" => $this->getFullName(), "password" => $this->getPassword()));
         return $this;
     }
 
@@ -65,10 +90,11 @@ class User extends Model
             $error[] = "this Email already exist";
         }
         //check le fullName
-        if (!isset($fullName) || !is_string($fullName)) {
+        //isset == null
+        if (!isset($fullName) || !is_string($fullName) || $fullName == "") {
             if (strlen($fullName) <= 0) {
                 $error[] = "Your full Name is required";
-            } elseif (strlen($fullName) <= 3) {
+            } elseif (strlen($fullName) < 3) {
                 $error[] = "Your full Name must contain between 3 and 16 letters";
             } elseif (preg_match("/^[a-zA-Z]*$/", $this->fullName)) {
                 $error[] = "Your full Name must contain only letters";

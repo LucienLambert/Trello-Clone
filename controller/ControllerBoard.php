@@ -24,7 +24,7 @@ class ControllerBoard extends Controller
         //recup le user connecté
         $user = $this->get_user_or_redirect();
         //recup le mail du user
-        $user = User::select_member_by_mail($user->mail);
+        $user = User::select_member_by_mail($user->getMail());
         //recup la liste des boards du user.
         $tableBoard = Board::select_board_by_user($user);
         //recup la liste des boards de TOUS LE MONDE
@@ -64,24 +64,25 @@ class ControllerBoard extends Controller
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $board = Board::select_board_by_id($_GET["param1"]);
         }
+        $user = $this->get_user_or_false();
         $viewEditTitleBoard = false;
-        $user = $this->get_user_or_redirect();
-        $tableFormatDateCreation = $this->diffDateFormat($board->createdAt);
-        $diffDateModif = $board->modifiedAt;
+        $owner = User::select_user_by_id($board->getOwner());
+        $tableFormatDateCreation = $this->diffDateFormat($board->getCreatedAt());
+        $diffDateModif = $board->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
         $messageTime = $tableFormatDateCreation[1];
         //table à deux dimenssion [la colonnes][les cartes de la colonnes]
-        $tableColumn = Column::select_all_column_by_id_board_ASC($board->id);
+        $tableColumn = Column::select_all_column_by_id_board_ASC($board->getId());
         $tableCardColumn = [];
         foreach ($tableColumn as $column) {
-            $tableCardColumn [$column->position] = Card::select_all_card_by_id_column_ASC($column->id);
+            $tableCardColumn [$column->getPosition()] = Card::select_all_card_by_id_column_ASC($column->getId());
         }
-        if (!isset($board->modifiedAt)) {
+        if ($board->getModifiedAt() == null) {
             $modifDate = false;
             $messageTimeModif = "Never modified";
         } else {
             $modifDate = true;
-            $tableFormatDateModif = $this->diffDateFormat($board->modifiedAt);
+            $tableFormatDateModif = $this->diffDateFormat($board->getModifiedAt());
             $diffDateModif = $tableFormatDateModif[0];
             $messageTimeModif = $tableFormatDateModif[1];
         }
@@ -91,9 +92,9 @@ class ControllerBoard extends Controller
         try {
             (new View("edit_board"))->show(array("board" => $board, "diffDate" => $diffDate, "messageTime" => $messageTime,
                 "diffDateModif" => $diffDateModif, "messageTimeModif" => $messageTimeModif,
-                "fullName" => $user->fullName, "tableColumn" => $tableColumn,
+                "fullName" => $owner->getFullName(), "tableColumn" => $tableColumn,
                 "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate,
-                "tableCardColumn" => $tableCardColumn, "error" => $error));
+                "tableCardColumn" => $tableCardColumn, "error" => $error, "user"=>$user));
         } catch (Exception $e) {
             $e->getMessage();
         }
@@ -103,7 +104,7 @@ class ControllerBoard extends Controller
     public function add_board()
     {
         $user = $this->get_user_or_redirect();
-        $user = User::select_member_by_mail($user->mail);
+        $user = User::select_member_by_mail($user->getMail());
         $error = [];
         //check le boutonAdd pour voir si on a cliqué dessus
         if (isset($_POST["boutonAdd"])) {
@@ -135,8 +136,8 @@ class ControllerBoard extends Controller
         if (isset($_POST["boutonAddColumn"])) {
             $positionColumn = count($tableColumn);
             $title = $_POST["title"];
-            $column = new Column(null, $title, $positionColumn, null, null, $board->id);
-            $error = Column::valide_column($board, $column->title);
+            $column = new Column(null, $title, $positionColumn, null, null, $board->getId());
+            $error = Column::valide_column($board, $column->getTitle());
 
             if (count($error) == 0) {
                 $column->inset_column($board);
@@ -155,34 +156,43 @@ class ControllerBoard extends Controller
             //recup le board depuis son titre
             $board = Board::select_board_by_id($_GET["param1"]);
         }
-        if (isset($_POST["modifTitle"])) {
-            $newTitle = $_POST["newTitleBoard"];
-            $error = Board::valide_board($newTitle, $user);
+        if($user->getId() === $board->getOwner()){
+            if (isset($_POST["modifTitle"])) {
+                $newTitle = $_POST["newTitleBoard"];
+                $error = Board::valide_board($newTitle, $user);
 
-            if (count($error) == 0) {
-                $board->update_title_board($newTitle, $board->id, new DateTime("now"));
-                $this->redirect("board", "board", $_GET["param1"]);
-            } else {
-                $this->board($error);
+                if (count($error) == 0) {
+                    $board->update_title_board($newTitle, $board->getId(), new DateTime("now"));
+                    $this->redirect("board", "board", $_GET["param1"]);
+                } else {
+                    $this->board($error);
+                }
             }
+        } else {
+            $this->redirect("board", "board", $_GET["param1"]);
         }
     }
 
     //change le titre de la colonne sur laquelle on à cliqué.
     public function edit_Title_column()
     {
+
         $error = [];
         if (isset($_GET["param2"]) && $_GET["param2"] != 0 && isset($_GET["param1"]) && $_GET["param1"] != "") {
             $column = Column::select_column_by_id($_GET["param2"]);
             $board = Board::select_board_by_id($_GET["param1"]);
         }
-        $title = $_POST["newTitleColumn"];
-        $error = Column::valide_column($board, $title);
-        if (count($error) == 0) {
-            $column->update_title_column($column->id, $title, new DateTime("now"));
-            $this->redirect("board", "board", $_GET["param1"]);
+        if($this->get_user_or_false()->getId() === $board->getOwner()){
+            $title = $_POST["newTitleColumn"];
+            $error = Column::valide_column($board, $title);
+            if (count($error) == 0) {
+                $column->update_title_column($column->getId(), $title, new DateTime("now"));
+                $this->redirect("board", "board", $_GET["param1"]);
+            } else {
+                $this->board($error);
+            }
         } else {
-            $this->board($error);
+            $this->board();
         }
     }
 
@@ -194,13 +204,15 @@ class ControllerBoard extends Controller
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Board::select_board_by_id($_GET["param1"]);
         }
-        if (isset($_POST["butonCancel"])) {
-            $this->redirect("board", "index");
-        } elseif (isset($_POST["butonDelete"])) {
-            if (Board::delete_board_by_id($_GET["param1"])) {
-                $resultat = "successful deletion.";
-            } else {
-                $resultat = "the board hasn't been deleted.";
+        if($this->get_user_or_false()->getId() === $object->getOwner()){
+            if (isset($_POST["butonCancel"])) {
+                $this->redirect("board", "index");
+            } elseif (isset($_POST["butonDelete"])) {
+                if (Board::delete_board_by_id($_GET["param1"])) {
+                    $resultat = "successful deletion.";
+                } else {
+                    $resultat = "the board hasn't been deleted.";
+                }
             }
         }
         (new View("conf_delete"))->show(array("function"=>$function, "resultat" => $resultat,
@@ -210,20 +222,25 @@ class ControllerBoard extends Controller
     public function add_card()
     {
         $user = $this->get_user_or_false();
-        $user = User::select_member_by_mail($user->mail);
+        $user = User::select_member_by_mail($user->getMail());
         $column = Column::select_column_by_id($_GET["param2"]);
-        $idColumn = $column->id;
-        //contient les cartes de la colunne
-        $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
-        $positionCard = count($tableCard);
-        $title = $_POST["titleCard"];
-        $error = Card::valide_card($column, $title);
-        if (count($error) == 0) {
-            $card = new Card(null, $title, '', $positionCard, null, null, $user->id, $idColumn);
-            $card->insert_card();
+        $board = Board::select_board_by_id($_GET["param1"]);
+        $idColumn = $column->getId();
+        if($user->getId() === $board->getOwner()){
+            //contient les cartes de la colunne
+            $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
+            $positionCard = count($tableCard);
+            $title = $_POST["titleCard"];
+            $error = Card::valide_card($column, $title);
+            if (count($error) == 0) {
+                $card = new Card(null, $title, '', $positionCard, null, null, $user->getId(), $idColumn);
+                $card->insert_card();
+                $this->redirect("board", "board", $_GET["param1"]);
+            }
+            $this->board($error);
+        }else {
             $this->redirect("board", "board", $_GET["param1"]);
         }
-        $this->board($error);
     }
 
     private function diffDateFormat($date)

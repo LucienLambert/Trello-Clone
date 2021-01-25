@@ -46,7 +46,7 @@ class ControllerColumn extends Controller {
         //recup l'objet sur lequel on est
         $column = Column::select_column_by_id($_GET["param2"]);
         //recup la colonne de gauche.
-        $columnToLeft = $column->select_column_by_board_and_position($column->board, $column->position + 1);
+        $columnToLeft = $column->select_column_by_board_and_position($column->getBoard(), $column->getPosition() + 1);
         //appel la function move_column
         $this->move_column($column, $columnToLeft);
     }
@@ -56,7 +56,7 @@ class ControllerColumn extends Controller {
         //recup l'objet sur lequel on est
         $column = Column::select_column_by_id($_GET["param2"]);
         //recup la colonne de droite
-        $columnToRight = $column->select_column_by_board_and_position($column->board, $column->position - 1);
+        $columnToRight = $column->select_column_by_board_and_position($column->getBoard(), $column->getPosition() - 1);
         //appel la private function move_column
         $this->move_column($columnToRight, $column);
     }

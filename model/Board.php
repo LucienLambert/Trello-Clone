@@ -5,11 +5,11 @@ require_once "framework/Model.php";
 class Board extends Model
 {
 
-    public $id;
-    public $title;
-    public $owner;
-    public $createdAt;
-    public $modifiedAt;
+    private $id;
+    private $title;
+    private $owner;
+    private $createdAt;
+    private $modifiedAt;
 
     public function __construct($id, $title, $owner, $createdAt, $modifiedAt)
     {
@@ -49,7 +49,7 @@ class Board extends Model
     //ajoute un board dans la DB
     public function insert_board($user)
     {
-        self::execute("INSERT INTO Board(title,owner) VALUES(:title,:owner)", array("title" => $this->title, "owner" => $user->id));
+        self::execute("INSERT INTO Board(title,owner) VALUES(:title,:owner)", array("title" => $this->getTitle(), "owner" => $user->getId()));
         return true;
     }
 
@@ -69,7 +69,7 @@ class Board extends Model
         }
         foreach ($tableBoard as $board) {
             //controler si une table ne porte pas déjà un titre identique (convertie les String en minuscule).
-            if (strtolower($board->title) == strtolower($title)) {
+            if (strtolower($board->getTitle()) == strtolower($title)) {
                 $error [] = "this table title is already used, please choose another title";
             }
         }
@@ -80,7 +80,7 @@ class Board extends Model
     public static function select_board_by_user($user)
     {
         //execute la requete sur (id = $user->id)
-        $query = self::execute("SELECT * FROM Board where owner = :id", array("id" => $user->id));
+        $query = self::execute("SELECT * FROM Board where owner = :id", array("id" => $user->getId()));
         //recup les résultats (ATTENTION utiliser fetchAll() quand on récup plusieurs objets).
         $data = $query->fetchAll();
         //table vide
@@ -110,7 +110,7 @@ class Board extends Model
         $tableAllBoard = self::select_all_board();
         $tableOtherBoard = [];
         foreach ($tableAllBoard as $board) {
-            if ($board->owner != $user->id) {
+            if ($board->getOwner() != $user->getId()) {
                 $tableOtherBoard[] = $board;
             }
         }

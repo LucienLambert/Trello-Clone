@@ -15,14 +15,14 @@ class ControllerCard extends Controller {
 
     public function view_card()
     {
+        $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && $_GET["param1"] != 0) {
             $card = Card::select_card_by_id($_GET["param1"]);
             $column = Column::select_column_by_id($card->getColumn());
         }
-        $board = Board::select_board_by_id($column->board);
-        $fullName = User::select_user_by_id($card->getAuthor())->fullName;
+        $board = Board::select_board_by_id($column->getBoard());
+        $fullName = User::select_user_by_id($card->getAuthor())->getFullName();
         $viewEditTitleCard = false;
-        //TODO: CODE DUPLIQUE, DOIT ETRE MODIFIE! 134 -> 146
         $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
         $diffDateModif = $card->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
@@ -42,22 +42,26 @@ class ControllerCard extends Controller {
         try {
             (new View("view_card"))->show(array("card" => $card, "fullName" => $fullName, "viewEditTitleCard" => $viewEditTitleCard,
                 "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
-                "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif));
+                "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "user"=>$user));
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
 
-    public function edit_card($error = "")
+    public function edit_card($error = [])
     {
-        if (isset($_GET["param1"]) && $_GET["param1"] != 0) {
+        $user = $this->get_user_or_false();
+
+        if (isset($_GET["param2"]) && $_GET["param2"] != 0) {
+            $card = Card::select_card_by_id($_GET["param2"]);
+            $column = Column::select_column_by_id($card->getColumn());
+        } else {
             $card = Card::select_card_by_id($_GET["param1"]);
             $column = Column::select_column_by_id($card->getColumn());
         }
-        $error = [];
-        $board = Board::select_board_by_id($column->board);
-        $fullName = User::select_user_by_id($card->getAuthor())->fullName;
-        //TODO: CODE DUPLIQUE, DOIT ETRE MODIFIE! 171- 184
+
+        $board = Board::select_board_by_id($column->getBoard());
+        $fullName = $user->getFullName();
         $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
         $diffDateModif = $card->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
@@ -71,13 +75,9 @@ class ControllerCard extends Controller {
             $diffDateModif = $tableFormatDateModif[0];
             $messageTimeModif = $tableFormatDateModif[1];
         }
-        try {
-            (new View("edit_card"))->show(array("card" => $card, "fullName" => $fullName,
-                "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
-                "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "error" => $error));
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        (new View("edit_card"))->show(array("card" => $card, "fullName" => $fullName,
+            "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
+            "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "error" => $error));
     }
 
     private function move_card_right_or_left($card = "", $newColonne = ""){
@@ -136,19 +136,26 @@ class ControllerCard extends Controller {
 
     public function modif_card()
     {
+        $error = [];
+        var_dump("A");
         if (isset($_POST["boutonCancel"])) {
             $this->redirect("card", "view_card", $_GET["param1"], $_GET["param2"]);
         } elseif (isset($_POST["boutonApply"])) {
+            var_dump("B");
             $card = Card::select_card_by_id($_GET["param2"]);
-            $error = Card::valide_card($_GET["param1"], $_POST["titleCard"]);
+            $column = Column::select_column_by_id($_GET["param1"]);
+            if (strcasecmp($card->getTitle(),$_POST["titleCard"]) != 0) {
+                $error = Card::valide_card($column, $_POST["titleCard"]);
+            }
             if(count($error) == 0){
+                var_dump("C");
                 $card->setTitle($_POST["titleCard"]);
                 $card->setBody($_POST["bodyCard"]);
                 $card->update_card();
-                $this->redirect("card", "view_card", $_GET["param2"]);
-            } else {
-                $this->edit_card($error);
+                $this->redirect("card", "view_card",$_GET["param2"]);
             }
+            var_dump("D");
+            $this->edit_card($error);
         }
     }
 

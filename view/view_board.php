@@ -8,16 +8,16 @@
 </head>
 <body>
     <div>
-        <a href="board/logout">Log Out</a>
+        <p><?php include("header.php")?></p>
     </div>
-    <h1>Welcome <?php echo $user->fullName ?></h1>
+    <h1>Welcome <?php echo $user->getFullName() ?></h1>
 
     <h1>Your boards</h1>
     <!-- formulaire qui gère l'affichage et l'ouverture des boards -->
     <?php for($i = 0; $i < count($tableBoard); $i++) { ?>
-    <form class="boardForm" action="board/open_Board/<?php echo $tableBoard[$i]->id ?>" method="post">
+    <form class="boardForm" action="board/open_Board/<?php echo $tableBoard[$i]->getId() ?>" method="post">
         <tr>
-            <td><input type="submit" name="boutonBoard" size="30" value="<?php echo $tableBoard[$i]->title." (".$tableNbColumn[$i]."Column)" ?>"></td>
+            <td><input id="submitBoardUser" type="submit" name="boutonBoard" size="30" value="<?php echo $tableBoard[$i]->getTitle()." (".$tableNbColumn[$i]."Column)" ?>"></td>
         </tr>
     </form>
     <?php }?>
@@ -25,9 +25,10 @@
     <form class="boardForm" action="board/add_board" method="post">
         <tr>
             <td><input type="text" name="title" size="15" placeholder="add a board">
-                <input type="submit" name="boutonAdd" value="add">
+                <input id="submitBoardUser" type="submit" name="boutonAdd" value="add">
             </td>
         </tr>
+        <div id="error">
         <?php if (count($error) > 0) { ?>
             <p>Please check the errors and correct them :</p>
             <ul>
@@ -36,13 +37,14 @@
                 <?php } ?>
             </ul>
         <?php } ?>
+        </div>
     </form>
     <h1>others Boards</h1>
     <!-- formulaire qui affiche la liste des boards != user -->
     <?php for ($i = 0; $i < count($tableOthersBoards); $i++) { ?>
-    <form class="boardForm" action="board/open_Board/<?php echo $tableOthersBoards[$i]->id ?>" method="post">
+    <form class="boardForm" action="board/open_Board/<?php echo $tableOthersBoards[$i]->getId() ?>" method="post">
         <tr>
-            <td><input type="submit" name="boutonBoard" size="30" value="<?php echo $tableOthersBoards[$i]->title." (".$tableNbColumnOther[$i]."Column)" ?>"></td>
+            <td><input id="submitBoardAnother" type="submit" name="boutonBoard" size="30" value="<?php echo $tableOthersBoards[$i]->getTitle()." (".$tableNbColumnOther[$i]."Column)" ?>"></td>
         </tr>
     </form>
     <?php } ?>

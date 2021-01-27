@@ -8,12 +8,9 @@
         <link href="css/styles.css" rel="stylesheet" type="text/css"/>
     </head>
 </head>
+<?php include("header.php") ?>
 <body>
-<div>
-    <p><a href="board/index">Home</a>
-        <a href="board/board/<?php echo $board->getId()?>">Board</a>
-    </p>
-</div>
+<br>
 <h1>Edit a card</h1>
 <p>
     <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by " . $fullName . "." ?>

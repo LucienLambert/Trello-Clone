@@ -62,7 +62,6 @@ class ControllerUser extends Controller {
                 $this->log_user($user);
             }
         }
-        (new View("signup"))->show(
-            array("mail" => $mail, "fullName" => $fullName, "password" => $password, "conf_password" => $conf_password, "error" => $error));
+        (new View("signup"))->show(array("error" => $error, "mail"=>$mail, "fullName"=>$fullName));
     }
 }

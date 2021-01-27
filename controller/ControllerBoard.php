@@ -65,6 +65,7 @@ class ControllerBoard extends Controller
             $board = Board::select_board_by_id($_GET["param1"]);
         }
         $user = $this->get_user_or_false();
+
         $viewEditTitleBoard = false;
         $owner = User::select_user_by_id($board->getOwner());
         $tableFormatDateCreation = $this->diffDateFormat($board->getCreatedAt());
@@ -75,7 +76,7 @@ class ControllerBoard extends Controller
         $tableColumn = Column::select_all_column_by_id_board_ASC($board->getId());
         $tableCardColumn = [];
         foreach ($tableColumn as $column) {
-            $tableCardColumn [$column->getPosition()] = Card::select_all_card_by_id_column_ASC($column->getId());
+            $tableCardColumn [] = Card::select_all_card_by_id_column_ASC($column->getId());
         }
         if ($board->getModifiedAt() == null) {
             $modifDate = false;
@@ -198,6 +199,7 @@ class ControllerBoard extends Controller
 
     public function delete_board()
     {
+        $user = $this->get_user_or_false();
         $function = "board";
         $objectNotif = "board (the columns and cards will be deleted too)";
         $resultat = "";
@@ -216,7 +218,7 @@ class ControllerBoard extends Controller
             }
         }
         (new View("conf_delete"))->show(array("function"=>$function, "resultat" => $resultat,
-            "object" => $object, "objectNotif" => $objectNotif));
+            "object" => $object, "objectNotif" => $objectNotif, "user"=>$user));
     }
 
     public function add_card()

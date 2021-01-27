@@ -1,19 +1,18 @@
 <!DOCTYPE>
 <html>
-    <head>
-        <head>
-            <meta charset="UTF-8">
-            <title>Edit Card</title>
-            <base href="<?= $web_root ?>"/>
-            <link href="css/styles.css" rel="stylesheet" type="text/css"/>
-        </head>
-    </head>
-    <body>
-    <div>
-        <p><a href="board/index">Home</a> <a href="board/board/<?php echo $column->getBoard()?>">Board</a></p>
-    </div>
-    <h1>Card "<?php echo $card->getTitle() ?>"</h1>
-    <?php if($card->getAuthor() == $user->getID()) {?>
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Card</title>
+    <base href="<?= $web_root ?>"/>
+    <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+</head>
+<div>
+    <?php include("header.php") ?>
+</div>
+</br>
+<body>
+<h1>Card "<?php echo $card->getTitle() ?>"</h1>
+<?php if ($card->getAuthor() == $user->getID()) { ?>
     <!-- formulaire pour supprimer la carte -->
     <form class="FormColumn" action="card/delete_card/<?php echo $card->getId()?>" method="post">
         <input type="submit" name="delCard" value="Delete Card">
@@ -24,19 +23,20 @@
             <input type="submit" name="openViewModifCard" value="modify Card">
         </form>
     <?php endif; ?>
-    <?php }?>
-    <p>
-        <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by " . $fullName . "." ?>
-        <?php if (!$modifDate) {
-            echo $messageTimeModif;
-        } else {
-            echo "Modified " . $diffDateModif . " " . $messageTimeModif . " ago";
-        } ?>
-    </p>
-    <p>
-        this card is on the board "<?php echo $board->getTitle()?>", column "<?php echo $column->getTitle()?>" at position <?php echo $column->getPosition()?>;
-    </p>
-    <h3>Body</h3>
-    <textarea name="bodyCard" disabled="disabled" rows="5" cols="100"><?php echo $card->getBody() ?></textarea>
-    </body>
+<?php } ?>
+<p>
+    <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by " . $fullName . "." ?>
+    <?php if (!$modifDate) {
+        echo $messageTimeModif;
+    } else {
+        echo "Modified " . $diffDateModif . " " . $messageTimeModif . " ago";
+    } ?>
+</p>
+<p>
+    this card is on the board "<?php echo $board->getTitle() ?>", column "<?php echo $column->getTitle() ?>" at
+    position <?php echo $column->getPosition() ?>;
+</p>
+<h3>Body</h3>
+<textarea name="bodyCard" disabled="disabled" rows="5" cols="100"><?php echo $card->getBody() ?></textarea>
+</body>
 </html>

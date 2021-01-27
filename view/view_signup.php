@@ -17,11 +17,11 @@
         <table>
             <tr>
                 <td>@</td>
-                <td><input type="email" name="mail" placeholder="Email"></td>
+                <td><input type="email" name="mail" placeholder="Email" value="<?php echo $mail?>"></td>
             </tr>
             <tr>
                 <td>&#x1F610;</td>
-                <td><input type="text" name="fullName" placeholder="Full Name"></td>
+                <td><input type="text" name="fullName" placeholder="Full Name" value="<?php echo $fullName?>"></td>
             </tr>
             <tr>
                 <td>&#x1F512;</td>

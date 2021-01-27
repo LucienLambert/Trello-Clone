@@ -71,7 +71,7 @@ class User extends Model
         $query = self::execute("SELECT * FROM User where id = :id", array("id" => $idUser));
         $data = $query->fetch();
         if ($query->rowCount() == 0) {
-            return false;
+            return null;
         } else {
             return new User($data["ID"], $data["Mail"], $data["FullName"], $data["Password"], $data["RegisteredAt"]);
         }
@@ -101,10 +101,15 @@ class User extends Model
             }
         }
         //check le password
-        if (strlen($password) < 8 || strlen($password) > 16) {
+        if (strlen($password) <= 8 || strlen($password) > 16) {
             $error[] = "Your password must contain between 8 and 16 charactères";
         } elseif ($password != $conf_password) {
             $error[] = "You entered two different password.";
+        } elseif(!preg_match('/[0-9A-Za-z!]*$/', $password)){
+            $error[] = "Your password must contain a special character";
+        }
+        if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?\\-]/", $password))) {
+            $errors[] = "Password must contain one uppercase letter, one number and one punctuation mark.";
         }
         return $error;
     }

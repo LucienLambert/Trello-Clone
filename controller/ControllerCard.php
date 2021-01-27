@@ -75,7 +75,7 @@ class ControllerCard extends Controller {
             $diffDateModif = $tableFormatDateModif[0];
             $messageTimeModif = $tableFormatDateModif[1];
         }
-        (new View("edit_card"))->show(array("card" => $card, "fullName" => $fullName,
+        (new View("edit_card"))->show(array("user"=>$user, "card" => $card, "fullName" => $fullName,
             "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
             "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "error" => $error));
     }
@@ -161,6 +161,7 @@ class ControllerCard extends Controller {
 
     public function delete_card()
     {
+        $user = $this->get_user_or_false();
         $function = "card";
         $objectNotif = "card";
         $resultat = "";
@@ -177,7 +178,7 @@ class ControllerCard extends Controller {
             }
         }
         (new View("conf_delete"))->show(array("function"=>$function,"resultat" => $resultat,
-            "object" => $object, "objectNotif" => $objectNotif));
+            "object" => $object, "objectNotif" => $objectNotif, "user"=>$user));
     }
 
     private function diffDateFormat($date)

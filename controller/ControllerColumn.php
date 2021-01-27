@@ -14,6 +14,7 @@ class ControllerColumn extends Controller {
     }
 
     public function delete_column() {
+        $user = $this->get_user_or_false();
         $function = "column";
         $objectNotif = "column (the cards will be deleted too)";
         $resultat = "";
@@ -30,7 +31,7 @@ class ControllerColumn extends Controller {
             }
         }
         (new View("conf_delete"))->show(array("function"=>$function, "resultat" => $resultat,
-            "object" => $object, "objectNotif" => $objectNotif));
+            "object" => $object, "objectNotif" => $objectNotif, "user"=>$user));
     }
 
     //switch les deux colonnes passé en paramètre.

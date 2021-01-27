@@ -8,6 +8,10 @@
     <div>
         <?php include("menu.html")?>
     </div>
-    <p>Hello guest! Please <a href="user/login">log In</a> or <a href="user/signup">sign Up</a></p>
+    <p>Hello guest! Please
+        <a style="color: blue" href="user/login">log In</a>
+        or
+        <a style="color: blue" href="user/signup">sign Up</a>
+    </p>
     </body>
 </html>

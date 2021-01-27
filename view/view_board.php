@@ -10,8 +10,6 @@
     <div>
         <p><?php include("header.php")?></p>
     </div>
-    <h1>Welcome <?php echo $user->getFullName() ?></h1>
-
     <h1>Your boards</h1>
     <!-- formulaire qui gère l'affichage et l'ouverture des boards -->
     <?php for($i = 0; $i < count($tableBoard); $i++) { ?>

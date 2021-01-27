@@ -30,7 +30,7 @@
     <?php endif; ?>
 <?php } ?>
 <p>
-    <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by " . $fullName . "." ?>
+    <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by " ?><span style="color: #6565f1"><?php echo $fullName?>.</span>
     <?php if (!$modifDate) {
         echo $messageTimeModif;
     } else {

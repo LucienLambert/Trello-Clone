@@ -25,8 +25,9 @@
         <a class="header" href="board/index">Boards</a>
         <a class="header" href="board/board/<?php echo $board->getId()?>/board"><?php echo $board->getTitle()?></a>
         <a class="header"><?php echo $card->getTitle()?></a>
-    <?php } else { ?>
+    <?php } ?>
+    <?php if($_GET["action"] == "delete_board" || $_GET["action"] == "delete_column" || $_GET["action"] == "delete_card"){?>
         <a class="header" href="board/index">Boards</a>
-    <?php }?>
+    <?php } ?>
 </div>
 </header>

@@ -34,6 +34,10 @@ th, td{
 }
 
 #delete{
+    padding: 20px;
+    border-width:2px;
+    border-style:solid;
+    border-color:black;
     color: red;
     text-align: center;
     position: absolute;

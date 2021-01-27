@@ -25,7 +25,7 @@
     <?php endif; ?>
 <?php } ?>
 <p>
-    <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by " . $fullName . "." ?>
+    <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by "?><span style="color: 6565f1"><?php echo $fullName?>.</span>
     <?php if (!$modifDate) {
         echo $messageTimeModif;
     } else {
@@ -33,10 +33,11 @@
     } ?>
 </p>
 <p>
-    this card is on the board "<?php echo $board->getTitle() ?>", column "<?php echo $column->getTitle() ?>" at
+    this card is on the board "<span style="color: 6565f1"><?php echo $board->getTitle()?></span>"
+    , column "<span style="color: #6565f1"><?php echo $column->getTitle()?></span>" at
     position <?php echo $column->getPosition() ?>;
 </p>
 <h3>Body</h3>
-<textarea name="bodyCard" disabled="disabled" rows="5" cols="100"><?php echo $card->getBody() ?></textarea>
+<textarea style="background: lightgray" name="bodyCard" disabled="disabled" rows="5" cols="100"><?php echo $card->getBody() ?></textarea>
 </body>
 </html>

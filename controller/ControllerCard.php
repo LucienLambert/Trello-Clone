@@ -137,24 +137,20 @@ class ControllerCard extends Controller {
     public function modif_card()
     {
         $error = [];
-        var_dump("A");
         if (isset($_POST["boutonCancel"])) {
             $this->redirect("card", "view_card", $_GET["param1"], $_GET["param2"]);
         } elseif (isset($_POST["boutonApply"])) {
-            var_dump("B");
             $card = Card::select_card_by_id($_GET["param2"]);
             $column = Column::select_column_by_id($_GET["param1"]);
             if (strcasecmp($card->getTitle(),$_POST["titleCard"]) != 0) {
                 $error = Card::valide_card($column, $_POST["titleCard"]);
             }
             if(count($error) == 0){
-                var_dump("C");
                 $card->setTitle($_POST["titleCard"]);
                 $card->setBody($_POST["bodyCard"]);
-                $card->update_card();
+                $card->update_card(new DateTime("now"));
                 $this->redirect("card", "view_card",$_GET["param2"]);
             }
-            var_dump("D");
             $this->edit_card($error);
         }
     }

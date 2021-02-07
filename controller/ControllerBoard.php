@@ -72,7 +72,6 @@ class ControllerBoard extends Controller
         $diffDateModif = $board->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
         $messageTime = $tableFormatDateCreation[1];
-        //table à deux dimenssion [la colonnes][les cartes de la colonnes]
         $tableColumn = Column::select_all_column_by_id_board_ASC($board->getId());
         $tableCardColumn = [];
         foreach ($tableColumn as $column) {

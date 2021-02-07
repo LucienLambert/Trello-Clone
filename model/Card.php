@@ -135,15 +135,6 @@ class Card extends Model
                 }
             }
         }
-
-        /*
-        $tableCardColumn = self::select_all_card_by_id_column_ASC($column->getId());
-        foreach ($tableCardColumn as $card){
-            if(strcasecmp($card->getTitle(),$_POST["titleCard"])){
-                $error [] ="the Column contains already a card with this title";
-            }
-        }
-        */
         return $error;
     }
 
@@ -172,14 +163,14 @@ class Card extends Model
     }
 
     //update la carte current
-    public function update_card(){
-        self::execute("UPDATE Card SET title = :title, body = :body, position = :position, createdAt = :createdAt, modifiedAt = :createdAt, author = :author, `column` = :column WHERE id = :id",array(
+    public function update_card($modifiedAt){
+        self::execute("UPDATE Card SET title = :title, body = :body, position = :position, createdAt = :createdAt, modifiedAt = :modifiedAt, author = :author, `column` = :column WHERE id = :id",array(
             "id"=>$this->getId(),
             "title"=>$this->getTitle(),
             "body"=>$this->getBody(),
             "position"=>$this->getPosition(),
             "createdAt"=>$this->getCreatedAt(),
-            "modifiedAt"=>$this->getModifiedAt(),
+            "modifiedAt"=>$modifiedAt->format('Y-m-d H:i:s'),
             "author"=>$this->getAuthor(),
             "column"=>$this->getColumn()
         ));

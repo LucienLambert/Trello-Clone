@@ -26,5 +26,5 @@ Tous les utilisateurs (`boverhaegen@epfc.eu`, `bepenelle@epfc.eu`, `brlacroix@ep
 
 #MODIFICATION
 user : Lucien@gmail.com 
-mdp : Lonsdfale@1
+mdp : Password1,
 

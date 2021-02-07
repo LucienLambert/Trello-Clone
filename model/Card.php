@@ -162,15 +162,25 @@ class Card extends Model
         return false;
     }
 
+    public function update_card_modifiedAt($modifiedAt){
+        self::execute("UPDATE Card SET title = :title, body = :body, modifiedAt = :modifiedAt WHERE id = :id",array(
+            "id"=>$this->getId(),
+            "title"=>$this->getTitle(),
+            "body"=>$this->getBody(),
+            "modifiedAt"=>$modifiedAt->format('Y-m-d H:i:s'),
+        ));
+        return true;
+    }
+
     //update la carte current
-    public function update_card($modifiedAt){
+    public function update_card(){
         self::execute("UPDATE Card SET title = :title, body = :body, position = :position, createdAt = :createdAt, modifiedAt = :modifiedAt, author = :author, `column` = :column WHERE id = :id",array(
             "id"=>$this->getId(),
             "title"=>$this->getTitle(),
             "body"=>$this->getBody(),
             "position"=>$this->getPosition(),
             "createdAt"=>$this->getCreatedAt(),
-            "modifiedAt"=>$modifiedAt->format('Y-m-d H:i:s'),
+            "modifiedAt"=>$this->getModifiedAt(),
             "author"=>$this->getAuthor(),
             "column"=>$this->getColumn()
         ));

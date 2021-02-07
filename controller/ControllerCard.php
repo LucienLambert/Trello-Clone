@@ -148,7 +148,7 @@ class ControllerCard extends Controller {
             if(count($error) == 0){
                 $card->setTitle($_POST["titleCard"]);
                 $card->setBody($_POST["bodyCard"]);
-                $card->update_card(new DateTime("now"));
+                $card->update_card_modifiedAt(new DateTime("now"));
                 $this->redirect("card", "view_card",$_GET["param2"]);
             }
             $this->edit_card($error);

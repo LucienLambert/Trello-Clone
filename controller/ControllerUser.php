@@ -59,7 +59,7 @@ class ControllerUser extends Controller {
                 //créer l'utilisateur et l'joute à la DB
                 $user->insert_user();
                 //connecte l'utilisateur et le redirige vers l'accueil
-                $this->log_user($user);
+                $this->log_user(User::select_member_by_mail($mail));
             }
         }
         (new View("signup"))->show(array("error" => $error, "mail"=>$mail, "fullName"=>$fullName));

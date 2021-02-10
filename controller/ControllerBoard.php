@@ -65,7 +65,6 @@ class ControllerBoard extends Controller
             $board = Board::select_board_by_id($_GET["param1"]);
         }
         $user = $this->get_user_or_false();
-
         $viewEditTitleBoard = false;
         $owner = User::select_user_by_id($board->getOwner());
         $tableFormatDateCreation = $this->diffDateFormat($board->getCreatedAt());

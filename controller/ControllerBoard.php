@@ -103,16 +103,16 @@ class ControllerBoard extends Controller
     public function add_board()
     {
         $user = $this->get_user_or_redirect();
-        $user = User::select_member_by_mail($user->getMail());
-        $error = [];
+        //$user = User::select_member_by_mail($user->getMail());
         //check le boutonAdd pour voir si on a cliqué dessus
         if (isset($_POST["boutonAdd"])) {
             $title = $_POST["title"];
+            $board = new Board(null, $title, $user, null, null);
             //check si le fomulaire répond aux conditions d'ajout
-            $error = Board::valide_board($title, $user);
+            $error = $board->valide_board();
             //check si pas error
             if (count($error) == 0) {
-                $board = new Board(null, $title, $user, null, null);
+                //$board = new Board(null, $title, $user, null, null);
                 $board->insert_board($user);
                 //return sur list_board pour réafficher la liste des boards rafraîchir.
                 $this->redirect("board", "index");
@@ -158,10 +158,11 @@ class ControllerBoard extends Controller
         if($user->getId() === $board->getOwner()){
             if (isset($_POST["modifTitle"])) {
                 $newTitle = $_POST["newTitleBoard"];
-                $error = Board::valide_board($newTitle, $user);
+                $board->setTitle($newTitle);
+                $error = $board->valide_board();
 
                 if (count($error) == 0) {
-                    $board->update_title_board($newTitle, $board->getId(), new DateTime("now"));
+                    $board->update_title_board(new DateTime("now"));
                     $this->redirect("board", "board", $_GET["param1"]);
                 } else {
                     $this->board($error);
@@ -208,7 +209,7 @@ class ControllerBoard extends Controller
             if (isset($_POST["butonCancel"])) {
                 $this->redirect("board", "index");
             } elseif (isset($_POST["butonDelete"])) {
-                if (Board::delete_board_by_id($_GET["param1"])) {
+                if ($object->delete_board_by_id()) {
                     $resultat = "successful deletion.";
                 } else {
                     $resultat = "the board hasn't been deleted.";

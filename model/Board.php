@@ -45,6 +45,10 @@ class Board extends Model
         return $this->modifiedAt;
     }
 
+    public function setTitle($title){
+        $this->title = $title;
+    }
+
 
     //ajoute un board dans la DB
     public function insert_board($user)
@@ -54,22 +58,22 @@ class Board extends Model
     }
 
     //verifie si l'ajout de la table respect bien les conditions
-    public static function valide_board($title, $user)
+    public function valide_board()
     {
         //contiendra les erreurs
         $error = [];
         //recup la liste des board du user
-        $tableBoard = self::select_all_board($user);
+        $tableBoard = self::select_all_board();
         //check si le titre n'est pas une string vide, si c'est bien une string, si c'est pas null
-        if (!isset($title) || strlen($title) <= 0 || !is_string($title)) {
+        if ($this->getTitle() == null || strlen($this->getTitle()) <= 0 || !is_string($this->getTitle())) {
             $error [] = "You must enter a title for you board";
             //parcoure la table
-        } elseif(strlen($title) < 3){
+        } elseif(strlen($this->getTitle()) < 3){
             $error [] = "Your title must contain 3 characters minimum.";
         }
         foreach ($tableBoard as $board) {
             //controler si une table ne porte pas déjà un titre identique (convertie les String en minuscule).
-            if (strtolower($board->getTitle()) == strtolower($title)) {
+            if (strtolower($board->getTitle()) == strtolower($this->getTitle())) {
                 $error [] = "this table title is already used, please choose another title";
             }
         }
@@ -133,17 +137,17 @@ class Board extends Model
         return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
     }
 
-    public function update_title_board($title, $id, $modifiedAt)
+    public function update_title_board($modifiedAt)
     {
         self::execute("UPDATE Board SET title = :title, modifiedAt = :modifiedAt WHERE id = :id",
-            array("title" => $title, "id" => $id, "modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
+            array("title" => $this->getTitle(), "id" => $this->getId(), "modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
         return true;
     }
 
-    public static function delete_board_by_id($idBoard){
-        if(isset($idBoard)){
-            if(Column::delete_all_column_by_id_board($idBoard)){
-                self::execute("DELETE FROM Board WHERE id= :id",array("id"=>$idBoard));
+    public function delete_board_by_id(){
+        if($this->getId() != null){
+            if(Column::delete_all_column_by_id_board($this->getId())){
+                self::execute("DELETE FROM Board WHERE id= :id",array("id"=>$this->getId()));
                 return true;
             }
         }

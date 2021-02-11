@@ -9,6 +9,9 @@
     <h1 class="header">Trello!</h1>
     <a class="header" href="board/logout">Log Out</a>
     <a class="header"><?php echo $user->getFullName()?><?php if($user->getRole() == "admin") { ?><img id="image" src="image/icon_admin.png"><?php }?></a>
+    <?php if($user->getRole() == "admin"){ ?>
+        <a class="header" href="user/list_users">Manage Users</a>
+        <?php } ?>
     <?php if($_GET["action"] == "index"){?>
         <a class="header">Boards</a>
     <?php } ?>

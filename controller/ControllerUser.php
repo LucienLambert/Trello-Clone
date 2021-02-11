@@ -64,4 +64,24 @@ class ControllerUser extends Controller {
         }
         (new View("signup"))->show(array("error" => $error, "mail"=>$mail, "fullName"=>$fullName));
     }
+
+    //affiche la liste des user sauf le user connecté
+    //pour changement de role
+    public function list_users(){
+        $user = $this->get_user_or_redirect();
+        if($user->getRole() != "admin"){
+            $this->redirect("Board","index");
+        }
+        $tablUsers = $user->select_all_user();
+        if(isset($_POST["role"])){
+            $role = $_POST["role"];
+            $idUserRole = $_POST["idUser"];
+            $userRole = User:: select_user_by_id($idUserRole);
+            $userRole->setRole($role);
+            $userRole->update_role();
+            $this->redirect("user","list_users");
+        }
+
+        (new View("zone_admin"))->show(array("user" => $user,"tablUsers"=>$tablUsers));
+    }
 }

@@ -8,15 +8,17 @@ class User extends Model
     private $fullName;
     private $password;
     private $registeredAt;
+    private $role;
 
 
-    public function __construct($id, $mail, $fullName, $password, $registeredAt)
+    public function __construct($id, $mail, $fullName, $password, $registeredAt, $role=null)
     {
         $this->id = $id;
         $this->mail = $mail;
         $this->fullName = $fullName;
         $this->password = $password;
         $this->registeredAt = $registeredAt;
+        $this->role = $role;
     }
 
     public function getFullName()
@@ -44,6 +46,14 @@ class User extends Model
         return $this->registeredAt;
     }
 
+    public function getRole(){
+        return $this->role;
+    }
+
+    public function setRole($role){
+        $this->role = $role;
+    }
+
     //ajoute un user à la DB
     public function insert_user()
     {
@@ -63,7 +73,7 @@ class User extends Model
         if ($query->rowCount() == 0) {
             return false;
         } else {
-            return new User($data["ID"], $data["Mail"], $data["FullName"], $data["Password"], $data["RegisteredAt"]);
+            return new User($data["ID"], $data["Mail"], $data["FullName"], $data["Password"], $data["RegisteredAt"], $data["Role"]);
         }
     }
 
@@ -134,6 +144,33 @@ class User extends Model
         }
         return $error;
     }
+
+    //check si un user est un collaborateur d'un board
+    public static function check_collaborator_board($user,$board){
+        $query = self::execute("SELECT * FROM Collaborate WHERE board=:board and collaborator=:user",array(
+            "board" => $board->getID(),
+            "user" => $user->getId()
+        ));
+        $data = $query->fetch();
+        //return false si data est vide
+        //sinon renvoi la ligne de la db
+        return $data;
+    }
+
+    /*
+    //savoir si le user est l'admin -> on ne l'uttilise pas pour l'instant
+    public function is_admin(){
+        $query = self::execute("SELECT role FROM User where id=:id",array(
+            "id" => $this->getId()
+        ));
+        $data = $query->fetch();
+        if($data["role"] != "admin"){
+            return false;
+        }
+        return true;
+    }
+    */
+    
 }
 
 ?>

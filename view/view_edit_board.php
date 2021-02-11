@@ -11,7 +11,7 @@
 </div>
 <body>
 <h1>Board "<?php echo $board->getTitle() ?>"</h1>
-<?php if ($board->getOwner() == $user->getId()) { ?>
+<?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) != false || $user->getRole() == "admin") { ?>
     <!-- formulaire pour supprimer le board -->
     <form action="board/delete_board/<?php echo $board->getId() ?>" method="post">
         <input type="submit" name="delBoard" value="Delete Board">
@@ -48,7 +48,7 @@
         <tr>
             <th>
                 <?php echo $column->getTitle() ?>
-                <?php if ($board->getOwner() == $user->getId()) { ?>
+                <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
                 <!-- formulaire pour modifier le title de la colonne -->
                 <form action="board/edit_title_column/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>"
                       method="post">
@@ -174,7 +174,7 @@
             </tr>
             </tbody>
         <?php } ?>
-        <?php if ($board->getOwner() == $user->getId()) { ?>
+        <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
             <tfoot>
             <tr>
                 <!-- formulaire pour ajouter une carte-->
@@ -189,7 +189,7 @@
         <?php } ?>
     </table>
     <?php } ?>
-    <?php if ($board->getOwner() == $user->getId()) { ?>
+    <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
     <!--formulaire qui s'occupe d'ajouter une colonne au board-->
     <form action="board/add_column/<?php echo $board->getId() ?>" method="post">
         <td>

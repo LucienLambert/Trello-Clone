@@ -52,7 +52,7 @@ class ControllerUser extends Controller {
             $mail = $_POST['mail'];
             $password = $_POST['password'];
             $conf_password = $_POST['conf_password'];
-            $user = new User(null, $mail, $fullName, Tools::my_hash($password), null);
+            $user = new User(null, $mail, $fullName, Tools::my_hash($password), null, null);
             $error = array_merge($error, $user->validate_signup($mail,$password,$conf_password, $fullName));
             //si pas d'erreur
             if(count($error) == 0){

@@ -13,7 +13,7 @@
 </div>
 <body>
 <br>
-<h1>Board"<?php echo $board->getTitle()?>" : Collaborators</h1>
+<h1>Board "<?php echo $board->getTitle()?>": Collaborators</h1>
 <h4>Current collaborator(s)</h4>
     <ul>
         <?php foreach ($tableCollaborator as $collabo) {?>

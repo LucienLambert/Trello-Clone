@@ -62,3 +62,8 @@ div.error {
     text-align: center;
     color: red;
 }
+
+#image{
+    width: 15px;
+    height: 15px;
+}

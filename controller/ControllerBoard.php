@@ -6,6 +6,7 @@ require_once 'model/Column.php';
 require_once 'model/Card.php';
 require_once 'framework/View.php';
 require_once 'framework/Controller.php';
+require_once "model/Collaborate.php";
 
 class ControllerBoard extends Controller
 {
@@ -93,7 +94,7 @@ class ControllerBoard extends Controller
                 "diffDateModif" => $diffDateModif, "messageTimeModif" => $messageTimeModif,
                 "fullName" => $owner->getFullName(), "tableColumn" => $tableColumn,
                 "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate,
-                "tableCardColumn" => $tableCardColumn, "error" => $error, "user"=>$user));
+                "tableCardColumn" => $tableCardColumn, "error" => $error, "user" => $user));
         } catch (Exception $e) {
             $e->getMessage();
         }
@@ -155,7 +156,7 @@ class ControllerBoard extends Controller
             //recup le board depuis son titre
             $board = Board::select_board_by_id($_GET["param1"]);
         }
-        if($user->getId() === $board->getOwner()){
+        if ($user->getId() === $board->getOwner()) {
             if (isset($_POST["modifTitle"])) {
                 $newTitle = $_POST["newTitleBoard"];
                 $board->setTitle($newTitle);
@@ -182,7 +183,7 @@ class ControllerBoard extends Controller
             $column = Column::select_column_by_id($_GET["param2"]);
             $board = Board::select_board_by_id($_GET["param1"]);
         }
-        if($this->get_user_or_false()->getId() === $board->getOwner()){
+        if ($this->get_user_or_false()->getId() === $board->getOwner()) {
             $title = $_POST["newTitleColumn"];
             $error = Column::valide_column($board, $title);
             if (count($error) == 0) {
@@ -205,19 +206,17 @@ class ControllerBoard extends Controller
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Board::select_board_by_id($_GET["param1"]);
         }
-        if($this->get_user_or_false()->getId() === $object->getOwner()){
-            if (isset($_POST["butonCancel"])) {
-                $this->redirect("board", "index");
-            } elseif (isset($_POST["butonDelete"])) {
-                if ($object->delete_board_by_id()) {
-                    $resultat = "successful deletion.";
-                } else {
-                    $resultat = "the board hasn't been deleted.";
-                }
+        if (isset($_POST["butonCancel"])) {
+            $this->redirect("board", "index");
+        } elseif (isset($_POST["butonDelete"])) {
+            if ($object->delete_board_by_id()) {
+                $resultat = "successful deletion.";
+            } else {
+                $resultat = "the board hasn't been deleted.";
             }
         }
-        (new View("conf_delete"))->show(array("function"=>$function, "resultat" => $resultat,
-            "object" => $object, "objectNotif" => $objectNotif, "user"=>$user));
+        (new View("conf_delete"))->show(array("function" => $function, "resultat" => $resultat,
+            "object" => $object, "objectNotif" => $objectNotif, "user" => $user));
     }
 
     public function add_card()
@@ -227,7 +226,7 @@ class ControllerBoard extends Controller
         $column = Column::select_column_by_id($_GET["param2"]);
         $board = Board::select_board_by_id($_GET["param1"]);
         $idColumn = $column->getId();
-        if($user->getId() === $board->getOwner()){
+        if ($user->getId() === $board->getOwner() || $user->getRole() == "admin") {
             //contient les cartes de la colunne
             $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
             $positionCard = count($tableCard);
@@ -239,9 +238,24 @@ class ControllerBoard extends Controller
                 $this->redirect("board", "board", $_GET["param1"]);
             }
             $this->board($error);
-        }else {
+        } else {
             $this->redirect("board", "board", $_GET["param1"]);
         }
+    }
+
+    public function collaborators(){
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
+            $board = Board::select_board_by_id($_GET["param1"]);
+        }
+        $tableCollaborator = Collaborate::select_all_collaborator($board);
+        $tableUser = $user->select_all_user();
+        (new View("collaborator"))->show(array("user"=>$user, "board"=>$board, "tableUser"=>$tableUser, "tableCollaborator"=>$tableCollaborator));
+    }
+
+    //TODO pour la suite.
+    public function add_collaborator(){
+
     }
 
     private function diffDateFormat($date)

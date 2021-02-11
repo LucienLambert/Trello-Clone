@@ -12,7 +12,7 @@
     <?php if($_GET["action"] == "index"){?>
         <a class="header">Boards</a>
     <?php } ?>
-    <?php if($_GET["action"] == "board" || $_GET["action"] == "edit_title_board"){?>
+    <?php if($_GET["action"] == "board" || $_GET["action"] == "edit_title_board" || $_GET["action"] == "collaborators"){?>
         <a class="header" href="board/index">Boards</a>
         <a class="header"><?php echo $board->getTitle()?></a>
     <?php } ?>

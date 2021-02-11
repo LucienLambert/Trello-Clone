@@ -145,6 +145,7 @@ class User extends Model
         return $error;
     }
 
+    //TODO tu dois return un user ou null, (ou return false or true), le prof ne veut pas que l'on face ce que tu as fais.
     //check si un user est un collaborateur d'un board
     public static function check_collaborator_board($user,$board){
         $query = self::execute("SELECT * FROM Collaborate WHERE board=:board and collaborator=:user",array(
@@ -155,6 +156,18 @@ class User extends Model
         //return false si data est vide
         //sinon renvoi la ligne de la db
         return $data;
+    }
+
+
+
+    public function select_all_user(){
+        $query = self::execute("SELECT * FROM User WHERE id!= :id",array("id"=>$this->getId()));
+        $data = $query->fetchAll();
+        $tableUser = [];
+        foreach ($data as $d){
+            $tableUser[] = new User($d["ID"], $d["Mail"], $d["FullName"], $d["Password"], $d["RegisteredAt"], $d["Role"]);
+        }
+        return $tableUser;
     }
 
     /*

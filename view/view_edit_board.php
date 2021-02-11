@@ -28,6 +28,9 @@
             <input type="submit" name="modifTitle" value="apply">
         </form>
     <?php endif; ?>
+    <form action="board/collaborators/<?php echo $board->getId() ?>" method="post">
+        <input type="submit" name="view_collaborator" value="Add Collaborators">
+    </form>
 <?php } ?>
 <p>
     <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by " ?><span style="color: #6565f1"><?php echo $fullName?>.</span>

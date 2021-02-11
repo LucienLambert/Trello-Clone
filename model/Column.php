@@ -112,13 +112,16 @@ class Column extends Model
     }
 
     //supprime la colonne selectionnée (doit également supprimer les cartes contenues dans la colonne)
-    public static function delete_column_by_id($idColumn)
+    public function delete_column_by_id()
     {
-        $column = Column::select_column_by_id($idColumn);
-        $table = Column::select_all_column_from_position($column);
-        if(isset($idColumn)){
-            Card::delete_all_card_by_Column($idColumn);
-            self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$column->getId()));
+        //$column = Column::select_column_by_id($idColumn);
+        $table = Column::select_all_column_from_position($this);
+        if($this->getId() != null){
+            $tableCard = Card::select_all_card_by_id_column_ASC($this->getId());
+            foreach ($tableCard as $c){
+                $c->delete_all_card_by_Column($this->getId());
+            }
+            self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$this->getId()));
             for($i = 0; $i < count($table); $i++){
                 $current = $table[$i];
                 $current->setPosition($current->getPosition() -1);
@@ -129,12 +132,12 @@ class Column extends Model
         return false;
     }
 
-    public static function delete_all_column_by_id_board($idBoard){
-        $column = Column::select_all_column_by_id_board_ASC($idBoard);
-        foreach ($column as $c){
-            Card::delete_all_card_by_Column($c->getId());
+    public function delete_all_column_by_id_board(){
+        $cardColumn = Card::select_all_card_by_id_column_ASC($this->getId());
+        foreach ($cardColumn as $c){
+            $c->delete_all_card_by_Column();
         }
-        self::execute("DELETE FROM `Column` WHERE board= :board", array("board"=>$idBoard));
+        self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$this->getId()));
         return true;
     }
 
@@ -167,12 +170,12 @@ class Column extends Model
         return new Column($data["ID"], $data["Title"], $data["Position"], $data["CreatedAt"], $data["ModifiedAt"], $data["Board"]);
     }
 
-    public static function move_column($columnR, $columnL) {
+    public function move_column($columnL) {
         self::execute("UPDATE `Column` SET position = :position WHERE id = :id"
-            ,array("position" =>$columnL->position, "id" =>$columnR->id));
+            ,array("position" =>$columnL->position, "id" =>$this->getId()));
 
         self::execute("UPDATE `Column` SET position = :position WHERE id = :id"
-            ,array("position" =>$columnR->position, "id" =>$columnL->id));
+            ,array("position" =>$this->getPosition(), "id" =>$columnL->id));
         return true;
     }
     //recup toutes les colonnes d'un board->id mais trié par position

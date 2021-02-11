@@ -154,9 +154,9 @@ class Card extends Model
     }
 
     //supprime toutes les cartes d'une colonne par rapport à l'id de la colonne.
-    public static function delete_all_card_by_Column($idColumn){
-        if(isset($idColumn)){
-            self::execute("DELETE FROM Card WHERE `column` = :column",array("column"=>$idColumn));
+    public function delete_all_card_by_Column(){
+        if($this->getColumn() != null){
+            self::execute("DELETE FROM Card WHERE `column` = :column",array("column"=>$this->getColumn()));
             return true;
         }
         return false;
@@ -187,15 +187,15 @@ class Card extends Model
         return true;
     }
 
-    public static function move_card_and_add_last_position_right_or_left($card , $newColumn){
+    public function move_card_and_add_last_position_right_or_left($newColumn){
         //recup le nombre de carte de la colonne
         $nbCardColumn = count(Card::select_all_card_by_id_column_ASC($newColumn->getId()));
         //recup toutes les cartes à partir de la position de la carte à déplacer
-        $table = Card::select_all_card_from_position_modif($card);
+        $table = Card::select_all_card_from_position_modif($this);
 
         //déplace la carte vers l'autre colonne
         self::execute("UPDATE Card SET `column` = :column, position = :position WHERE id = :id",
-            array("column"=>$newColumn->getId(), "id"=>$card->getId(), "position"=>$nbCardColumn));
+            array("column"=>$newColumn->getId(), "id"=>$this->getId(), "position"=>$nbCardColumn));
         //parcours le tableau avec les cartes à update.
         for ($i = 0 ; $i < count($table); $i++){
             $currentCard = $table[$i];
@@ -206,10 +206,10 @@ class Card extends Model
     }
 
     //supprime la carte selectionné depuis son id et return la card supprimer si ok sinon false.
-    public static function delete_card_by_id($card){
-        $table = Card::select_all_card_from_position_modif($card);
-        if(isset($card)){
-            self::execute("DELETE FROM Card WHERE id= :id",array("id"=>$card->getId()));
+    public function delete_card_by_id(){
+        $table = Card::select_all_card_from_position_modif($this);
+        if($this != null){
+            self::execute("DELETE FROM Card WHERE id= :id",array("id"=>$this->getId()));
             for ($i = 0 ; $i < count($table); $i++){
                 $currentCard = $table[$i];
                 $currentCard->setPosition($currentCard->getPosition()-1);
@@ -241,12 +241,12 @@ class Card extends Model
         return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"]);
     }
 
-    public static function move_card_up_or_down($oldPositionCard, $newPositionCard){
+    public function move_card_up_or_down($newPositionCard){
         self::execute("UPDATE Card SET position = :position WHERE id= :id",
-            array("id"=>$oldPositionCard->getId(), "position"=>$newPositionCard->getPosition()));
+            array("id"=>$this->getId(), "position"=>$newPositionCard->getPosition()));
 
         self::execute("UPDATE Card SET position = :position WHERE id= :id",
-            array("id"=>$newPositionCard->getId(), "position"=>$oldPositionCard->getPosition()));
+            array("id"=>$newPositionCard->getId(), "position"=>$this->getPosition()));
         return true;
     }
 }

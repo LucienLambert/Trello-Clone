@@ -146,10 +146,12 @@ class Board extends Model
 
     public function delete_board_by_id(){
         if($this->getId() != null){
-            if(Column::delete_all_column_by_id_board($this->getId())){
-                self::execute("DELETE FROM Board WHERE id= :id",array("id"=>$this->getId()));
-                return true;
+            $columnBoard = Column::select_all_column_by_id_board($this);
+            foreach ($columnBoard as $column){
+                $column->delete_all_column_by_id_board();
             }
+            self::execute("DELETE FROM Board WHERE id= :id",array("id"=>$this->getId()));
+            return true;
         }
         return false;
     }

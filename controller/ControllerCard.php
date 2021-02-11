@@ -81,7 +81,7 @@ class ControllerCard extends Controller {
     }
 
     private function move_card_right_or_left($card = "", $newColonne = ""){
-        Card::move_card_and_add_last_position_right_or_left($card, $newColonne);
+        $card->move_card_and_add_last_position_right_or_left($newColonne);
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $this->redirect("board","board", $_GET["param1"]);
         } else {
@@ -110,7 +110,7 @@ class ControllerCard extends Controller {
     }
 
     private function move_card_up_or_down($oldPosition, $newPosition){
-        Card::move_card_up_or_down($oldPosition, $newPosition);
+        $oldPosition->move_card_up_or_down($newPosition);
         $this->redirect("board", "board", $_GET["param1"]);
     }
 
@@ -167,7 +167,7 @@ class ControllerCard extends Controller {
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
         } elseif (isset($_POST["butonDelete"])) {
-            if (Card::delete_card_by_id($object)) {
+            if ($object->delete_card_by_id()) {
                 $resultat = "successful deletion.";
             } else {
                 $resultat = "the card hasn't been deleted.";

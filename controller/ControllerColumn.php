@@ -24,7 +24,7 @@ class ControllerColumn extends Controller {
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
         } elseif (isset($_POST["butonDelete"])) {
-            if (Column::delete_column_by_id($_GET["param1"])) {
+            if ($object->delete_column_by_id()) {
                 $resultat = "successful deletion.";
             } else {
                 $resultat = "the column hasn't been deleted.";
@@ -37,7 +37,8 @@ class ControllerColumn extends Controller {
     //switch les deux colonnes passé en paramètre.
     private function move_column($columnRigth = "", $columnLeft = "")
     {
-        Column::move_column($columnRigth, $columnLeft);
+        $columnRigth->move_column($columnLeft);
+        //Column::move_column($columnRigth, $columnLeft);
         $this->redirect("board", "board", $_GET["param1"]);
     }
 

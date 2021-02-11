@@ -23,6 +23,10 @@ class Collaborate extends Model{
         return User::select_user_by_id($this->getIdCollaborator());
     }
 
+    public static function select_collaborator($idUser){
+
+    }
+
     public static function select_all_collaborator($board){
         $query = self::execute("SELECT * FROM Collaborate WHERE board= :board",array("board"=>$board->getID()));
         $data = $query->fetchAll();
@@ -40,6 +44,15 @@ class Collaborate extends Model{
         self::execute("INSERT INTO Collaborate(Collaborator,Board) VALUES (:idCollaborator, :idBoard)",
             array("idCollaborator"=>$this->getIdCollaborator(),
                 "idBoard"=>$this->idBoard
+            ));
+        return true;
+    }
+
+    public function delete_collaborator($board){
+        self::execute("DELETE FROM collaborate WHERE user=:user AND board:=board",
+            array(
+                "user"=>$this->getId(),
+                "board"=>$board->getId()
             ));
         return true;
     }

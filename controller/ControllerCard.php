@@ -80,7 +80,7 @@ class ControllerCard extends Controller {
             "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "error" => $error));
     }
 
-    private function move_card_right_or_left($card = "", $newColonne = ""){
+    private function move_card_right_or_left($card, $newColonne){
         $card->move_card_and_add_last_position_right_or_left($newColonne);
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $this->redirect("board","board", $_GET["param1"]);

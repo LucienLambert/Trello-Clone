@@ -274,6 +274,17 @@ class ControllerBoard extends Controller
         $this->redirect("board", "collaborators", $_GET["param1"]);
     }
 
+    public function del_collaborator(){
+        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
+            $board = Board::select_board_by_id($_GET["param1"]);
+            if (isset($_GET["param2"]) && $_GET["param2"] != "") {
+                $CollaboDel = $_GET["param2"];
+                $CollaboDel = User::select_user_by_id($CollaboDel);
+            }
+        }
+        $this->redirect("board", "collaborators", $_GET["param1"]);
+    }
+
     private function diffDateFormat($date)
     {
         $tableFormatDate = [];

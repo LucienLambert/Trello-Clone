@@ -148,7 +148,7 @@ class User extends Model
     //check si un user est un collaborateur d'un board
     public static function check_collaborator_board($user,$board){
         $query = self::execute("SELECT * FROM Collaborate WHERE board=:board and collaborator=:user",array(
-            "board" => $board->getID(),
+            "board" => $board->getId(),
             "user" => $user->getId()
         ));
         $data = $query->fetch();

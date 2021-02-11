@@ -35,4 +35,12 @@ class Collaborate extends Model{
         }
         return $table;
     }
+
+    public function insert_collaborator(){
+        self::execute("INSERT INTO Collaborate(Collaborator,Board) VALUES (:idCollaborator, :idBoard)",
+            array("idCollaborator"=>$this->getIdCollaborator(),
+                "idBoard"=>$this->idBoard
+            ));
+        return true;
+    }
 }

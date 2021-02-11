@@ -20,11 +20,11 @@
         <li><?php echo $collabo->getUser()->getFullName()." (".$collabo->getUser()->getMail().")"?></li>
         <?php }?>
     </ul>
-<form action="board/add_collaborators">
+<form action="board/add_collaborator/<?php echo $board->getId()?>" method="post">
     <label>Add a new collaborator:</label><br>
     <select name="collaborator_select">
-        <?php foreach ($tableUser as $u) {?>
-            <option value="user_collaborator"><?php echo $u->getFullName()." (".$u->getMail().")"?></option>
+        <?php foreach ($tableNotCollabo as $u) {?>
+            <option value="<?php echo $u->getId() ?>"><?php echo $u->getFullName()." (".$u->getMail().")"?></option>
         <?php }?>
     </select>
     <input type="submit" name="submit_collaborator" value="Add">

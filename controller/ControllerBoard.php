@@ -250,12 +250,28 @@ class ControllerBoard extends Controller
         }
         $tableCollaborator = Collaborate::select_all_collaborator($board);
         $tableUser = $user->select_all_user();
-        (new View("collaborator"))->show(array("user"=>$user, "board"=>$board, "tableUser"=>$tableUser, "tableCollaborator"=>$tableCollaborator));
+        $tableNotCollabo = [];
+        foreach ($tableUser as $u){
+            if(User::check_collaborator_board($u,$board) == false){
+                $tableNotCollabo [] = $u;
+            }
+        }
+        (new View("collaborator"))->show(array("user"=>$user, "board"=>$board, "tableNotCollabo"=>$tableNotCollabo, "tableCollaborator"=>$tableCollaborator));
     }
 
-    //TODO pour la suite.
     public function add_collaborator(){
-
+        if (isset($_GET["param1"]) && $_GET["param1"] != "") {
+            $board = Board::select_board_by_id($_GET["param1"]);
+            $userCollabo = $_POST["collaborator_select"];
+            if($_POST["collaborator_select"] != null){
+                $user = User::select_user_by_id($userCollabo);
+                if(User::check_collaborator_board($user, $board) == false){
+                    $newCollaborator = new Collaborate($userCollabo, $board->getId());
+                    $newCollaborator->insert_collaborator();
+                }
+            }
+        }
+        $this->redirect("board", "collaborators", $_GET["param1"]);
     }
 
     private function diffDateFormat($date)

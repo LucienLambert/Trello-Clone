@@ -278,8 +278,8 @@ class ControllerBoard extends Controller
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $board = Board::select_board_by_id($_GET["param1"]);
             if (isset($_GET["param2"]) && $_GET["param2"] != "") {
-                $CollaboDel = $_GET["param2"];
-                $CollaboDel = User::select_user_by_id($CollaboDel);
+                $collabo = Collaborate::select_collaborator_by_board($_GET["param2"], $board);
+                var_dump($collabo->delete_collaborator());
             }
         }
         $this->redirect("board", "collaborators", $_GET["param1"]);

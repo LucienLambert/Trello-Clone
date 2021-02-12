@@ -126,7 +126,7 @@ class Card extends Model
 
         $trouverCard = Card::check_equals_title_card_by_column($cardTitle);
         if($trouverCard){
-            $error [] ="the Column contains already a card with this title !!!!!!!!!!!!!!!!!";
+            $error [] ="the Column contains already a card with this title !";
         } else {
             $tableCardColumn = self::select_all_card_by_id_column_ASC($column->getId());
             foreach ($tableCardColumn as $card){

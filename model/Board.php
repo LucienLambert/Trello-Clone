@@ -143,13 +143,15 @@ class Board extends Model
             array("title" => $this->getTitle(), "id" => $this->getId(), "modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
         return true;
     }
-
+    //TODO ajouter la suppression des collaborateurs en même temps que l'on del un board.
     public function delete_board_by_id(){
         if($this->getId() != null){
             $columnBoard = Column::select_all_column_by_id_board($this);
             foreach ($columnBoard as $column){
                 $column->delete_all_column_by_id_board();
             }
+            $collabo = new Collaborate($this->getOwner(), $this->getId());
+            $collabo->delete_all_collaborator_by_board();
             self::execute("DELETE FROM Board WHERE id= :id",array("id"=>$this->getId()));
             return true;
         }

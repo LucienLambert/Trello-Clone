@@ -29,7 +29,7 @@
         </form>
     <?php endif; ?>
     <form action="board/collaborators/<?php echo $board->getId() ?>" method="post">
-        <input type="submit" name="view_collaborator" value="Add Collaborators">
+        <input type="submit" name="view_collaborator" value="Add Collaborator">
     </form>
 <?php } ?>
 <p>

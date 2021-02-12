@@ -29,7 +29,7 @@
         <a class="header" href="board/board/<?php echo $board->getId()?>/board"><?php echo $board->getTitle()?></a>
         <a class="header"><?php echo $card->getTitle()?></a>
     <?php } ?>
-    <?php if($_GET["action"] == "delete_board" || $_GET["action"] == "delete_column" || $_GET["action"] == "delete_card"){?>
+    <?php if($_GET["action"] == "delete_board" || $_GET["action"] == "delete_column" || $_GET["action"] == "delete_card" || $_GET["action"] == "list_users"){?>
         <a class="header" href="board/index">Boards</a>
     <?php } ?>
 </div>

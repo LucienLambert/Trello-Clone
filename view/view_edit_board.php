@@ -11,7 +11,7 @@
 </div>
 <body>
 <h1>Board "<?php echo $board->getTitle() ?>"</h1>
-<?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) != false || $user->getRole() == "admin") { ?>
+<?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
     <!-- formulaire pour supprimer le board -->
     <form action="board/delete_board/<?php echo $board->getId() ?>" method="post">
         <input type="submit" name="delBoard" value="Delete Board">
@@ -181,7 +181,7 @@
             <tfoot>
             <tr>
                 <!-- formulaire pour ajouter une carte-->
-                <form action="board/add_Card/<?php echo $column->getBoard()?>/<?php echo $column->getId()?>"
+                <form action="board/add_card/<?php echo $column->getBoard()?>/<?php echo $column->getId()?>"
                       method="post">
                     <td><input type="text" name="titleCard" size="15" placeholder="Add Card">
                         <input id="add" type="submit" name="boutonAddCard" value="+">

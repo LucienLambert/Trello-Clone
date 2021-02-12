@@ -18,7 +18,7 @@
     <ul>
         <?php foreach ($tableCollaborator as $collabo) {?>
         <li>
-            <form action="board/del_collaborator/<?php echo $board->getId()?>/<?php echo $collabo->getId()?>" method="post">
+            <form action="board/del_collaborator/<?php echo $board->getId()?>/<?php echo $collabo->getIdCollaborator()?>" method="post">
                 <?php echo $collabo->getUser()->getFullName()." (".$collabo->getUser()->getMail().")"?>
                 <input type="submit" name="del" value="Delete">
             </form>

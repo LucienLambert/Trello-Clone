@@ -23,10 +23,6 @@ class Collaborate extends Model{
         return User::select_user_by_id($this->getIdCollaborator());
     }
 
-    public static function select_collaborator($idUser){
-
-    }
-
     public static function select_all_collaborator($board){
         $query = self::execute("SELECT * FROM Collaborate WHERE board= :board",array("board"=>$board->getID()));
         $data = $query->fetchAll();
@@ -48,12 +44,26 @@ class Collaborate extends Model{
         return true;
     }
 
-    public function delete_collaborator($board){
-        self::execute("DELETE FROM collaborate WHERE user=:user AND board:=board",
+    public function delete_collaborator(){
+        self::execute("DELETE FROM Collaborate WHERE collaborator=:collaborator AND board= :board",
             array(
-                "user"=>$this->getId(),
-                "board"=>$board->getId()
+                "collaborator"=>$this->getIdCollaborator(),
+                "board"=>$this->getIdBoard()
             ));
         return true;
+    }
+
+    public function delete_all_collaborator_by_board(){
+        self::execute("DELETE FROM Collaborate WHERE board=:board", array("board"=>$this->getIdBoard()));
+        return true;
+    }
+
+    public static function select_collaborator_by_board($idCollabo, $board){
+        $query = self::execute("SELECT * FROM Collaborate WHERE board= :board AND collaborator= :collaborator", array(
+           "board"=>$board->getId(),
+           "collaborator"=>$idCollabo
+        ));
+        $data = $query->fetch();
+        return new Collaborate($data["Collaborator"], $data["Board"]);
     }
 }

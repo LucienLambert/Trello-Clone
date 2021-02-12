@@ -266,7 +266,16 @@ class ControllerCard extends Controller {
             $participant->insert_participant();
             $this->redirect("card","edit_card",$idCard);
         }
+    }
 
+    public function del_participant(){
+        if(isset($_GET["param1"]) && isset($_GET["param2"])){
+            $idParticipant = $_GET["param1"];
+            $idCard = $_GET["param2"];
+            $participant = new Participate($idParticipant,$idCard);
+            $participant->delete_participant();
+            $this->redirect("card","edit_card",$idCard);
+        }    
     }
 
 }

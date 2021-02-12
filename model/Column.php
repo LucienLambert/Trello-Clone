@@ -119,6 +119,11 @@ class Column extends Model
         if($this->getId() != null){
             $tableCard = Card::select_all_card_by_id_column_ASC($this->getId());
             foreach ($tableCard as $c){
+                //supprime tous les participant d'un carte d'un tableau de carte avant de supprimer la carte
+                $AllParticipant = Participate::select_all_participate_from_card($c);
+                foreach($AllParticipant as $participant){
+                    $participant->delete_participant();
+                }
                 $c->delete_all_card_by_Column($this->getId());
             }
             self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$this->getId()));
@@ -135,6 +140,11 @@ class Column extends Model
     public function delete_all_column_by_id_board(){
         $cardColumn = Card::select_all_card_by_id_column_ASC($this->getId());
         foreach ($cardColumn as $c){
+            //supprime tous les participant d'un carte d'un tableau de carte avant de supprimer la carte
+            $AllParticipant = Participate::select_all_participate_from_card($c);
+            foreach($AllParticipant as $participant){
+                $participant->delete_participant();
+            }
             $c->delete_all_card_by_Column();
         }
         self::execute("DELETE FROM `Column` WHERE id= :id", array("id"=>$this->getId()));

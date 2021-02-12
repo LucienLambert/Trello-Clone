@@ -33,6 +33,7 @@
         <?php foreach ($tableParticipant as $participant) {?>
         <li>
             <?php echo $participant->getUser()->getFullName()." (".$participant->getUser()->getMail().")"?>
+            <a type="button" href="card/del_participant/<?php echo $participant->getIdParticipate() ?>/<?php echo $participant->getIdCard() ?>">Delete</a>
         </li>
         <?php }?>
     </ul>

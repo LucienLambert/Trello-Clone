@@ -159,7 +159,6 @@ class ControllerCard extends Controller {
                 }
             }
             if(count($error) == 0){
-
                 $card->setTitle($_POST["titleCard"]);
                 $card->setBody($_POST["bodyCard"]);
                 $card->update_card();
@@ -168,9 +167,8 @@ class ControllerCard extends Controller {
             $this->edit_card($error);
         }
         if(isset($_POST["submit_participant"])){
-            $column = Column::select_column_by_id($_GET["param1"]);
-            $board = Board::select_board_by_id($column->getBoard());
-            $this->add_participant($board);
+            $this->add_participant();
+            $this->redirect("card", "edit_card",$_GET["param2"]);
         }
     }
 
@@ -255,16 +253,12 @@ class ControllerCard extends Controller {
     }
 
 
-    private function add_participant($board){
-        $user = $this->get_user_or_redirect();
-        if(isset($_GET["param1"]) && isset($_GET["param2"])){
+    private function add_participant(){
+        if(isset($_GET["param1"]) && isset($_GET["param2"])  && isset($_POST["participant_select"])){
             $idParticipant = $_POST["participant_select"];
             $idCard = $_GET["param2"];
-            $card = Card::select_card_by_id($idCard);
-            $idColumn = $_GET["param1"];
             $participant = new Participate($idParticipant,$idCard);
             $participant->insert_participant();
-            $this->redirect("card","edit_card",$idCard);
         }
     }
 

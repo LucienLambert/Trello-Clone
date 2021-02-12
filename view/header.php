@@ -15,16 +15,20 @@
     <?php if($_GET["action"] == "index"){?>
         <a class="header">Boards</a>
     <?php } ?>
-    <?php if($_GET["action"] == "board" || $_GET["action"] == "edit_title_board" || $_GET["action"] == "collaborators" || $_GET["action"] == "add_card"){?>
+    <?php if($_GET["action"] == "board" || $_GET["action"] == "edit_title_board" || $_GET["action"] == "add_card"){?>
         <a class="header" href="board/index">Boards</a>
         <a class="header"><?php echo $board->getTitle()?></a>
     <?php } ?>
+    <?php if($_GET["action"] == "collaborators"){?>
+        <a class="header" href="board/index">Boards</a>
+        <a class="header" href="board/board/<?php echo $board->getId() ?>"><?php echo $board->getTitle()?></a>
+    <?php }?>
     <?php if($_GET["action"] == "view_card"){?>
         <a class="header" href="board/index">Boards</a>
         <a class="header" href="board/board/<?php echo $board->getId()?>/board"><?php echo $board->getTitle()?></a>
         <a class="header"><?php echo $card->getTitle()?></a>
     <?php } ?>
-    <?php if($_GET["action"] == "edit_card"){?>
+    <?php if($_GET["action"] == "edit_card" || $_GET["action"] == "modif_card"){?>
         <a class="header" href="board/index">Boards</a>
         <a class="header" href="board/board/<?php echo $board->getId()?>/board"><?php echo $board->getTitle()?></a>
         <a class="header"><?php echo $card->getTitle()?></a>

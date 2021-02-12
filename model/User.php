@@ -169,6 +169,17 @@ class User extends Model
         }
         return $tableUser;
     }
+
+    //recup tous les users sauf le user connecté.
+    public function select_all_users(){
+        $query = self::execute("SELECT * FROM User WHERE id!= :id",array("id"=>$this->getId()));
+        $data = $query->fetchAll();
+        $tableUser = [];
+        foreach ($data as $d){
+            $tableUser[] = new User($d["ID"], $d["Mail"], $d["FullName"], $d["Password"], $d["RegisteredAt"], $d["Role"]);
+        }
+        return $tableUser;
+    }
     
     //update role user
     public function update_role(){

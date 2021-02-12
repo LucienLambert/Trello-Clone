@@ -89,12 +89,14 @@ class ControllerBoard extends Controller
         if (isset($_POST["openViewModifTitle"])) {
             $viewEditTitleBoard = true;
         }
+        $dueDate = new DateTime("now");
+        $dueDate = $dueDate->format('Y-m-d');
         try {
             (new View("edit_board"))->show(array("board" => $board, "diffDate" => $diffDate, "messageTime" => $messageTime,
                 "diffDateModif" => $diffDateModif, "messageTimeModif" => $messageTimeModif,
                 "fullName" => $owner->getFullName(), "tableColumn" => $tableColumn,
                 "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate,
-                "tableCardColumn" => $tableCardColumn, "error" => $error, "user" => $user));
+                "tableCardColumn" => $tableCardColumn, "error" => $error, "user" => $user, "dueDate" => $dueDate));
         } catch (Exception $e) {
             $e->getMessage();
         }

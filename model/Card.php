@@ -99,7 +99,7 @@ class Card extends Model
         $data = $Cards->fetchAll();
         $tableCards = [];
         foreach($data as $d){
-            $tableCards[] = new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"]);
+            $tableCards[] = new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"], $d["DueDate"]);
         }
         return $tableCards;
     }

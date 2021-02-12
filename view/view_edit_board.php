@@ -94,7 +94,7 @@
         <?php foreach ($tableCardColumn[$column->getPosition()] as $card) { ?>
             <tbody>
             <tr>
-                <td>
+                <td <?php if($dueDate > $card->getDueDate() && $card->getDueDate() != null){ ?> id="RedDueDate" <?php }?>>
                     <!-- formulaire pour ouvrir une carte-->
                     <form action="card/view_card/<?php echo $card->getId() ?>" method="post">
                         <input type="submit" name="openCard" value="<?php echo $card->getTitle() ?>">

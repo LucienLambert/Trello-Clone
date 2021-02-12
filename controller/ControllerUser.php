@@ -72,7 +72,7 @@ class ControllerUser extends Controller {
         if($user->getRole() != "admin"){
             $this->redirect("Board","index");
         }
-        $tablUsers = $user->select_all_user();
+        $tablUsers = $user->select_all_users();
         if(isset($_POST["role"])){
             $role = $_POST["role"];
             $idUserRole = $_POST["idUser"];
@@ -81,7 +81,6 @@ class ControllerUser extends Controller {
             $userRole->update_role();
             $this->redirect("user","list_users");
         }
-
         (new View("zone_admin"))->show(array("user" => $user,"tablUsers"=>$tablUsers));
     }
 }

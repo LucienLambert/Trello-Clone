@@ -4,6 +4,7 @@ require_once 'model/User.php';
 require_once 'model/Board.php';
 require_once 'model/Column.php';
 require_once 'model/Card.php';
+require_once 'model/Participate.php';
 require_once 'framework/View.php';
 require_once 'framework/Controller.php';
 
@@ -27,6 +28,7 @@ class ControllerCard extends Controller {
         $diffDateModif = $card->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
         $messageTime = $tableFormatDateCreation[1];
+        $tableParticipant = $this->participate();
         if (!isset($diffDateModif)) {
             $modifDate = false;
             $messageTimeModif = "Never modified";
@@ -42,7 +44,7 @@ class ControllerCard extends Controller {
         try {
             (new View("view_card"))->show(array("card" => $card, "fullName" => $fullName, "viewEditTitleCard" => $viewEditTitleCard,
                 "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
-                "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "user"=>$user));
+                "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "user"=>$user,"tableParticipant"=>$tableParticipant));
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -59,13 +61,14 @@ class ControllerCard extends Controller {
             $card = Card::select_card_by_id($_GET["param1"]);
             $column = Column::select_column_by_id($card->getColumn());
         }
-
         $board = Board::select_board_by_id($column->getBoard());
-        $fullName = $user->getFullName();
+        $authorCard = User::select_user_by_id($card->getAuthor());
         $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
         $diffDateModif = $card->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
         $messageTime = $tableFormatDateCreation[1];
+        $tableParticipant = $this->participate();
+        $tablNotParti = $this->table_not_participant($board,$card);
         if (!isset($diffDateModif)) {
             $modifDate = false;
             $messageTimeModif = "Never modified";
@@ -75,9 +78,9 @@ class ControllerCard extends Controller {
             $diffDateModif = $tableFormatDateModif[0];
             $messageTimeModif = $tableFormatDateModif[1];
         }
-        (new View("edit_card"))->show(array("user"=>$user, "card" => $card, "fullName" => $fullName,
+        (new View("edit_card"))->show(array("user"=>$user, "card" => $card, "authorCard" => $authorCard,
             "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
-            "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "error" => $error));
+            "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "tableParticipant"=>$tableParticipant, "tablNotParti"=>$tablNotParti, "error" => $error));
     }
 
     private function move_card_right_or_left($card, $newColonne){
@@ -164,6 +167,11 @@ class ControllerCard extends Controller {
             }
             $this->edit_card($error);
         }
+        if(isset($_POST["submit_participant"])){
+            $column = Column::select_column_by_id($_GET["param1"]);
+            $board = Board::select_board_by_id($column->getBoard());
+            $this->add_participant($board);
+        }
     }
 
     public function delete_card()
@@ -174,6 +182,12 @@ class ControllerCard extends Controller {
         $resultat = "";
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Card::select_card_by_id($_GET["param1"]);
+            /*$participants = Participate::select_all_participate_from_card($object);
+            foreach($participants as $part){
+                $part->delete_participant();
+            }*/
+            $participant = new Participate($object->getAuthor(),$object->getId());
+            $participant->delete_all_participants();
         }
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
@@ -217,6 +231,42 @@ class ControllerCard extends Controller {
             $tableFormatDate[1] = "Month";
         }
         return $tableFormatDate;
+    }
+
+    private function participate(){
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && $_GET["param1"] != ""){
+            $card = Card::select_card_by_id($_GET["param1"]);
+        }
+        $tableParticipant = Participate::select_all_participate_from_card($card);
+        return $tableParticipant;
+    }
+
+    private function table_not_participant($board,$card){
+        $user = $this->get_user_or_redirect();
+        $tablUser = $user->select_all_user($board);
+        $tabNotParti = [];
+        foreach($tablUser as $u){
+            if(Participate::check_participate($u,$card) == false){
+                $tabNotParti [] = $u; 
+            }
+        }
+        return $tabNotParti;    
+    }
+
+
+    private function add_participant($board){
+        $user = $this->get_user_or_redirect();
+        if(isset($_GET["param1"]) && isset($_GET["param2"])){
+            $idParticipant = $_POST["participant_select"];
+            $idCard = $_GET["param2"];
+            $card = Card::select_card_by_id($idCard);
+            $idColumn = $_GET["param1"];
+            $participant = new Participate($idParticipant,$idCard);
+            $participant->insert_participant();
+            $this->redirect("card","edit_card",$idCard);
+        }
+
     }
 
 }

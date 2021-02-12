@@ -8,12 +8,12 @@
         <link href="css/styles.css" rel="stylesheet" type="text/css"/>
     </head>
 </head>
-<?php //include("header.php") ?>
+<?php include("header.php") ?>
 <body>
 <br>
 <h1>Edit a card</h1>
 <p>
-    <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by "?><span style="color: #6565f1"><?php echo $fullName?>.</span>
+    <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by "?><span style="color: #6565f1"><?php echo $authorCard->getFullName()?>.</span>
     <?php if (!$modifDate) {
         echo $messageTimeModif;
     } else {
@@ -28,22 +28,41 @@
     <textarea name="bodyCard" rows="10" cols="50"><?php echo $card->getBody() ?></textarea>
     <h3>Due date : <?php echo $card->getDueDate()?></h3>
     <input type="date" name="due_date">
+    <h3>Current participant(s) </h3>
+    <ul>
+        <?php foreach ($tableParticipant as $participant) {?>
+        <li>
+            <?php echo $participant->getUser()->getFullName()." (".$participant->getUser()->getMail().")"?>
+        </li>
+        <?php }?>
+    </ul>
+    <h3>Add a new Participant : </h3>
+    
+        <select name="participant_select">
+            <?php foreach ($tablNotParti as $u) {?>
+                <option value="<?php echo $u->getId() ?>"><?php echo $u->getFullName()." (".$u->getMail().")"?></option>
+            <?php }?>
+        </select>
+        <input type="submit" name="submit_participant" value="Add">
+    
     <h3>Board</h3>
     <textarea style="background: lightgray" name="titleboard" disabled="disabled" rows="2" cols="100"><?php echo $board->getTitle()?></textarea>
     <h3>Column</h3>
-    <textarea style="background: lightgray" name="titleColumn" disabled="disabled" rows="2" cols="100"><?php echo $column->getTitle()?></textarea></br>
+    <textarea style="background: lightgray" name="titleColumn" disabled="disabled" rows="2" cols="100"><?php echo $column->getTitle()?></textarea></br></br>
     <input type="submit" name="boutonApply" value="Edit this card">
 </form>
 <form action="card/modif_card/<?php $column->getId()?>/<?php echo $card->getId()?>" method="post">
     <input type="submit" name="boutonCancel" value="Cancel">
 </form>
-<?php if (count($error) > 0) { ?>
-    <p>Please check the errors and correct them :</p>
-    <ul>
-        <?php foreach ($error as $err) { ?>
-            <li><?php echo $err ?></li>
-        <?php } ?>
-    </ul>
-<?php } ?>
+<div id="error">
+    <?php if (count($error) > 0) { ?>
+        <p>Please check the errors and correct them :</p>
+        <ul>
+            <?php foreach ($error as $err) { ?>
+                <li><?php echo $err ?></li>
+            <?php } ?>
+        </ul>
+    <?php } ?>
+</div>
 </body>
 </html>

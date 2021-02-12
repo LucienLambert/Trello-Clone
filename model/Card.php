@@ -1,5 +1,6 @@
 <?php
 
+require_once "framework/Model.php";
 
 class Card extends Model
 {
@@ -134,8 +135,8 @@ class Card extends Model
             $error [] = "Your title's card must contain 3 characters minimum.";
         }
 
-        $trouverCard = Card::check_equals_title_card_by_column($cardTitle);
-        if($trouverCard){
+        //$trouverCard = Card::check_equals_title_card_by_column($cardTitle);
+        if($cardTitle != null){
             $error [] ="the Column contains already a card with this title !";
         } else {
             $tableCardColumn = self::select_all_card_by_id_column_ASC($column->getId());
@@ -151,7 +152,12 @@ class Card extends Model
     public static function select_card_by_title($title, $column){
         $query = self::execute("SELECT * FROM Card WHERE title=:title AND `column`=:column", array("title"=>$title, "column"=>$column->getId()));
         $d = $query->fetch();
-        return new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"],$d["DueDate"]);
+        if($d == false){
+            return null;
+        }
+        else{ 
+            return new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"],$d["DueDate"]);
+        }
     }
 
     public static function check_equals_title_card_by_column($card){
@@ -244,7 +250,7 @@ class Card extends Model
         $data = $query->fetchAll();
         $tableCard = [];
         foreach ($data as $d){
-            $tableCard [] = new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"], $d["dueDate"]);
+            $tableCard [] = new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"], $d["DueDate"]);
         }
         return $tableCard;
     }
@@ -253,7 +259,7 @@ class Card extends Model
         $card = self::execute("SELECT * FROM Card WHERE position = :position AND `column` = :column",
             array("position"=>$cardPosition, "column"=>$column->getId()));
         $data = $card->fetch();
-        return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"], $data["dueDate"]);
+        return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"], $data["DueDate"]);
     }
 
     public function move_card_up_or_down($newPositionCard){

@@ -1,5 +1,6 @@
 <?php
 require_once "framework/Model.php";
+require_once 'model/Participate.php';
 
 class User extends Model
 {
@@ -83,7 +84,7 @@ class User extends Model
         if ($query->rowCount() == 0) {
             return null;
         } else {
-            return new User($data["ID"], $data["Mail"], $data["FullName"], $data["Password"], $data["RegisteredAt"]);
+            return new User($data["ID"], $data["Mail"], $data["FullName"], $data["Password"], $data["RegisteredAt"], $data["Role"]);
         }
     }
 
@@ -158,9 +159,9 @@ class User extends Model
         return true;
     }
 
-    //recup tout les users sauf le user connécté
-    public function select_all_user(){
-        $query = self::execute("SELECT * FROM User WHERE id!= :id",array("id"=>$this->getId()));
+    //recup tout les users sauf le proprio du board
+    public function select_all_user($board){
+        $query = self::execute("SELECT * FROM User WHERE id!= :id",array("id"=>$board->getOwner()));
         $data = $query->fetchAll();
         $tableUser = [];
         foreach ($data as $d){
@@ -168,20 +169,6 @@ class User extends Model
         }
         return $tableUser;
     }
-
-    /*
-    //savoir si le user est l'admin -> on ne l'uttilise pas pour l'instant
-    public function is_admin(){
-        $query = self::execute("SELECT role FROM User where id=:id",array(
-            "id" => $this->getId()
-        ));
-        $data = $query->fetch();
-        if($data["role"] != "admin"){
-            return false;
-        }
-        return true;
-    }
-    */
     
     //update role user
     public function update_role(){

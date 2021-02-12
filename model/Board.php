@@ -129,7 +129,7 @@ class Board extends Model
         return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
     }
 
-    //recup le board via son titre
+    //recup le board via son id
     public static function select_board_by_id($id)
     {
         $query = self::execute("SELECT * FROM Board where id = :id", array("id" => $id));

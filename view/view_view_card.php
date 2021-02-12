@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Edit Card</title>
+    <title>View Card</title>
     <base href="<?= $web_root ?>"/>
     <link href="css/styles.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -12,7 +12,7 @@
 </br>
 <body>
 <h1>Card "<?php echo $card->getTitle() ?>"</h1>
-<?php if ($card->getAuthor() == $user->getID()) { ?>
+<?php if ($card->getAuthor() == $user->getID() || $user->getRole() == "admin") { ?>
     <!-- formulaire pour supprimer la carte -->
     <form class="FormColumn" action="card/delete_card/<?php echo $card->getId()?>" method="post">
         <input type="submit" name="delCard" value="Delete Card">
@@ -39,5 +39,16 @@
 </p>
 <h3>Body</h3>
 <textarea style="background: lightgray" name="bodyCard" disabled="disabled" rows="5" cols="100"><?php echo $card->getBody() ?></textarea>
+
+<h4>Current participant(s) :</h4>
+<ul>
+        <?php foreach ($tableParticipant as $participant) {?>
+        <li>
+            <form action="board/del_participant/<?php echo $card->getId()?>/<?php echo $participant->getIdParticipate()?>" method="post">
+                <?php echo $participant->getUser()->getFullName()." (".$participant->getUser()->getMail().")"?>
+            </form>
+        </li>
+        <?php }?>
+    </ul>
 </body>
 </html>

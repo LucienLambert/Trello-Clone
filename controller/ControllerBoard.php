@@ -249,7 +249,7 @@ class ControllerBoard extends Controller
             $board = Board::select_board_by_id($_GET["param1"]);
         }
         $tableCollaborator = Collaborate::select_all_collaborator($board);
-        $tableUser = $user->select_all_user();
+        $tableUser = $user->select_all_user($board);
         $tableNotCollabo = [];
         foreach ($tableUser as $u){
             if(User::check_collaborator_board($u,$board) == false){

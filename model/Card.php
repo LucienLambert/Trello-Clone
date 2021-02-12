@@ -12,8 +12,9 @@ class Card extends Model
     private $modifiedAt; //unique
     private $author;
     private $column;
+    private $dueDate;
 
-    public function __construct($id, $title, $body, $position, $createdAt, $modifiedAt, $author, $column)
+    public function __construct($id, $title, $body, $position, $createdAt, $modifiedAt, $author, $column, $dueDate = null)
     {
         $this->id = $id;
         $this->title = $title;
@@ -23,6 +24,7 @@ class Card extends Model
         $this->modifiedAt = $modifiedAt;
         $this->author = $author;
         $this->column = $column;
+        $this->dueDate = $dueDate;
     }
 
     public function getId()
@@ -64,6 +66,10 @@ class Card extends Model
         return $this->column;
     }
 
+    public function getDueDate(){
+        return $this->dueDate;
+    }
+
     public function setPosition($position){
         $this->position = $position;
     }
@@ -74,6 +80,10 @@ class Card extends Model
 
     public function setBody($body){
         $this->body = $body;
+    }
+
+    public function setDueDate($dueDate){
+        $this->dueDate = $dueDate;
     }
 
     public function insert_card(){
@@ -110,7 +120,7 @@ class Card extends Model
     public static function select_card_by_id($idCard){
         $card = self::execute("SELECT * FROM Card WHERE id = :id",array("id"=>$idCard));
         $data = $card->fetch();
-        return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"]);
+        return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"], $data["DueDate"]);
     }
 
     //param1 = objet Colonne
@@ -141,7 +151,7 @@ class Card extends Model
     public static function select_card_by_title($title, $column){
         $query = self::execute("SELECT * FROM Card WHERE title=:title AND `column`=:column", array("title"=>$title, "column"=>$column->getId()));
         $d = $query->fetch();
-        return new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"]);
+        return new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"],$d["DueDate"]);
     }
 
     public static function check_equals_title_card_by_column($card){
@@ -162,27 +172,32 @@ class Card extends Model
         return false;
     }
 
-    public function update_card_modifiedAt($modifiedAt){
+    //Cette méthode n'est plus utilisé.
+    //est remplacé par update_card();
+    public function update_card_modifiedAt(){
+        $date = new DateTime("now");
         self::execute("UPDATE Card SET title = :title, body = :body, modifiedAt = :modifiedAt WHERE id = :id",array(
             "id"=>$this->getId(),
             "title"=>$this->getTitle(),
             "body"=>$this->getBody(),
-            "modifiedAt"=>$modifiedAt->format('Y-m-d H:i:s'),
+            "modifiedAt"=>$date->format('Y-m-d H:i:s'),
         ));
         return true;
     }
 
     //update la carte current
     public function update_card(){
-        self::execute("UPDATE Card SET title = :title, body = :body, position = :position, createdAt = :createdAt, modifiedAt = :modifiedAt, author = :author, `column` = :column WHERE id = :id",array(
+        $date = new DateTime("now");
+        self::execute("UPDATE Card SET title = :title, body = :body, position = :position, createdAt = :createdAt, modifiedAt = :modifiedAt, author = :author, `column` = :column, dueDate= :dueDate WHERE id = :id",array(
             "id"=>$this->getId(),
             "title"=>$this->getTitle(),
             "body"=>$this->getBody(),
             "position"=>$this->getPosition(),
             "createdAt"=>$this->getCreatedAt(),
-            "modifiedAt"=>$this->getModifiedAt(),
+            "modifiedAt"=>$date->format('Y-m-d H:i:s'),
             "author"=>$this->getAuthor(),
-            "column"=>$this->getColumn()
+            "column"=>$this->getColumn(),
+            "dueDate"=>$this->getDueDate()
         ));
         return true;
     }
@@ -229,7 +244,7 @@ class Card extends Model
         $data = $query->fetchAll();
         $tableCard = [];
         foreach ($data as $d){
-            $tableCard [] = new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"]);
+            $tableCard [] = new Card($d["ID"],$d["Title"],$d["Body"],$d["Position"],$d["CreatedAt"],$d["ModifiedAt"],$d["Author"], $d["Column"], $d["dueDate"]);
         }
         return $tableCard;
     }
@@ -238,7 +253,7 @@ class Card extends Model
         $card = self::execute("SELECT * FROM Card WHERE position = :position AND `column` = :column",
             array("position"=>$cardPosition, "column"=>$column->getId()));
         $data = $card->fetch();
-        return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"]);
+        return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"], $data["dueDate"]);
     }
 
     public function move_card_up_or_down($newPositionCard){

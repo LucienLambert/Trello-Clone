@@ -8,7 +8,7 @@
         <link href="css/styles.css" rel="stylesheet" type="text/css"/>
     </head>
 </head>
-<?php include("header.php") ?>
+<?php //include("header.php") ?>
 <body>
 <br>
 <h1>Edit a card</h1>
@@ -26,6 +26,8 @@
     <input type="text" name="titleCard" value="<?php echo $card->getTitle() ?>">
     <h3>Body</h3>
     <textarea name="bodyCard" rows="10" cols="50"><?php echo $card->getBody() ?></textarea>
+    <h3>Due date : <?php echo $card->getDueDate()?></h3>
+    <input type="date" name="due_date">
     <h3>Board</h3>
     <textarea style="background: lightgray" name="titleboard" disabled="disabled" rows="2" cols="100"><?php echo $board->getTitle()?></textarea>
     <h3>Column</h3>

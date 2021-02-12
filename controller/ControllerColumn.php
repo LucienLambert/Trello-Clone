@@ -35,7 +35,7 @@ class ControllerColumn extends Controller {
     }
 
     //switch les deux colonnes passé en paramètre.
-    private function move_column($columnRigth = "", $columnLeft = "")
+    private function move_column($columnRigth, $columnLeft = "")
     {
         $columnRigth->move_column($columnLeft);
         //Column::move_column($columnRigth, $columnLeft);

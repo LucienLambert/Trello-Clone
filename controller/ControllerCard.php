@@ -145,10 +145,21 @@ class ControllerCard extends Controller {
             if (strcasecmp($card->getTitle(),$_POST["titleCard"]) != 0) {
                 $error = Card::valide_card($column, $_POST["titleCard"]);
             }
+            if($_POST["due_date"] != null){
+                $dateCurrent = new DateTime("now");
+                $dateCurrent = $dateCurrent->format('Y-m-d');
+                if($dateCurrent > $_POST["due_date"]){
+                    $error [] = "invalid due date.";
+
+                } else {
+                    $card->setDueDate($_POST["due_date"]);
+                }
+            }
             if(count($error) == 0){
+
                 $card->setTitle($_POST["titleCard"]);
                 $card->setBody($_POST["bodyCard"]);
-                $card->update_card_modifiedAt(new DateTime("now"));
+                $card->update_card();
                 $this->redirect("card", "view_card",$_GET["param2"]);
             }
             $this->edit_card($error);

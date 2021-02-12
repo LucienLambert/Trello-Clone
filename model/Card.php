@@ -121,7 +121,12 @@ class Card extends Model
     public static function select_card_by_id($idCard){
         $card = self::execute("SELECT * FROM Card WHERE id = :id",array("id"=>$idCard));
         $data = $card->fetch();
-        return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"], $data["DueDate"]);
+        if($data == false){
+            return null;
+        }
+        else{ 
+            return new Card($data["ID"],$data["Title"],$data["Body"],$data["Position"],$data["CreatedAt"],$data["ModifiedAt"],$data["Author"], $data["Column"], $data["DueDate"]);
+        }
     }
 
     //param1 = objet Colonne

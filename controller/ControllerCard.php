@@ -233,7 +233,10 @@ class ControllerCard extends Controller {
 
     private function participate(){
         $user = $this->get_user_or_redirect();
-        if (isset($_GET["param1"]) && $_GET["param1"] != ""){
+        if(isset($_GET["param2"])){
+            $card = Card::select_card_by_id($_GET["param2"]);
+        }
+        else{
             $card = Card::select_card_by_id($_GET["param1"]);
         }
         $tableParticipant = Participate::select_all_participate_from_card($card);

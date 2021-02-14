@@ -39,11 +39,15 @@
 </p>
 <h3>Body</h3>
 <textarea style="background: lightgray" name="bodyCard" disabled="disabled" rows="5" cols="100"><?php echo $card->getBody() ?></textarea>
-
+<?php if($card->getDueDate() == null) {?>
+    <p>This card has no due date yet</p>
+<?php } else { ?>
+    <p>this card will expire on : <?php echo $card->getDueDate();?></p>
+<?php } ?>
 <h4>Current participant(s) :</h4>
 <ul>
         <?php foreach ($tableParticipant as $participant) {?>
-        <li>
+        <li style="color: #6565f1">
             <form action="board/del_participant/<?php echo $card->getId()?>/<?php echo $participant->getIdParticipate()?>" method="post">
                 <?php echo $participant->getUser()->getFullName()." (".$participant->getUser()->getMail().")"?>
             </form>

@@ -17,7 +17,7 @@
 <h4>Current collaborator(s)</h4>
     <ul>
         <?php foreach ($tableCollaborator as $collabo) {?>
-        <li>
+        <li style="color: #6565f1">
             <form action="board/del_collaborator/<?php echo $board->getId()?>/<?php echo $collabo->getIdCollaborator()?>" method="post">
                 <?php echo $collabo->getUser()->getFullName()." (".$collabo->getUser()->getMail().")"?>
                 <input type="submit" name="del" value="Delete">
@@ -32,7 +32,7 @@
             <option value="<?php echo $u->getId() ?>"><?php echo $u->getFullName()." (".$u->getMail().")"?></option>
         <?php }?>
     </select>
-    <input type="submit" name="submit_collaborator" value="Add">
+    <input style="background: #6565f1" type="submit" name="submit_collaborator" value="Add">
 </form>
 </body>
 </html>

@@ -31,7 +31,7 @@
     <h3>Current participant(s) </h3>
     <ul>
         <?php foreach ($tableParticipant as $participant) {?>
-        <li>
+        <li style="color: #6565f1">
             <?php echo $participant->getUser()->getFullName()." (".$participant->getUser()->getMail().")"?>
             <a type="button" href="card/del_participant/<?php echo $participant->getIdParticipate() ?>/<?php echo $participant->getIdCard() ?>">Delete</a>
         </li>
@@ -44,7 +44,7 @@
                 <option value="<?php echo $u->getId() ?>"><?php echo $u->getFullName()." (".$u->getMail().")"?></option>
             <?php }?>
         </select>
-        <input type="submit" name="submit_participant" value="Add">
+        <input style="background: #6565f1" type="submit" name="submit_participant" value="Add">
     
     <h3>Board</h3>
     <textarea style="background: lightgray" name="titleboard" disabled="disabled" rows="2" cols="100"><?php echo $board->getTitle()?></textarea>

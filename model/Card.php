@@ -71,6 +71,11 @@ class Card extends Model
         return $this->dueDate;
     }
 
+    public function getBoard(){
+        $column = Column::select_column_by_id($this->getColumn());
+        return $column->getBoard();
+    }
+
     public function setPosition($position){
         $this->position = $position;
     }

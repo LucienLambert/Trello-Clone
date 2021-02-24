@@ -66,8 +66,15 @@ class ControllerBoard extends Controller
             $board = Board::select_board_by_id($_GET["param1"]);
         }
         $user = $this->get_user_or_false();
+        
         $viewEditTitleBoard = false;
         $owner = User::select_user_by_id($board->getOwner());
+        //check si le user est admin ou collaborateur ou owner
+        if($owner->getId() != $user->getId() || User::check_collaborator_board($user,$board)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         $tableFormatDateCreation = $this->diffDateFormat($board->getCreatedAt());
         $diffDateModif = $board->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
@@ -134,6 +141,14 @@ class ControllerBoard extends Controller
             //recup le board depuis si titre
             $board = Board::select_board_by_id($_GET["param1"]);
         }
+        //recuperer le user
+        $user = $this->get_user_or_redirect();
+        //check si le user est admin ou collaborateur ou owner
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         $tableColumn = Column::select_all_column_by_id_board($board);
         if (isset($_POST["boutonAddColumn"])) {
             $positionColumn = count($tableColumn);
@@ -157,6 +172,12 @@ class ControllerBoard extends Controller
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             //recup le board depuis son titre
             $board = Board::select_board_by_id($_GET["param1"]);
+        }
+        //check si le user est admin ou collaborateur ou owner
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
         }
         if ($user->getId() === $board->getOwner()) {
             if (isset($_POST["modifTitle"])) {
@@ -185,6 +206,14 @@ class ControllerBoard extends Controller
             $column = Column::select_column_by_id($_GET["param2"]);
             $board = Board::select_board_by_id($_GET["param1"]);
         }
+        //recuperer le user
+        $user = $this->get_user_or_redirect();
+        //check si le user est admin ou collaborateur ou owner 
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         if ($this->get_user_or_false()->getId() === $board->getOwner()) {
             $title = $_POST["newTitleColumn"];
             $error = Column::valide_column($board, $title);
@@ -208,6 +237,12 @@ class ControllerBoard extends Controller
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Board::select_board_by_id($_GET["param1"]);
         }
+        //check si le user est admin ou collaborateur ou owner
+        if($object->getOwner() != $user->getId() || User::check_collaborator_board($user,$object)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
         } elseif (isset($_POST["butonDelete"])) {
@@ -227,6 +262,12 @@ class ControllerBoard extends Controller
         $user = User::select_member_by_mail($user->getMail());
         $column = Column::select_column_by_id($_GET["param2"]);
         $board = Board::select_board_by_id($_GET["param1"]);
+        //check si le user est admin ou collaborateur ou owner
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         $idColumn = $column->getId();
         if ($user->getId() === $board->getOwner() || $user->getRole() == "admin") {
             //contient les cartes de la colunne
@@ -250,6 +291,12 @@ class ControllerBoard extends Controller
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $board = Board::select_board_by_id($_GET["param1"]);
         }
+        //check si user est admin ou collaborateur ou owner
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         $tableCollaborator = Collaborate::select_all_collaborator($board);
         $tableUser = $user->select_all_user($board);
         $tableNotCollabo = [];
@@ -267,6 +314,10 @@ class ControllerBoard extends Controller
             $userCollabo = $_POST["collaborator_select"];
             if($_POST["collaborator_select"] != null){
                 $user = User::select_user_by_id($userCollabo);
+            //check si le user est admin ou collaborateur 
+            if($user->getRole() != "admin" || !User::check_collaborator_board($user,$board)){
+                $this->redirect("board","index");
+            }
                 if(User::check_collaborator_board($user, $board) == false){
                     $newCollaborator = new Collaborate($userCollabo, $board->getId());
                     $newCollaborator->insert_collaborator();
@@ -279,6 +330,11 @@ class ControllerBoard extends Controller
     public function del_collaborator(){
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $board = Board::select_board_by_id($_GET["param1"]);
+            $user = $this->get_user_or_redirect();
+            //check si le user est admin ou collaborateur 
+            if($user->getRole() != "admin" || !User::check_collaborator_board($user,$board)){
+                $this->redirect("board","index");
+            }
             if (isset($_GET["param2"]) && $_GET["param2"] != "") {
                 $collabo = Collaborate::select_collaborator_by_board($_GET["param2"], $board);
                 var_dump($collabo->delete_collaborator());

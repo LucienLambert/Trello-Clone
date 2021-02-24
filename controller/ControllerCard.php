@@ -22,6 +22,12 @@ class ControllerCard extends Controller {
             $column = Column::select_column_by_id($card->getColumn());
         }
         $board = Board::select_board_by_id($column->getBoard());
+        //check si le user est admin ou collaborateur ou participant ou owner
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board) || Participate::check_participate($user,$card)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         $fullName = User::select_user_by_id($card->getAuthor())->getFullName();
         $viewEditTitleCard = false;
         $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
@@ -62,6 +68,12 @@ class ControllerCard extends Controller {
             $column = Column::select_column_by_id($card->getColumn());
         }
         $board = Board::select_board_by_id($column->getBoard());
+        //check si le user est admin ou collaborateur ou participant ou owner
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board) || Participate::check_participate($user,$card)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         $authorCard = User::select_user_by_id($card->getAuthor());
         $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
         $diffDateModif = $card->getModifiedAt();
@@ -84,6 +96,13 @@ class ControllerCard extends Controller {
     }
 
     private function move_card_right_or_left($card, $newColonne){
+        $board = Board::select_board_by_id($newColonne->getId());
+        $user = $this->get_user_or_redirect();
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board) || Participate::check_participate($user,$card)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         $card->move_card_and_add_last_position_right_or_left($newColonne);
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $this->redirect("board","board", $_GET["param1"]);
@@ -113,6 +132,13 @@ class ControllerCard extends Controller {
     }
 
     private function move_card_up_or_down($oldPosition, $newPosition){
+        $board = Board::select_board_by_id($newPosition->getId());
+        $user = $this->get_user_or_redirect();
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board) || Participate::check_participate($user,$oldPosition)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         $oldPosition->move_card_up_or_down($newPosition);
         $this->redirect("board", "board", $_GET["param1"]);
     }
@@ -180,6 +206,14 @@ class ControllerCard extends Controller {
         $resultat = "";
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Card::select_card_by_id($_GET["param1"]);
+            //recuperer le board
+            $board = Board::select_board_by_id($object->getAuthor());
+            //check si le user est admin ou collaborateur ou participant ou owner
+            if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board) || Participate::check_participate($user,$object)){
+                if($user->getRole() != "admin"){
+                    $this->redirect("board","index");
+                }
+            }
             /*$participants = Participate::select_all_participate_from_card($object);
             foreach($participants as $part){
                 $part->delete_participant();
@@ -260,6 +294,14 @@ class ControllerCard extends Controller {
         if(isset($_GET["param1"]) && isset($_GET["param2"])  && isset($_POST["participant_select"])){
             $idParticipant = $_POST["participant_select"];
             $idCard = $_GET["param2"];
+            $user = $this->get_user_or_redirect();
+            $card = Card::select_card_by_id($idCard);
+            $board = Board::select_board_by_id($card->getBoard());
+            if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board) || Participate::check_participate($user,$card)){
+                if($user->getRole() != "admin"){
+                    $this->redirect("board","index");
+                }
+            }
             $participant = new Participate($idParticipant,$idCard);
             $participant->insert_participant();
         }
@@ -269,6 +311,14 @@ class ControllerCard extends Controller {
         if(isset($_GET["param1"]) && isset($_GET["param2"])){
             $idParticipant = $_GET["param1"];
             $idCard = $_GET["param2"];
+            $user = $this->get_user_or_redirect();
+            $card = Card::select_card_by_id($idCard);
+            $board = Board::select_board_by_id($card->getBoard());
+            if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board) || Participate::check_participate($user,$card)){
+                if($user->getRole() != "admin"){
+                    $this->redirect("board","index");
+                }
+            }
             $participant = new Participate($idParticipant,$idCard);
             $participant->delete_participant();
             $this->redirect("card","edit_card",$idCard);

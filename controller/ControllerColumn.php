@@ -21,6 +21,12 @@ class ControllerColumn extends Controller {
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Column::select_column_by_id($_GET["param1"]);
         }
+        $board = Board::select_board_by_id($object->getBoard());
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
         } elseif (isset($_POST["butonDelete"])) {
@@ -37,6 +43,13 @@ class ControllerColumn extends Controller {
     //switch les deux colonnes passé en paramètre.
     private function move_column($columnRigth, $columnLeft = "")
     {
+        $user = $this->get_user_or_redirect();
+        $board = Board::select_board_by_id($columnRigth->getBoard());
+        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
+            if($user->getRole() != "admin"){
+                $this->redirect("board","index");
+            }
+        }
         $columnRigth->move_column($columnLeft);
         //Column::move_column($columnRigth, $columnLeft);
         $this->redirect("board", "board", $_GET["param1"]);

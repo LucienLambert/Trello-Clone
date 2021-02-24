@@ -28,6 +28,8 @@ class ControllerCard extends Controller {
                 $this->redirect("board","index");
             }
         }
+        $currentDate = new DateTime("now");
+        $currentDate = $currentDate->format("Y-m-d");
         $fullName = User::select_user_by_id($card->getAuthor())->getFullName();
         $viewEditTitleCard = false;
         $tableFormatDateCreation = $this->diffDateFormat($card->getCreatedAt());
@@ -48,7 +50,7 @@ class ControllerCard extends Controller {
             $viewEditTitleCard = true;
         }
         try {
-            (new View("view_card"))->show(array("card" => $card, "fullName" => $fullName, "viewEditTitleCard" => $viewEditTitleCard,
+            (new View("view_card"))->show(array("currentDate" => $currentDate, "card" => $card, "fullName" => $fullName, "viewEditTitleCard" => $viewEditTitleCard,
                 "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
                 "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "user"=>$user,"tableParticipant"=>$tableParticipant));
         } catch (Exception $e) {

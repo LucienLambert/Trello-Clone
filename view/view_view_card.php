@@ -41,9 +41,11 @@
 <textarea style="background: lightgray" name="bodyCard" disabled="disabled" rows="5" cols="100"><?php echo $card->getBody() ?></textarea>
 <?php if($card->getDueDate() == null) {?>
     <p>This card has no due date yet</p>
-<?php } else { ?>
+<?php } elseif($currentDate > $card->getDueDate()) { ?>
+    <p>this card has expired</p>
+<?php } else {?>
     <p>this card will expire on : <?php echo $card->getDueDate();?></p>
-<?php } ?>
+<?php }?>
 <h4>Current participant(s) :</h4>
 <ul>
         <?php foreach ($tableParticipant as $participant) {?>

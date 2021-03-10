@@ -30,7 +30,7 @@ class ControllerBoard extends Controller
         $tableBoard = Board::select_board_by_user($user);
         //recup la liste des boards de TOUS LE MONDE
         $tableOthersBoards = Board::select_other_board($user);
-        //table vide pour contenir le nombre de colonne de chaque table
+        $tableBoardCollaboration = Collaborate::list_board_collaboration_by_id_user($user);
         $tableNbColumn = [];
         $tableNbColumnOther = [];
         foreach ($tableBoard as $board) {
@@ -42,7 +42,7 @@ class ControllerBoard extends Controller
         try {
             (new View("board"))->show(array("user" => $user, "tableBoard" => $tableBoard,
                 "tableOthersBoards" => $tableOthersBoards, "tableNbColumn" => $tableNbColumn,
-                "tableNbColumnOther" => $tableNbColumnOther, "error" => $error));
+                "tableNbColumnOther" => $tableNbColumnOther,"tableBoardCollaboration"=>$tableBoardCollaboration, "error" => $error));
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -66,7 +66,6 @@ class ControllerBoard extends Controller
             $board = Board::select_board_by_id($_GET["param1"]);
         }
         $user = $this->get_user_or_false();
-        
         $viewEditTitleBoard = false;
         $owner = User::select_user_by_id($board->getOwner());
         //check si le user est admin ou collaborateur ou owner
@@ -164,7 +163,7 @@ class ControllerBoard extends Controller
         }
     }
 
-    //change le titre du board sur le quel on est
+    //change le titre du board sur lequel on est
     public function edit_title_board()
     {
         $user = $this->get_user_or_redirect();

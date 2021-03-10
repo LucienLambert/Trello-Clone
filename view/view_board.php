@@ -8,7 +8,7 @@
 </head>
 <body>
     <div>
-        <p><?php include("header.php")?></p>
+        <?php include("header.php")?>
     </div>
     <h1>Your boards</h1>
     <!-- formulaire qui gère l'affichage et l'ouverture des boards -->
@@ -29,7 +29,7 @@
         <div id="error">
         <?php if (count($error) > 0) { ?>
             <p>Please check the errors and correct them :</p>
-            <ul>
+                <ul>
                 <?php foreach ($error as $err) { ?>
                     <li><?php echo $err ?></li>
                 <?php } ?>
@@ -37,7 +37,7 @@
         <?php } ?>
         </div>
     </form>
-    <h1>others Boards</h1>
+    <h1>Others Boards</h1>
     <!-- formulaire qui affiche la liste des boards != user -->
     <?php for ($i = 0; $i < count($tableOthersBoards); $i++) { ?>
     <form class="boardForm" action="board/open_Board/<?php echo $tableOthersBoards[$i]->getId() ?>" method="post">
@@ -46,5 +46,15 @@
         </tr>
     </form>
     <?php } ?>
+    <h1>Collaboration Board</h1>
+    <?php foreach ($tableBoardCollaboration as $board) {?>
+    <form class="boardForm" action="board/open_Board/<?php echo $board->getId() ?>" method="post">
+        <tr>
+            <td>
+            <input id="submitBoardCollabo" type="submit" name="boutonBoard" size="30" value="<?php echo $board->getTitle()?>">
+            </td>
+        </tr>
+    </form>
+    <?php }?>
 </body>
 </html>

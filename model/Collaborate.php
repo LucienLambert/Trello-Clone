@@ -1,7 +1,7 @@
 <?php
-
 require_once "framework/Model.php";
 require_once "controller/ControllerUser.php";
+
 class Collaborate extends Model{
     private $idCollaborator;
     private $idBoard;
@@ -65,5 +65,27 @@ class Collaborate extends Model{
         ));
         $data = $query->fetch();
         return new Collaborate($data["Collaborator"], $data["Board"]);
+    }
+
+    public static function list_board_collaboration_by_id_user($user){
+        $query = self::execute("SELECT * FROM Collaborate WHERE collaborator=:user", array("user"=>$user->getId()));
+        $data = $query->fetchAll();
+        $tableCollaborator = [];
+        if(empty($data)){
+            return $tableCollaborator;
+        } else {
+            foreach ($data as $d) {
+                $tableCollaborator [] = Board::select_board_by_id($d["Board"]);
+                //$tableCollaborator [] = new Collaborate($d["Board"], $d["Collaborator"]);
+            }
+            return $tableCollaborator;
+            /*
+            $tableBoardCollaboration = [];
+            foreach ($tableCollaborator as $collabo){
+                $tableBoardCollaboration [] = Board::select_board_by_id($collabo->getIdBoard());
+            }
+            return $tableBoardCollaboration;
+            */
+        }
     }
 }

@@ -126,7 +126,7 @@ class Board extends Model
     {
         $query = self::execute("SELECT * FROM Board where title = :title", array("title" => $title));
         $data = $query->fetch();
-        return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
+        return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);
     }
 
     //recup le board via son id
@@ -134,7 +134,7 @@ class Board extends Model
     {
         $query = self::execute("SELECT * FROM Board where id = :id", array("id" => $id));
         $data = $query->fetch();
-        return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);;
+        return new Board($data["ID"], $data["Title"], $data["Owner"], $data["CreatedAt"], $data["ModifiedAt"]);
     }
 
     public function update_title_board($modifiedAt)
@@ -143,8 +143,9 @@ class Board extends Model
             array("title" => $this->getTitle(), "id" => $this->getId(), "modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
         return true;
     }
-    //TODO ajouter la suppression des collaborateurs en même temps que l'on del un board.
-    public function delete_board_by_id(){
+
+    public function delete_board_by_id()
+    {
         if($this->getId() != null){
             $columnBoard = Column::select_all_column_by_id_board($this);
             foreach ($columnBoard as $column){

@@ -190,7 +190,5 @@ class User extends Model
             ));
         return true;
     }
-
 }
-
 ?>

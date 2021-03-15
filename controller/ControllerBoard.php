@@ -314,7 +314,8 @@ class ControllerBoard extends Controller
             if($_POST["collaborator_select"] != null){
                 $user = User::select_user_by_id($userCollabo);
             //check si le user est admin ou collaborateur 
-                if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
+                $userConnect = $this->get_user_or_redirect();
+                if($board->getOwner() != $userConnect->getId() || User::check_collaborator_board($userConnect,$board)){
                     if($user->getRole() != "admin"){
                         $this->redirect("board","index");
                     }

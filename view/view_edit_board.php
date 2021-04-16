@@ -99,7 +99,7 @@
                     <form action="card/view_card/<?php echo $card->getId() ?>" method="post">
                         <input type="submit" name="openCard" value="<?php echo $card->getTitle() ?>">
                     </form>
-                    <?php if ($board->getOwner() == $user->getId()) { ?>
+                    <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin" || Participate::check_participate($user,$card)) { ?>
                         <form action="card/delete_card/<?php echo $card->getId() ?>" method="post">
                             <input type="submit" name="deleteCard" value="&#128465;">
                         </form>

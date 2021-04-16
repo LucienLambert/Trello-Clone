@@ -22,10 +22,10 @@ class ControllerColumn extends Controller {
             $object = Column::select_column_by_id($_GET["param1"]);
         }
         $board = Board::select_board_by_id($object->getBoard());
-        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
-            if($user->getRole() != "admin"){
-                $this->redirect("board","index");
-            }
+        $owner = User::select_user_by_id($board->getOwner());
+        //check si le user est admin ou collaborateur ou owner
+        if($owner->getId() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin"){
+            $this->redirect("board","index");
         }
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "index");
@@ -45,10 +45,10 @@ class ControllerColumn extends Controller {
     {
         $user = $this->get_user_or_redirect();
         $board = Board::select_board_by_id($columnRigth->getBoard());
-        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
-            if($user->getRole() != "admin"){
-                $this->redirect("board","index");
-            }
+        $owner = User::select_user_by_id($board->getOwner());
+        //check si le user est admin ou collaborateur ou owner
+        if($owner->getId() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin"){
+            $this->redirect("board","index");
         }
         $columnRigth->move_column($columnLeft);
         //Column::move_column($columnRigth, $columnLeft);

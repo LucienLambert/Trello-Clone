@@ -69,10 +69,8 @@ class ControllerBoard extends Controller
         $viewEditTitleBoard = false;
         $owner = User::select_user_by_id($board->getOwner());
         //check si le user est admin ou collaborateur ou owner
-        if($owner->getId() != $user->getId() || User::check_collaborator_board($user,$board)){
-            if($user->getRole() != "admin"){
-                $this->redirect("board","index");
-            }
+        if($owner->getId() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin"){
+            $this->redirect("board","index");
         }
         $tableFormatDateCreation = $this->diffDateFormat($board->getCreatedAt());
         $diffDateModif = $board->getModifiedAt();
@@ -142,11 +140,10 @@ class ControllerBoard extends Controller
         }
         //recuperer le user
         $user = $this->get_user_or_redirect();
+        $owner = User::select_user_by_id($board->getOwner());
         //check si le user est admin ou collaborateur ou owner
-        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
-            if($user->getRole() != "admin"){
-                $this->redirect("board","index");
-            }
+        if($owner->getId() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin"){
+            $this->redirect("board","index");
         }
         $tableColumn = Column::select_all_column_by_id_board($board);
         if (isset($_POST["boutonAddColumn"])) {
@@ -207,13 +204,7 @@ class ControllerBoard extends Controller
         }
         //recuperer le user
         $user = $this->get_user_or_redirect();
-        //check si le user est admin ou collaborateur ou owner 
-        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
-            if($user->getRole() != "admin"){
-                $this->redirect("board","index");
-            }
-        }
-        if ($this->get_user_or_false()->getId() === $board->getOwner()) {
+        if ($this->get_user_or_false()->getId() === $board->getOwner() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") {
             $title = $_POST["newTitleColumn"];
             $error = Column::valide_column($board, $title);
             if (count($error) == 0) {
@@ -261,14 +252,9 @@ class ControllerBoard extends Controller
         $user = User::select_member_by_mail($user->getMail());
         $column = Column::select_column_by_id($_GET["param2"]);
         $board = Board::select_board_by_id($_GET["param1"]);
-        //check si le user est admin ou collaborateur ou owner
-        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
-            if($user->getRole() != "admin"){
-                $this->redirect("board","index");
-            }
-        }
+        
         $idColumn = $column->getId();
-        if ($user->getId() === $board->getOwner() || $user->getRole() == "admin") {
+        if ($user->getId() === $board->getOwner() || $user->getRole() == "admin" || User::check_collaborator_board($user,$board)) {
             //contient les cartes de la colunne
             $tableCard = Card::select_all_card_by_id_column_ASC($idColumn);
             $positionCard = count($tableCard);
@@ -293,7 +279,7 @@ class ControllerBoard extends Controller
         //check si user est admin ou collaborateur ou owner
         if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
             if($user->getRole() != "admin"){
-                $this->redirect("board","index");
+                $this->redirect("board","board",$_GET["param1"]);
             }
         }
         $tableCollaborator = Collaborate::select_all_collaborator($board);

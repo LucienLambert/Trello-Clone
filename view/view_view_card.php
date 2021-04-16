@@ -12,7 +12,7 @@
 </br>
 <body>
 <h1>Card "<?php echo $card->getTitle() ?>"</h1>
-<?php if ($card->getAuthor() == $user->getID() || $user->getRole() == "admin") { ?>
+<?php if ($card->getAuthor() == $user->getID() || $user->getRole() == "admin" || User::check_collaborator_board($user,$board)) { ?>
     <!-- formulaire pour supprimer la carte -->
     <form class="FormColumn" action="card/delete_card/<?php echo $card->getId()?>" method="post">
         <input type="submit" name="delCard" value="Delete Card">

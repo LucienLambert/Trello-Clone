@@ -40,7 +40,7 @@
     <h3>Add a new Participant : </h3>
     
         <select name="participant_select">
-            <?php foreach ($tablNotParti as $u) {?>
+            <?php foreach ($tableParticipantValide as $u) {?>
                 <option value="<?php echo $u->getId() ?>"><?php echo $u->getFullName()." (".$u->getMail().")"?></option>
             <?php }?>
         </select>

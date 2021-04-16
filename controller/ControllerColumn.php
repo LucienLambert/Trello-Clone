@@ -27,16 +27,15 @@ class ControllerColumn extends Controller {
         if($owner->getId() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin"){
             $this->redirect("board","index");
         }
+       
         if (isset($_POST["butonCancel"])) {
-            $this->redirect("board", "index");
+            $this->redirect("board", "board",$_GET["param2"]);
         } elseif (isset($_POST["butonDelete"])) {
             if ($object->delete_column_by_id()) {
-                $resultat = "successful deletion.";
-            } else {
-                $resultat = "the column hasn't been deleted.";
+                $this->redirect("board", "board",$board->getId());
             }
         }
-        (new View("conf_delete"))->show(array("function"=>$function, "resultat" => $resultat,
+        (new View("conf_delete"))->show(array("function"=>$function, "board" => $board,
             "object" => $object, "objectNotif" => $objectNotif, "user"=>$user));
     }
 

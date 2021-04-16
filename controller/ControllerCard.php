@@ -4,6 +4,7 @@ require_once 'model/User.php';
 require_once 'model/Board.php';
 require_once 'model/Column.php';
 require_once 'model/Card.php';
+require_once 'model/Collaborate.php';
 require_once 'model/Participate.php';
 require_once 'framework/View.php';
 require_once 'framework/Controller.php';
@@ -79,8 +80,17 @@ class ControllerCard extends Controller {
         $diffDateModif = $card->getModifiedAt();
         $diffDate = $tableFormatDateCreation[0];
         $messageTime = $tableFormatDateCreation[1];
+        $tableCollabo = Collaborate::select_all_collaborator($board);
         $tableParticipant = $this->participate();
         $tablNotParti = $this->table_not_participant($board,$card);
+        $tableParticipantValide = [];
+        foreach($tableCollabo as $collabo){
+            foreach($tablNotParti as $notParti){
+                if($collabo->getUser() == $notParti){
+                    $tableParticipantValide [] = $notParti;
+                }
+            }
+        }
         if (!isset($diffDateModif)) {
             $modifDate = false;
             $messageTimeModif = "Never modified";
@@ -92,7 +102,7 @@ class ControllerCard extends Controller {
         }
         (new View("edit_card"))->show(array("user"=>$user, "card" => $card, "authorCard" => $authorCard,
             "diffDate" => $diffDate, "messageTime" => $messageTime, "modifDate" => $modifDate, "diffDateModif" => $diffDateModif,
-            "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif, "tableParticipant"=>$tableParticipant, "tablNotParti"=>$tablNotParti, "error" => $error));
+            "board" => $board, "column" => $column, "messageTimeModif" => $messageTimeModif,"tableParticipant"=>$tableParticipant, "tablNotParti"=>$tablNotParti, "tableParticipantValide"=>$tableParticipantValide, "error" => $error));
     }
 
     private function move_card_right_or_left($card, $newColonne){
@@ -204,12 +214,12 @@ class ControllerCard extends Controller {
         $user = $this->get_user_or_false();
         $function = "card";
         $objectNotif = "card";
-        $resultat = "";
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Card::select_card_by_id($_GET["param1"]);
             //recuperer le board
             $column = Column::select_column_by_id($object->getColumn());
             $board = Board::select_board_by_id($column->getBoard());
+            var_dump($board);
             $owner = User::select_user_by_id($board->getOwner());
             //check si le user est admin ou collaborateur ou owner
             if($owner->getId() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin"){
@@ -222,17 +232,16 @@ class ControllerCard extends Controller {
             $participant = new Participate($object->getAuthor(),$object->getId());
             $participant->delete_all_participants();
         }
+        
         if (isset($_POST["butonCancel"])) {
-            $this->redirect("board", "index");
+            $this->redirect("board", "board",$_GET["param2"]);
         } elseif (isset($_POST["butonDelete"])) {
             if ($object->delete_card_by_id()) {
-                $resultat = "successful deletion.";
-            } else {
-                $resultat = "the card hasn't been deleted.";
+                $this->redirect("board", "board",$board->getId());
             }
         }
-        (new View("conf_delete"))->show(array("function"=>$function,"resultat" => $resultat,
-            "object" => $object, "objectNotif" => $objectNotif, "user"=>$user));
+        (new View("conf_delete"))->show(array("function"=>$function,
+            "object" => $object, "objectNotif" => $objectNotif, "user"=>$user, "board"=>$board));
     }
 
     private function diffDateFormat($date)
@@ -298,10 +307,8 @@ class ControllerCard extends Controller {
             $user = $this->get_user_or_redirect();
             $card = Card::select_card_by_id($idCard);
             $board = Board::select_board_by_id($card->getBoard());
-            if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board) || Participate::check_participate($user,$card)){
-                if($user->getRole() != "admin"){
-                    $this->redirect("board","index");
-                }
+            if($board->getOwner() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin" && Participate::check_participate($user,$card)){
+                $this->redirect("board","index");
             }
             $participant = new Participate($idParticipant,$idCard);
             $participant->insert_participant();
@@ -315,10 +322,8 @@ class ControllerCard extends Controller {
             $user = $this->get_user_or_redirect();
             $card = Card::select_card_by_id($idCard);
             $board = Board::select_board_by_id($card->getBoard());
-            if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board) || Participate::check_participate($user,$card)){
-                if($user->getRole() != "admin"){
-                    $this->redirect("board","index");
-                }
+            if($board->getOwner() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin" && Participate::check_participate($user,$card)){
+                $this->redirect("board","index");
             }
             $participant = new Participate($idParticipant,$idCard);
             $participant->delete_participant();

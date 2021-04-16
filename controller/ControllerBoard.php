@@ -223,9 +223,9 @@ class ControllerBoard extends Controller
         $user = $this->get_user_or_false();
         $function = "board";
         $objectNotif = "board (the columns and cards will be deleted too)";
-        $resultat = "";
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Board::select_board_by_id($_GET["param1"]);
+            $board = $object;
         }
         //check si le user est admin ou collaborateur ou owner
         if($object->getOwner() != $user->getId() || User::check_collaborator_board($user,$object)){
@@ -234,15 +234,13 @@ class ControllerBoard extends Controller
             }
         }
         if (isset($_POST["butonCancel"])) {
-            $this->redirect("board", "index");
+            $this->redirect("board", "board",$_GET["param2"]);
         } elseif (isset($_POST["butonDelete"])) {
             if ($object->delete_board_by_id()) {
-                $resultat = "successful deletion.";
-            } else {
-                $resultat = "the board hasn't been deleted.";
+                $this->redirect("board", "index");
             }
         }
-        (new View("conf_delete"))->show(array("function" => $function, "resultat" => $resultat,
+        (new View("conf_delete"))->show(array("function" => $function, "board" => $board,
             "object" => $object, "objectNotif" => $objectNotif, "user" => $user));
     }
 

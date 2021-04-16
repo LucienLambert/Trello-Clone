@@ -23,9 +23,7 @@ class Participate extends Model
 
     public function getUser(){
         return User::select_user_by_id($this->getIdParticipate());
-    }    
-
-    
+    }
 
     public static function check_participate($user,$card){
         $query = self::execute("SELECT * FROM participate WHERE participant=:user AND card=:card ",array(

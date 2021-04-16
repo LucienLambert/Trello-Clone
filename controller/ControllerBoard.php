@@ -324,7 +324,21 @@ class ControllerBoard extends Controller
                 }
             }
             if (isset($_GET["param2"]) && $_GET["param2"] != "") {
-                $collabo = Collaborate::select_collaborator_by_board($_GET["param2"], $board);
+                $idCollabo = $_GET["param2"];
+                $collabo = Collaborate::select_collaborator_by_board($idCollabo, $board);
+                $tableColumn = Column::select_all_column_by_id_board($board);
+                foreach ($tableColumn as $column){
+                    $tableCard [] = Card::select_all_card_by_id_column_ASC($column->getId());
+                }
+                foreach ($tableCard as $card){
+                    foreach ($card as $c){
+                        if(Participate::check_participate($collabo->getUser(), $c)){
+                            $participate = new Participate($collabo->getIdCollaborator(), $c->getId());
+                            $participate->delete_participant();
+                        }
+                    }
+
+                }
                 $collabo->delete_collaborator();
             }
         }

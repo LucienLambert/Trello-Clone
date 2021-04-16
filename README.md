@@ -2,7 +2,22 @@
 
 ## Notes de livraison itération 1
 
+#MODIFICATION
+DB Lucien:
+user : Lucien@gmail.com 
+mdp : Password1,
+
 ## Notes de livraison itération 2
+
+#MODIFICATION
+DB Lucien:
+user : Lucien@gmail.com 
+mdp : Password1,
+
+DB Victor:
+user : victor@epfc.eu
+       vic@gmail.com
+mdp : Password1,
 
 ## Notes de livraison itération 3
 
@@ -24,7 +39,4 @@ Tous les utilisateurs (`boverhaegen@epfc.eu`, `bepenelle@epfc.eu`, `brlacroix@ep
     - `database/prwb_2021_d02_dump.sql` contient le dump de la base de données
 - Pour la restaurer, accédez à l'url [http://localhost/prwb_2021_d02/setup/install](http://localhost/prwb_2021_d02/setup/install)
 
-#MODIFICATION
-user : Lucien@gmail.com 
-mdp : Password1,
 

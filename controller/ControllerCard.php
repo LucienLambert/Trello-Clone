@@ -208,7 +208,8 @@ class ControllerCard extends Controller {
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $object = Card::select_card_by_id($_GET["param1"]);
             //recuperer le board
-            $board = Board::select_board_by_id($object->getAuthor());
+            $column = Column::select_column_by_id($object->getColumn());
+            $board = Board::select_board_by_id($column->getBoard());
             $owner = User::select_user_by_id($board->getOwner());
             //check si le user est admin ou collaborateur ou owner
             if($owner->getId() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin"){

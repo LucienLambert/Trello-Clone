@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <link href="css/style.css" rel="stylesheet" type="text/css"/>
-</head>
 <header>
 <div class="header">
     <h1 class="header">Trello!</h1>
     <a class="header" href="board/logout">Log Out</a>
-    <a class="header"><?php echo $user->getFullName()?><?php if($user->getRole() == "admin") { ?><img id="image" src="image/icon_admin.png"><?php }?></a>
+    <a class="header"><?php echo $user->getFullName()?><?php if($user->getRole() == "admin") { ?><img id="image" src="image/icon_admin.png" alt="admin"><?php }?></a>
     <?php if($user->getRole() == "admin"){ ?>
         <a class="header" href="user/list_users">Manage Users</a>
         <?php } ?>

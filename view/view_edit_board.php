@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <title>Edit board</title>
     <base href="<?= $web_root ?>"/>
     <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
-<div>
-    <?php include("header.php") ?>
-</div>
+    
 <body>
+<?php include("header.php") ?>
 <h1>Board "<?php echo $board->getTitle() ?>"</h1>
 <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
     <!-- formulaire pour supprimer le board -->
@@ -41,9 +41,7 @@
     } ?>
 </p>
 
-<?php foreach ($tableColumn
-
-               as $column) { ?>
+<?php foreach ($tableColumn as $column) { ?>
     <!-- ajout condition  -->
 <div class="divTable">
     <table>
@@ -181,12 +179,13 @@
             <tfoot>
             <tr>
                 <!-- formulaire pour ajouter une carte-->
-                <form action="board/add_card/<?php echo $column->getBoard()?>/<?php echo $column->getId()?>"
-                      method="post">
+                
                     <td><input type="text" name="titleCard" size="15" placeholder="Add Card">
-                        <input id="add" type="submit" name="boutonAddCard" value="+">
+                    <form action="board/add_card/<?php echo $column->getBoard()?>/<?php echo $column->getId()?>" method="post">
+                        <input class="add" type="submit" name="boutonAddCard" value="+">
+                    </form>
                     </td>
-                </form>
+                
             </tr>
             </tfoot>
         <?php } ?>
@@ -197,11 +196,11 @@
     <form action="board/add_column/<?php echo $board->getId() ?>" method="post">
         <td>
             <input type="text" name="title" size="15" placeholder="Add a column">
-            <input id="add" type="submit" name="boutonAddColumn" value="+">
+            <input class="add" type="submit" name="boutonAddColumn" value="+">
         </td>
     </form>
+    <?php } ?>
 </div>
-<?php } ?>
 <div id="error">
     <?php if (count($error) > 0) { ?>
         <p>Please check the errors and correct them :</p>

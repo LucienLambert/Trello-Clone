@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <title>Trello!</title>
         <base href="<?= $web_root ?>"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
     </head>
-    <div>
+    <body>
         <?php include("menu.html")?>
-    </div>
+    
     <p>Hello guest! Please
         <a style="color: blue" href="user/login">log In</a>
         or

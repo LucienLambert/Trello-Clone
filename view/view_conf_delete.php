@@ -1,17 +1,16 @@
 <!DOCTYPE>
-<html>
+<html lang="en-US">
 <head>
     <head>
         <meta charset="UTF-8">
         <title>delete confirm</title>
         <base href="<?= $web_root ?>"/>
         <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
     </head>
 </head>
-<div>
-    <?php include("header.php") ?>
-</div>
 <body>
+<?php include("header.php") ?>
         <div id="delete">
             <h1 id="TrashIcon">&#128465;</h1>
             <h1>Are you sure ?</h1>

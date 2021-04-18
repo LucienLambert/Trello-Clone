@@ -1,18 +1,18 @@
 <!DOCTYPE>
-<html>
+<html lang="en-US">
 <head>
     <head>
         <meta charset="UTF-8">
         <title>Collaborator</title>
         <base href="<?= $web_root ?>"/>
         <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
     </head>
 </head>
-<div>
-    <?php include("header.php") ?>
-</div>
+    
 <body>
-<br>
+<?php include("header.php") ?>
+<br/>
 <h1>Board "<?php echo $board->getTitle()?>": Collaborators</h1>
 <h4>Current collaborator(s)</h4>
     <ul>

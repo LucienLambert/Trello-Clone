@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <title>Boards</title>
     <base href="<?= $web_root ?>"/>
     <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
-<div>
-    <?php include("header.php") ?>
-</div>
 <body>
+<?php include("header.php") ?>
     <h1>List Users</h1>
     <table style="width:100%">
         <tr>
@@ -24,7 +23,6 @@
             <td>
                 <form action="user/list_users" method="post">
                     <select name="role">
-                        <label>Role :</label></br>
                         <?php if($user->getRole()=="user"):?>
                             <option value="user" selected>User</option>
                             <option value="admin">Admin</option>
@@ -39,5 +37,6 @@
             </td>
         </tr>
     <?php endforeach; ?>
+    </table>
 </body>
 </html>

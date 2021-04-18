@@ -19,6 +19,8 @@ user : victor@epfc.eu
        vic@gmail.com
 mdp : Password1,
 
+Ajout d'un onglet dans la barre du menu nomé "Mannage Users" pour les admins afin de gerer le rôle des membres
+
 ## Notes de livraison itération 3
 
 

@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
     <head>
         <meta charset="UTF-8">
-        <title>Edit board</title>
+        <title>Sign Up</title>
         <base href="<?= $web_root ?>"/>
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-
-    <div>
-        <p><?php include("menu.html")?></p>
-    </div>
+        <?php include("menu.html")?>
+    <p></p>
     <h1 class="form-signup">Sign Up</h1>
     <main class="form-signup">
     <form class="blocktext" action="user/signup" method="post">

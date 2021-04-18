@@ -1,16 +1,16 @@
 <!DOCTYPE>
-<html>
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <title>View Card</title>
     <base href="<?= $web_root ?>"/>
     <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
-<div>
-    <?php include("header.php") ?>
-</div>
-</br>
+
+<br/>
 <body>
+<?php include("header.php") ?>
 <h1>Card "<?php echo $card->getTitle() ?>"</h1>
 <?php if ($card->getAuthor() == $user->getID() || $user->getRole() == "admin" || User::check_collaborator_board($user,$board)) { ?>
     <!-- formulaire pour supprimer la carte -->

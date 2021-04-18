@@ -219,7 +219,6 @@ class ControllerCard extends Controller {
             //recuperer le board
             $column = Column::select_column_by_id($object->getColumn());
             $board = Board::select_board_by_id($column->getBoard());
-            var_dump($board);
             $owner = User::select_user_by_id($board->getOwner());
             //check si le user est admin ou collaborateur ou owner
             if($owner->getId() != $user->getId() && User::check_collaborator_board($user,$board) == false && $user->getRole() != "admin"){

@@ -1,55 +1,59 @@
-.divTable{
+.divTable {
     display: flex;
     justify-content: center;
 }
 
-form{
-    display:inline;
+form {
+    display: inline;
 }
 
-th, td{
+th,
+td {
     padding: 10px;
     border: 1px solid black;
     border-collapse: collapse;
 }
 
-#submitBoardUser{
+.submitBoardUser {
     border-radius: 20%;
     background-color: #6565f1;
 }
 
-#submitBoardAnother{
+.submitBoardAnother {
     border-radius: 20%;
     background-color: palegreen;
 }
 
-#submitBoardCollabo{
+#submitBoardCollabo {
     border-radius: 20%;
     background-color: deeppink;
 }
 
-#TrashIcon{
+#TrashIcon {
     font-size: 50px;
 }
 
-#error{
+#error {
     color: red;
 }
-#add{
+
+.add {
     background-color: #6565f1;
 }
 
-#delete{
+#delete {
     padding: 20px;
-    border-width:2px;
-    border-style:solid;
-    border-color:black;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
     color: red;
     text-align: center;
     position: absolute;
-    top: 50%; left: 50%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
-#RedDueDate{
+
+#RedDueDate {
     background-color: red;
 }

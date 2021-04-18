@@ -1,16 +1,17 @@
 <!DOCTYPE>
-<html>
+<html lang="en-US">
 <head>
     <head>
         <meta charset="UTF-8">
         <title>Edit Card</title>
         <base href="<?= $web_root ?>"/>
         <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
     </head>
 </head>
-<?php include("header.php") ?>
 <body>
-<br>
+<?php include("header.php") ?>
+<br/>
 <h1>Edit a card</h1>
 <p>
     <?php echo "Créated " . $diffDate . " " . $messageTime . " ago by "?><span style="color: #6565f1"><?php echo $authorCard->getFullName()?>.</span>

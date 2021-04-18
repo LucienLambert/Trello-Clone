@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <title>Trello!</title>
@@ -7,13 +7,11 @@
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-
-    <div>
-        <p><?php include("menu.html")?></p>
-    </div>
-
+    <?php include("menu.html")?>
+    <p></p>
     <h1 class="form-signup">Sign In</h1>
     <main class="form-signup">
+        
         <form class="blocktext" action="user/login" method="post">
             <table>
             <tr>
@@ -27,6 +25,7 @@
             </table>
             <input class="submit" type="submit" name="bouton" value="Login">
         </form>
+
     </main>
 
     <div class="error">

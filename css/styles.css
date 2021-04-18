@@ -24,7 +24,7 @@ td {
     background-color: palegreen;
 }
 
-#submitBoardCollabo {
+.submitBoardCollabo {
     border-radius: 20%;
     background-color: deeppink;
 }
@@ -54,6 +54,6 @@ td {
     transform: translate(-50%, -50%);
 }
 
-#RedDueDate {
+.RedDueDate {
     background-color: red;
 }

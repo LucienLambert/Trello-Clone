@@ -53,7 +53,7 @@
     <form class="boardForm" action="board/open_Board/<?php echo $board->getId() ?>" method="post">
         <tr>
             <td>
-            <input id="submitBoardCollabo" type="submit" name="boutonBoard" size="30" value="<?php echo $board->getTitle()?>">
+            <input class="submitBoardCollabo" type="submit" name="boutonBoard" size="30" value="<?php echo $board->getTitle()?>">
             </td>
         </tr>
     </form>

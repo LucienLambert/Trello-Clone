@@ -180,8 +180,9 @@
             <tr>
                 <!-- formulaire pour ajouter une carte-->
                 
-                    <td><input type="text" name="titleCard" size="15" placeholder="Add Card">
+                    <td>
                     <form action="board/add_card/<?php echo $column->getBoard()?>/<?php echo $column->getId()?>" method="post">
+                        <input type="text" name="titleCard" size="15" placeholder="Add Card">
                         <input class="add" type="submit" name="boutonAddCard" value="+">
                     </form>
                     </td>

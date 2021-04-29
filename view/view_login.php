@@ -28,9 +28,7 @@
             </table>
             <input class="submit" type="submit" name="bouton" value="Login">
         </form>
-
     </main>
-
     <div class="error">
         <?php if (count($error) > 0) { ?>
             <p>Please check the errors and correct them :</p>

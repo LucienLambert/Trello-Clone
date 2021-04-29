@@ -62,8 +62,10 @@ class ControllerBoard extends Controller
     //se chargera d'afficher les contenues du board sur le quel on est
     public function board($error = [])
     {
+
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $board = Board::select_board_by_id($_GET["param1"]);
+            $boardJson = json_encode($board);
         }
         $user = $this->get_user_or_false();
         $viewEditTitleBoard = false;
@@ -233,6 +235,7 @@ class ControllerBoard extends Controller
                 $this->redirect("board","index");
             }
         }
+
         if (isset($_POST["butonCancel"])) {
             $this->redirect("board", "board",$_GET["param2"]);
         } elseif (isset($_POST["butonDelete"])) {
@@ -374,5 +377,10 @@ class ControllerBoard extends Controller
             $tableFormatDate[1] = "Month";
         }
         return $tableFormatDate;
+    }
+
+    public function del_board_js(){
+        $board = Board::select_board_by_id($_GET["param1"]);
+        $board->delete_board_by_id();
     }
 }

@@ -6,16 +6,27 @@
     <base href="<?= $web_root ?>"/>
     <link href="css/styles.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui.theme.min.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui.structure.min.css" rel="stylesheet" type="text/css"/>
+    <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="js/conf_del.js" type="text/javascript"></script>
+    <script src="lib/jquery-ui.min.js" type="text/javascript"></script>
 </head>
-    
 <body>
 <?php include("header.php") ?>
 <h1>Board "<?php echo $board->getTitle() ?>"</h1>
 <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
     <!-- formulaire pour supprimer le board -->
     <form action="board/delete_board/<?php echo $board->getId() ?>" method="post">
-        <input type="submit" name="delBoard" value="Delete Board">
+        <input id="<?php echo $board->getId().'delete_board';?>" type="button" name="id_board" value="Delete Board" hidden>
+        <input id="delOrignal" type="submit" name="delBoard" value="Delete Board">
     </form>
+
+    <div id="confirmDialog" title="Delete Board" hidden>
+        <p>do you really want to delete this board ("<?php echo $board->getTitle()?>")</p>
+    </div>
+
     <!-- formulaire pour afficher l'option modifier le titre du board -->
     <?php if (!$viewEditTitleBoard) : ?>
         <form action="board/board/<?php echo $board->getId() ?>" method="post">

@@ -5,13 +5,16 @@
         <title>Sign Up</title>
         <base href="<?= $web_root ?>"/>
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
+        <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+        <script src="js/signup.js" type="text/javascript"></script>
+        <script src="lib/jquery-validate.1.19.3.min.js" type="text/javascript"></script>
     </head>
     <body>
         <?php include("menu.html")?>
     <p></p>
     <h1 class="form-signup">Sign Up</h1>
     <main class="form-signup">
-    <form class="blocktext" action="user/signup" method="post">
+    <form class="blocktext" id="formSignUp" action="user/signup" method="post">
         <table>
             <tr>
                 <td>@</td>
@@ -41,6 +44,7 @@
             <?php } ?>
         <?php } ?>
     </div>
+    
     </body>
 </html>
 

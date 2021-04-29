@@ -19,11 +19,11 @@
             <table>
             <tr>
                 <td>@</td>
-                <td><input type="email" name="mail" size="30" value="<?= $mail ?>" placeholder="Email" required></td>
+                <td><input type="email" name="mail" size="30" value="<?= $mail ?>" placeholder="Email"></td>
             </tr>
             <tr>
                 <td>&#x1F512;</td>
-                <td><input type="password" name="password" size="30" value="<?= $password ?>" required placeholder="**********"></td>
+                <td><input type="password" name="password" size="30" value="<?= $password ?>" placeholder="**********"></td>
             </tr>
             </table>
             <input class="submit" type="submit" name="bouton" value="Login">

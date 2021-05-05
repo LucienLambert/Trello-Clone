@@ -75,4 +75,14 @@ class ControllerColumn extends Controller {
         $this->move_column($columnToRight, $column);
     }
 
+    public function del_column_js(){
+        $user = $this->get_user_or_false();
+        $column = Column::select_column_by_id($_GET["param1"]);
+        $board = Board::select_board_by_id($column->getBoard());
+        if ($user->getId() === $board->getOwner()) {
+            $column->delete_column_by_id();
+        }
+        return $board->getId();
+    }
+
 }

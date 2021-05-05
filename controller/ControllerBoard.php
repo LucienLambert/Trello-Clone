@@ -381,6 +381,11 @@ class ControllerBoard extends Controller
 
     public function del_board_js(){
         $board = Board::select_board_by_id($_GET["param1"]);
-        $board->delete_board_by_id();
+        $user = $this->get_user_or_false();
+        if($board->getOwner() === $user->getId()){
+            $board->delete_board_by_id();
+            return true;
+        }
+        return false;
     }
 }

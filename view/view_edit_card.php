@@ -28,6 +28,9 @@
     <h3>Body</h3>
     <textarea name="bodyCard" rows="10" cols="50"><?php echo $card->getBody() ?></textarea>
     <h3>Due date : <?php echo $card->getDueDate()?></h3>
+        <?php if($card->getDueDate() != null){ ?>
+            <a type="button" href="card/del_due_date/<?php echo $card->getId()?>">delete Due Date</a><br>
+        <?php } ?>
     <input type="date" name="due_date">
     <h3>Current participant(s) </h3>
     <ul>

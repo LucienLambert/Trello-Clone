@@ -330,4 +330,11 @@ class ControllerCard extends Controller {
         }    
     }
 
+    public function del_due_date(){
+        $cardDueDate = Card::select_card_by_id($_GET["param1"]);
+        $cardDueDate->setDueDate(null);
+        $cardDueDate->update_card();
+        $this->redirect("card", "edit_card",$_GET["param1"]);
+    }
+
 }

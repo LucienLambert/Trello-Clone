@@ -32,6 +32,7 @@ class ControllerColumn extends Controller {
             $this->redirect("board", "board",$_GET["param2"]);
         } elseif (isset($_POST["butonDelete"])) {
             if ($object->delete_column_by_id()) {
+                $board->uptdate_board_modiefiedAt(new DateTime("now"));
                 $this->redirect("board", "board",$board->getId());
             }
         }
@@ -50,6 +51,7 @@ class ControllerColumn extends Controller {
             $this->redirect("board","index");
         }
         $columnRigth->move_column($columnLeft);
+        $board->uptdate_board_modiefiedAt(new DateTime("now"));
         //Column::move_column($columnRigth, $columnLeft);
         $this->redirect("board", "board", $_GET["param1"]);
     }

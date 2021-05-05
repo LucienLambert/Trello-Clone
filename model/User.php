@@ -138,7 +138,7 @@ class User extends Model
                 $error[] = "Your password is required";
                 //check si le password entré(hasher) correspond au password hasher de l'utilisateur.
             } elseif (Tools::my_hash($password) != self::select_member_by_mail($mail)->password) {
-                $error [] = "password incorrect";
+                $error [] = "Email or password incorrect";
             }
         } else {
             $error [] = "$mail invalid or does not exist";

@@ -115,6 +115,7 @@ class ControllerCard extends Controller {
             $this->redirect("board","index");
         }
         $card->move_card_and_add_last_position_right_or_left($newColonne);
+        $board->uptdate_board_modiefiedAt(new DateTime("now"));
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
             $this->redirect("board","board", $_GET["param1"]);
         } else {
@@ -151,6 +152,7 @@ class ControllerCard extends Controller {
             $this->redirect("board","index");
         }
         $oldPosition->move_card_up_or_down($newPosition);
+        $board->uptdate_board_modiefiedAt(new DateTime("now"));
         $this->redirect("board", "board", $_GET["param1"]);
     }
 
@@ -199,6 +201,8 @@ class ControllerCard extends Controller {
                 $card->setTitle($_POST["titleCard"]);
                 $card->setBody($_POST["bodyCard"]);
                 $card->update_card();
+                $board = Board::select_board_by_id($column->getBoard());
+                $board->uptdate_board_modiefiedAt(new DateTime("now"));
                 $this->redirect("card", "view_card",$_GET["param2"]);
             }
             $this->edit_card($error);
@@ -236,6 +240,7 @@ class ControllerCard extends Controller {
             $this->redirect("board", "board",$_GET["param2"]);
         } elseif (isset($_POST["butonDelete"])) {
             if ($object->delete_card_by_id()) {
+                $board->uptdate_board_modiefiedAt(new DateTime("now"));
                 $this->redirect("board", "board",$board->getId());
             }
         }

@@ -158,4 +158,10 @@ class Board extends Model
         }
         return false;
     }
+
+    public function uptdate_board_modiefiedAt($modifiedAt){
+        self::execute("UPDATE Board SET modifiedAt = :modifiedAt WHERE id = :id",
+        array("id" => $this->getId(),"modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
+    return true;
+    }
 }

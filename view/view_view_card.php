@@ -12,11 +12,13 @@
 <body>
 <?php include("header.php") ?>
 <h1>Card "<?php echo $card->getTitle() ?>"</h1>
-<?php if ($card->getAuthor() == $user->getID() || $user->getRole() == "admin" || User::check_collaborator_board($user,$board)) { ?>
+<?php if ($board->getOwner() == $user->getId() || $user->getRole() == "admin" || User::check_collaborator_board($user,$board)) { ?>
     <!-- formulaire pour supprimer la carte -->
+    <?php if ($board->getOwner() == $user->getId() || $user->getRole() == "admin" || $card->getAuthor() == $user->getId()) { ?>
     <form class="FormColumn" action="card/delete_card/<?php echo $card->getId()?>" method="post">
         <input type="submit" name="delCard" value="Delete Card">
     </form>
+    <?php } ?>
     <!-- formulaire pour afficher l'option modifier la carte -->
     <?php if (!$viewEditTitleCard) : ?>
         <form class="FormColumn" action="card/edit_card/<?php echo $card->getId() ?>" method="post">

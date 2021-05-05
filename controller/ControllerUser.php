@@ -83,4 +83,16 @@ class ControllerUser extends Controller {
         }
         (new View("zone_admin"))->show(array("user" => $user,"tablUsers"=>$tablUsers));
     }
+    
+    public function mail_available_service(){
+        $res = "true";
+        if(isset($_POST["mail"]) && $_POST["mail"] !== ""){
+            $member = User::select_member_by_mail($_POST["mail"]);
+            if($member){
+                $res = "false";
+            }
+        }
+        echo $res;
+        
+    }
 }

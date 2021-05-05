@@ -28,7 +28,7 @@
     </div>
 
     <!-- formulaire pour afficher l'option modifier le titre du board -->
-    <?php if (!$viewEditTitleBoard) : ?>
+    <?php if (!$viewEditTitleBoard || $board->getOwner() != $user->getId()) : ?>
         <form action="board/board/<?php echo $board->getId() ?>" method="post">
             <input type="submit" name="openViewModifTitle" value="modify Board">
         </form>

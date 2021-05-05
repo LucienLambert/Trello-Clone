@@ -1,5 +1,5 @@
 $(function() {
-    $("#formLogin").validate({
+    $('#formLogin').validate({
         rules: {
             mail: "required",
             password: "required"

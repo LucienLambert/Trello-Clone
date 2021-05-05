@@ -156,6 +156,7 @@ class ControllerBoard extends Controller
 
             if (count($error) == 0) {
                 $column->inset_column($board);
+                $board->uptdate_board_modiefiedAt(new DateTime("now"));
                 $this->redirect("board", "board", $_GET["param1"]);
             }
             $this->board($error);
@@ -211,6 +212,7 @@ class ControllerBoard extends Controller
             $error = Column::valide_column($board, $title);
             if (count($error) == 0) {
                 $column->update_title_column($column->getId(), $title, new DateTime("now"));
+                $board->uptdate_board_modiefiedAt(new DateTime("now"));
                 $this->redirect("board", "board", $_GET["param1"]);
             } else {
                 $this->board($error);
@@ -264,6 +266,7 @@ class ControllerBoard extends Controller
             if (count($error) == 0) {
                 $card = new Card(null, $title, '', $positionCard, null, null, $user->getId(), $idColumn);
                 $card->insert_card();
+                $board->uptdate_board_modiefiedAt(new DateTime("now"));
                 $this->redirect("board", "board", $_GET["param1"]);
             }
             $this->board($error);

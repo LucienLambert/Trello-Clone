@@ -7,7 +7,7 @@
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
         <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
         <script src="js/signup.js" type="text/javascript"></script>
-        <script src="lib/jquery-validate.1.19.3.min.js" type="text/javascript"></script>
+        <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
     </head>
     <body>
         <?php include("menu.html")?>
@@ -18,7 +18,7 @@
         <table>
             <tr>
                 <td>@</td>
-                <td><input type="email" name="mail" placeholder="Email" value="<?php echo $mail?>"></td>
+                <td><input type="email" id="mail" name="mail" placeholder="Email" value="<?php echo $mail?>"></td>
             </tr>
             <tr>
                 <td>&#x1F610;</td>

@@ -84,7 +84,7 @@ class ControllerColumn extends Controller {
         if ($user->getId() === $board->getOwner()) {
             $column->delete_column_by_id();
         }
-        return $board->getId();
+        echo $board->getId();
     }
 
 }

@@ -19,12 +19,12 @@
 <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
     <!-- formulaire pour supprimer le board -->
     <form action="board/delete_board/<?php echo $board->getId() ?>" method="post">
-        <input id="<?php echo $board->getId().'delete_board';?>" type="button" name="id_board" value="Delete Board" hidden>
-        <input id="delOrignal" type="submit" name="delBoard" value="Delete Board">
+        <input id="<?php echo $board->getId().'delete_board';?>" type="button" value="Delete Board" hidden>
+        <input class="delOrignal" type="submit" name="delBoard" value="Delete Board">
     </form>
 
-    <div id="confirmDialog" title="Delete Board" hidden>
-        <p>do you really want to delete this board ("<?php echo $board->getTitle()?>")</p>
+    <div id="confirmDialog" title="Delete" hidden>
+        <p>do you really want to delete</p>
     </div>
 
     <!-- formulaire pour afficher l'option modifier le titre du board -->
@@ -68,7 +68,8 @@
                     <input type="submit" name="modifTitle" value="Apply">
                 </form>
                 <form action="column/delete_column/<?php echo $column->getId() ?>" method="post">
-                    <input type="submit" name="butonDelColumn" value="&#128465;">
+                    <input id="<?php echo $column->getId().'delete_column';?>" type="button" value="&#128465;" hidden>
+                    <input class="delOrignal" type="submit" name="butonDelColumn" value="&#128465;">
                 </form>
                 <?php if (count($tableColumn) > 1){ ?>
                 <?php if ($column->getPosition() == 0 && count($tableColumn) > 0) { ?>

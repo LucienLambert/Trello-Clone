@@ -83,6 +83,7 @@ class ControllerColumn extends Controller {
         $board = Board::select_board_by_id($column->getBoard());
         if ($user->getId() === $board->getOwner()) {
             $column->delete_column_by_id();
+            //$board->uptdate_board_modiefiedAt(new DateTime("now"));
         }
         echo $board->getId();
     }

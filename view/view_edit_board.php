@@ -111,7 +111,8 @@
                     </form>
                     <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin" || Participate::check_participate($user,$card)) { ?>
                         <form action="card/delete_card/<?php echo $card->getId() ?>" method="post">
-                            <input type="submit" name="deleteCard" value="&#128465;">
+                            <input id="<?php echo $card->getId().'delete_card';?>" type="button" value="&#128465;" hidden>
+                            <input class="delOrignal" type="submit" name="deleteCard" value="&#128465;">
                         </form>
                         <?php if ($column->getPosition() == 0) { ?>
                             <!-- formulaire déplacement en haut -->

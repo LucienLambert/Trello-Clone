@@ -6,12 +6,12 @@
     <base href="<?= $web_root ?>"/>
     <link href="css/styles.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="lib/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
-    <link href="lib/jquery-ui.theme.min.css" rel="stylesheet" type="text/css"/>
-    <link href="lib/jquery-ui.structure.min.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui-1.12.1/jquery-ui.theme.min.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui-1.12.1/jquery-ui.structure.min.css" rel="stylesheet" type="text/css"/>
     <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
     <script src="js/conf_del.js" type="text/javascript"></script>
-    <script src="lib/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="lib/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
     <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
     <script src="js/validation_title.js" type="text/javascript"></script>
 </head>

@@ -391,4 +391,22 @@ class ControllerBoard extends Controller
         }
         return false;
     }
+
+    public function title_available_service(){
+        $res = "true";
+        if(isset($_POST["newTitleBoard"]) && $_POST["newTitleBoard"] !== ""){
+            $board = Board::select_board_by_title($_POST["newTitleBoard"]);
+            if($board){
+                $res = "false";
+            }
+        }
+        if(isset($_POST["newTitleColumn"]) && $_POST["newTitleColumn"] !== ""){
+            $board = Board::select_board_by_id($_GET["param1"]);
+            $column = Column::select_column_by_title_and_board($_POST["newTitleColumn"],$board->getId());
+            if($column){
+                $res = "false";
+            }
+        }
+        echo $res;
+     }
 }

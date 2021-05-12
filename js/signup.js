@@ -1,22 +1,20 @@
-/*$.validator.addMethod("regex", function(value, element, pattern) {
-        if (pattern == null) {
-            return null;
-        }
-        if (pattern instanceof Array) {
-            for (p of pattern) {
-                if (!p.test(value))
-                    return false;
-            }
-            return true;
-        } else {
-            return pattern.test(value);
-        }
-    },
-    "Please enter a valid input."
-);
-*/
 $(function() {
-    $("input:first").focus();
+    $.validator.addMethod("regex", function(value, element, pattern) {
+            if (pattern == null) {
+                return null;
+            }
+            if (pattern instanceof Array) {
+                for (p of pattern) {
+                    if (!p.test(value))
+                        return false;
+                }
+                return true;
+            } else {
+                return pattern.test(value);
+            }
+        },
+        "Please enter a valid input."
+    );
     validateSignup();
 });
 
@@ -46,14 +44,14 @@ function validateSignup() {
                 required: true,
                 minlength: 8,
                 maxlength: 16,
-                regex: [/[A-Z]/, /\d/, /['";:,.\/?\\-]/],
+                regex: [/[0-9A-Za-z!]*$/, /[A-Z]/, /\d/, /['";:,.\/?\\-]/],
             },
             conf_password: {
                 required: true,
                 minlength: 8,
                 maxlength: 16,
                 equalTo: "#password",
-                regex: [/[A-Z]/, /\d/, /['";:,.\/?\\-]/],
+                regex: [/[0-9A-Za-z!]*$/, /[A-Z]/, /\d/, /['";:,.\/?\\-]/],
             }
         },
         messages: {

@@ -12,6 +12,8 @@
     <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
     <script src="js/conf_del.js" type="text/javascript"></script>
     <script src="lib/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="js/validation_title.js" type="text/javascript"></script>
 </head>
 <body>
 <?php include("header.php") ?>
@@ -30,13 +32,14 @@
     <!-- formulaire pour afficher l'option modifier le titre du board -->
     <?php if (!$viewEditTitleBoard || $board->getOwner() != $user->getId()) : ?>
         <form action="board/board/<?php echo $board->getId() ?>" method="post">
-            <input type="submit" name="openViewModifTitle" value="modify Board">
+            <input type="submit" name="openViewModifTitle" id="openViewModifTitle" value="modify Board">
         </form>
     <?php else: ?>
         <!-- formulaire pour modifier le titre du board -->
-        <form action="board/edit_title_board/<?php echo $board->getId() ?>" method="post">
-            <input type="text" name="newTitleBoard" size="15" placeholder="Enter a new Title">
-            <input type="submit" name="modifTitle" value="apply">
+        <form action="board/edit_title_board/<?php echo $board->getId() ?>" id="modifTitleBoard" method="post">
+            <input type="text" name="newTitleBoard" id="newTitleBoard" size="15"  placeholder="Enter a new Title">
+            <input type="submit" name="modifTitle" id="modifTitle" value="apply">
+            
         </form>
     <?php endif; ?>
     <form action="board/collaborators/<?php echo $board->getId() ?>" method="post">
@@ -63,8 +66,8 @@
                 <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
                 <!-- formulaire pour modifier le title de la colonne -->
                 <form action="board/edit_title_column/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>"
-                      method="post">
-                    <input type="text" name="newTitleColumn" size="15" placeholder="Enter a new Title">
+                      method="post" id="modifTitleColumn">
+                    <input type="text" name="newTitleColumn" id="newTitleColumn" size="15" placeholder="Enter a new Title">
                     <input type="submit" name="modifTitle" value="Apply">
                 </form>
                 <form action="column/delete_column/<?php echo $column->getId() ?>" method="post">
@@ -214,6 +217,7 @@
     </form>
     <?php } ?>
 </div>
+<div id="errors"></div>
 <div id="error">
     <?php if (count($error) > 0) { ?>
         <p>Please check the errors and correct them :</p>

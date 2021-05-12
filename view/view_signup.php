@@ -8,7 +8,7 @@
         <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
         <script src="js/signup.js" type="text/javascript"></script>
         <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
-    </head>
+</head>
     <body>
         <?php include("menu.html")?>
     <p></p>

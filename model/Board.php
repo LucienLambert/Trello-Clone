@@ -164,4 +164,6 @@ class Board extends Model
         array("id" => $this->getId(),"modifiedAt" => $modifiedAt->format('Y-m-d H:i:s')));
     return true;
     }
+
+    
 }

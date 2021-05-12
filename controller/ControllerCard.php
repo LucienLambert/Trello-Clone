@@ -342,4 +342,17 @@ class ControllerCard extends Controller {
         $this->redirect("card", "edit_card",$_GET["param1"]);
     }
 
+    public function del_card_js(){
+        $user = $this->get_user_or_false();
+        $card = Card::select_card_by_id($_GET["param1"]);
+        $board = Board::select_board_by_id($card->getBoard());
+        if ($user->getId() === $board->getOwner()) {
+            $participant = new Participate($card->getAuthor(),$card->getId());
+            $participant->delete_all_participants();
+            $card->delete_card_by_id();
+            $board->uptdate_board_modiefiedAt(new DateTime("now"));
+        }
+        echo $board->getId();
+    }
+
 }

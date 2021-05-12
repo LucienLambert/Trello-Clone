@@ -386,10 +386,8 @@ class ControllerBoard extends Controller
         $board = Board::select_board_by_id($_GET["param1"]);
         $user = $this->get_user_or_false();
         if($board->getOwner() === $user->getId()){
-            $board->delete_board_by_id();
-            return true;
+            $board->delete_board_by_id();  
         }
-        return false;
     }
 
     public function title_available_service(){

@@ -13,10 +13,9 @@ $(function () {
             })
         }
         const closeFunction = function () {
-            console.log("Entre dans closeFunction");
-            $(this).dialog("close");
+            $('#confirmDialog').dialog("close");
         }
-        maFunction(delFunction, closeFunction);
+        dialogBox(delFunction, closeFunction);
     });
 
     $("[id$=delete_column]").click(function () {
@@ -28,9 +27,9 @@ $(function () {
         }
         const closeFunction = function () {
             console.log("Entre dans closeFunction"+ this);
-            $(this).dialog("close");
+            $('#confirmDialog').dialog("close");
         }
-        maFunction(delFunction, closeFunction);
+        dialogBox(delFunction, closeFunction);
     });
 
     $("[id$=delete_card]").click(function () {
@@ -43,12 +42,12 @@ $(function () {
         }
         const closeFunction = function () {
             console.log("Entre dans closeFunction");
-            $(this).dialog("close");
+            $('#confirmDialog').dialog("close");
         }
-        maFunction(delFunction, closeFunction);
+        dialogBox(delFunction, closeFunction);
     });
 
-    const maFunction = (delFunction, closeFunction) => {
+    function dialogBox(delFunction, closeFunction) {
         $('#confirmDialog').dialog({
             resizable: false,
             draggable: false,

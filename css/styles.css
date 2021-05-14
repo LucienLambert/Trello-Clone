@@ -2,6 +2,10 @@
     display: flex;
     justify-content: center;
 }
+#add_column{
+    display: flex;
+    left:80%;
+}
 
 form {
     display: inline;

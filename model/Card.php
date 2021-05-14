@@ -280,5 +280,10 @@ class Card extends Model
             array("id"=>$newPositionCard->getId(), "position"=>$this->getPosition()));
         return true;
     }
+
+    public static function move_card_up_and_down_js($id, $position){
+        self::execute("UPDATE Card SET position = :position WHERE id= :id",
+            array("id"=>$id, "position"=>$position));
+    }
 }
 ?>

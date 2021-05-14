@@ -62,6 +62,8 @@ a.header {
 /* error */
 
 div.error {
+    display: flex;
+    justify-content: center;
     text-align: center;
     color: red;
 }

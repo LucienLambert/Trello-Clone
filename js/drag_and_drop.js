@@ -1,11 +1,10 @@
 $(function (){
     $(".arrowMove").hide();
-});
 
-$(document).ready(function () {
-    
+    //move position table
     $('.divTable').sortable({
-        placeholder: "highlight",
+        placeholder: 'ui-state-highlight',
+        forcePlaceholderSize: true,
         update : function(event, ui){
             $(this).children().each(function (index){
                 if($(this).attr('data-position') != (index)){
@@ -17,26 +16,31 @@ $(document).ready(function () {
         }
     });
     
-    
-    $('table [id$=bodyTable]').sortable({
-        placeholder: "highlight",
+    //move position carte dans la meme table
+    $('[id$=bodyTable]').sortable({
+        connectWith: "[id$=bodyTable]",
+        placeholder: 'ui-state-highlight',
+        forcePlaceholderSize: true,
         update: function (event, ui) {
             $(this).children().each(function (index) {
-                 if ($(this).attr('data-position') != (index)) {
-                     $(this).attr('data-position', (index)).addClass('updated');
-                 }
+                if ($(this).attr('data-position') != (index) || $(this).parent().attr('data-idColumn') != $(this).attr('data-cardIdColumn')) {
+                    //update de la position de la carte déplacé 
+                    $(this).attr('data-position', (index)).addClass('updated');
+                    //update de l'id column de la carte déplacé
+                    $(this).attr('data-cardIdColumn', $(this).parent().attr('data-idColumn')).addClass('updated');
+                }
             });
             var functionName = 'card/move_card_js';
             saveNewPositions(functionName);
+            
         }
-    });
-    
- });
+    });   
+});
 
 function saveNewPositions(functionName) {
     var positions = [];
     $('.updated').each(function () {
-       positions.push([$(this).attr('data-id'), $(this).attr('data-position')]);
+       positions.push([$(this).attr('data-id'), $(this).attr('data-position'), $(this).attr('data-cardIdColumn')]);
        $(this).removeClass('updated');
     });
 
@@ -47,8 +51,7 @@ function saveNewPositions(functionName) {
        data: {
            update: 0,
            positions: positions,
-       }, success: function (response) {
-            console.log(response);
-       }
+       },
     });
 }
+

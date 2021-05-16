@@ -281,9 +281,9 @@ class Card extends Model
         return true;
     }
 
-    public static function move_card_up_and_down_js($id, $position){
-        self::execute("UPDATE Card SET position = :position WHERE id= :id",
-            array("id"=>$id, "position"=>$position));
+    public static function move_card_up_and_down_js($id, $position, $column){
+        self::execute("UPDATE Card SET `column` = :column, position = :position WHERE id= :id",
+            array("column"=>$column, "id"=>$id, "position"=>$position));
     }
 }
 ?>

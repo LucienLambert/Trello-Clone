@@ -6,6 +6,9 @@
     <base href="<?= $web_root ?>"/>
     <link href="css/styles.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="js/validation_title_addBoard.js" type="text/javascript"></script>
 </head>
 <body>
     <?php include("header.php")?>
@@ -20,9 +23,9 @@
     </form>
     <?php }?>
     <!-- formulaire d'ajout d'un nouveau board -->
-    <form class="boardForm" action="board/add_board" method="post">
+    <form class="boardForm" action="board/add_board" id="titleBoard" method="post" >
         <tr>
-            <td><input type="text" name="title" size="15" placeholder="add a board">
+            <td><input type="text" name="title" id="title" size="15" placeholder="add a board">
                 <input class="submitBoardUser" type="submit" name="boutonAdd" value="add">
             </td>
             

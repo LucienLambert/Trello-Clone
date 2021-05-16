@@ -87,5 +87,28 @@ class ControllerColumn extends Controller {
         }
         echo $board->getId();
     }
+    
+    public function title_available_service(){
+        $res = "true";
+        if(isset($_POST["newTitleColumn"]) && $_POST["newTitleColumn"] !== "" && isset($_POST["board"]) && $_POST["board"] !== ""){
+            $board = Board::select_board_by_id($_POST["board"]);
+            $column = Column::select_column_by_title_and_board($_POST["newTitleColumn"],$board->getId());
+            if($column){
+                $res = "false";
+            }
+        }
+        echo $res;
+    }
 
+    public function title_addColumn_available_service(){
+        $res = "true";
+        if(isset($_POST["title"]) && $_POST["title"] !== "" && isset($_POST["board"]) && $_POST["board"] !== ""){
+            $board = Board::select_board_by_id($_POST["board"]);
+            $column = Column::select_column_by_title_and_board($_POST["title"],$board->getId());
+            if($column){
+                $res = "false";
+            }
+        }
+        echo $res;
+    }
 }

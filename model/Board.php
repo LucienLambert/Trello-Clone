@@ -126,7 +126,11 @@ class Board extends Model
     {
         $query = self::execute("SELECT * FROM Board where title = :title", array("title" => $title));
         $data = $query->fetch();
-        return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);
+        if($data == false){
+            return null;
+        }
+        else 
+            return new Board($data['ID'], $data['Title'], $data['Owner'], $data['CreatedAt'], $data['ModifiedAt']);
     }
 
     //recup le board via son id

@@ -14,6 +14,8 @@
     <script src="lib/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
     <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
     <script src="js/validation_title.js" type="text/javascript"></script>
+    <script src="js/validation_title_addColumn.js" type="text/javascript"></script>
+    <script src="js/validation_title_column.js" type="text/javascript"></script>
 </head>
 <body>
 <?php include("header.php") ?>
@@ -66,9 +68,9 @@
                 <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
                 <!-- formulaire pour modifier le title de la colonne -->
                 <form action="board/edit_title_column/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>"
-                      method="post" id="modifTitleColumn">
-                    <input type="text" name="newTitleColumn" id="newTitleColumn" size="15" placeholder="Enter a new Title">
-                    <input type="submit" name="modifTitle" value="Apply">
+                data-form="<?php echo $column->getPosition()?>" id="<?php echo $column->getPosition().'modifTitleColumn';?>" method="post">
+                    <input type="text" name="newTitleColumn" data-id="<?php echo $column->getId()?>" id="<?php echo $column->getId() . 'TitleColumn';?>" size="15" placeholder="Enter a new Title">
+                    <input type="submit" name="modifTitle" id="<?php echo $board->getId() ?>" value="Apply">
                 </form>
                 <form action="column/delete_column/<?php echo $column->getId() ?>" method="post">
                     <input id="<?php echo $column->getId().'delete_column';?>" type="button" value="&#128465;" hidden>
@@ -210,10 +212,10 @@
     <?php } ?>
     <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
     <!--formulaire qui s'occupe d'ajouter une colonne au board-->
-    <form action="board/add_column/<?php echo $board->getId() ?>" method="post">
+    <form action="board/add_column/<?php echo $board->getId() ?>" id="newColumn" method="post">
         <td>
-            <input type="text" name="title" size="15" placeholder="Add a column">
-            <input class="add" type="submit" name="boutonAddColumn" value="+">
+            <input type="text" name="title" id="idtitle" size="15" placeholder="Add a column">
+            <input class="add" type="submit" name="boutonAddColumn" id="<?php echo $board->getId() ?>" value="+">
         </td>
     </form>
     <?php } ?>

@@ -7,6 +7,9 @@
         <base href="<?= $web_root ?>"/>
         <link href="css/styles.css" rel="stylesheet" type="text/css"/>
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
+        <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="js/validation_edit_card.js" type="text/javascript"></script>
     </head>
 </head>
 <body>
@@ -23,8 +26,8 @@
 </p>
 
 <h3>Title</h3>
-<form action="card/modif_card/<?php echo $column->getId()?>/<?php echo $card->getId()?>" method="post">
-    <input type="text" name="titleCard" value="<?php echo $card->getTitle() ?>">
+<form action="card/modif_card/<?php echo $column->getId()?>/<?php echo $card->getId()?>" id="modifCard" method="post">
+    <input type="text" name="titleCard" data-idColumn="<?php echo $column->getId();?>" data-idCard="<?php echo $card->getId(); ?>" id="titleCard" value="<?php echo $card->getTitle() ?>">
     <h3>Body</h3>
     <textarea name="bodyCard" rows="10" cols="50"><?php echo $card->getBody() ?></textarea>
     <h3>Due date : <?php echo $card->getDueDate()?></h3>
@@ -54,7 +57,7 @@
     <textarea style="background: lightgray" name="titleboard" disabled="disabled" rows="2" cols="100"><?php echo $board->getTitle()?></textarea>
     <h3>Column</h3>
     <textarea style="background: lightgray" name="titleColumn" disabled="disabled" rows="2" cols="100"><?php echo $column->getTitle()?></textarea></br></br>
-    <input type="submit" name="boutonApply" value="Edit this card">
+    <input type="submit" name="boutonApply" id="submit" value="Edit this card">
 </form>
 <form action="card/modif_card/<?php $column->getId()?>/<?php echo $card->getId()?>" method="post">
     <input type="submit" name="boutonCancel" value="Cancel">

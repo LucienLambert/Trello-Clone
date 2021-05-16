@@ -202,6 +202,10 @@ class Column extends Model
     public static function select_column_by_title_and_board($title, $id){
         $query = self::execute("SELECT * FROM `Column` where title = :title AND board = :id", array("title" => $title, "id" => $id));
         $data = $query->fetch();
-        return new Column($data["ID"], $data["Title"], $data["Position"], $data["CreatedAt"], $data["ModifiedAt"], $data["Board"]);
+        if($data == false){
+            return null;
+        }
+        else 
+            return new Column($data["ID"], $data["Title"], $data["Position"], $data["CreatedAt"], $data["ModifiedAt"], $data["Board"]);
     }
 }

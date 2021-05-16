@@ -355,4 +355,20 @@ class ControllerCard extends Controller {
         echo $board->getId();
     }
 
+    public static function select_card_js(){
+        $card = Card::select_card_by_id($_POST["param2"]);
+        echo $card->getTitle();
+    }
+
+    public function title_available_service(){
+        $res = "true";
+        if(isset($_POST["titleCard"]) && $_POST["titleCard"] !== "" && isset($_POST["column"]) && $_POST["column"] !== ""){
+            $column = Column::select_column_by_id($_POST["column"]);
+            $card = Card::select_card_by_title($_POST["titleCard"],$column);
+            if($card){
+                $res = "false";
+            }
+        }
+        echo $res;
+    }
 }

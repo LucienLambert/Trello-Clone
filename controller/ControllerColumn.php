@@ -111,4 +111,16 @@ class ControllerColumn extends Controller {
         }
         echo $res;
     }
+
+    public function move_column_js(){
+        if (isset($_POST['update'])) {
+            foreach($_POST['positions'] as $position) {
+               $index = $position[0];
+               $newPosition = $position[1];
+               Column::move_column_js($index, $newPosition);         
+            }
+            exit('success');
+        }
+    }
+
 }

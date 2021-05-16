@@ -1,15 +1,19 @@
-.divTable {
-    display: flex;
-    justify-content: center;
+table {
+    display:inline-block;
+    vertical-align:top;
+}
+
+tbody {
+    padding : 15px;
+    border: 1px solid black;
 }
 
 form {
     display: inline;
 }
 
-th,
-td {
-    padding: 10px;
+th,td {
+    padding: 15px;
     border: 1px solid black;
     border-collapse: collapse;
 }

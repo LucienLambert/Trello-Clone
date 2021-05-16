@@ -208,4 +208,10 @@ class Column extends Model
         else 
             return new Column($data["ID"], $data["Title"], $data["Position"], $data["CreatedAt"], $data["ModifiedAt"], $data["Board"]);
     }
+
+    public static function move_column_js($id, $position){
+        self::execute("UPDATE `Column` SET position = :position WHERE id = :id"
+            ,array("position" =>$position, "id" =>$id));
+    }
+
 }

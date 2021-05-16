@@ -371,4 +371,17 @@ class ControllerCard extends Controller {
         }
         echo $res;
     }
+    
+    public function move_card_js(){
+        if (isset($_POST['update'])) {
+            foreach($_POST['positions'] as $position) {
+               $index = $position[0];
+               $newPosition = $position[1];
+               $newIdColumn = $position[2];
+               Card::move_card_up_and_down_js($index, $newPosition, $newIdColumn);   
+            }
+            exit('success');
+        }
+
+    }
 }

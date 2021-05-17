@@ -9,7 +9,7 @@
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
         <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
     <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
-    <script src="js/validation_edit_card.js" type="text/javascript"></script>
+    <script src="js/validation_title.js" type="text/javascript"></script>
     </head>
 </head>
 <body>

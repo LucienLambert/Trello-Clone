@@ -5,8 +5,10 @@
     <a class="header"><?php echo $user->getFullName()?><?php if($user->getRole() == "admin") { ?><img id="image" src="image/icon_admin.png" alt="admin"><?php }?></a>
     <?php if($user->getRole() == "admin"){ ?>
         <a class="header" href="user/list_users">Manage Users</a>
-        <?php } ?>
+    <?php } ?>
+
     <?php if($_GET["action"] == "index"){?>
+        <a class="header" href="calendar/index">Calendar</a>
         <a class="header">Boards</a>
     <?php } ?>
     <?php if($_GET["action"] == "board" || $_GET["action"] == "edit_title_board" || $_GET["action"] == "add_card"){?>
@@ -27,7 +29,7 @@
         <a class="header" href="board/board/<?php echo $board->getId()?>/board"><?php echo $board->getTitle()?></a>
         <a class="header"><?php echo $card->getTitle()?></a>
     <?php } ?>
-    <?php if($_GET["action"] == "delete_board" || $_GET["action"] == "delete_column" || $_GET["action"] == "delete_card" || $_GET["action"] == "list_users"){?>
+    <?php if($_GET["action"] == "delete_board" || $_GET["action"] == "delete_column" || $_GET["action"] == "delete_card" || $_GET["action"] == "list_users" || $_GET["controller"] == "calendar"){?>
         <a class="header" href="board/index">Boards</a>
     <?php } ?>
 </div>

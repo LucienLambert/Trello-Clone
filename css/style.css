@@ -78,3 +78,8 @@ label.error {
     font-size: 8pt;
     padding-left: .5em;
 }
+
+#calendar {
+    width: 80%;
+    margin: auto;
+}

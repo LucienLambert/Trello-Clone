@@ -14,9 +14,6 @@
     <script src="lib/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
     <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
     <script src="js/validation_title.js" type="text/javascript"></script>
-    <script src="js/validation_title_addColumn.js" type="text/javascript"></script>
-    <script src="js/validation_title_column.js" type="text/javascript"></script>
-
     <script src="js/drag_and_drop.js" type="text/javascript"></script>
 </head>
 <body>

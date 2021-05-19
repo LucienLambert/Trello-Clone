@@ -285,5 +285,10 @@ class Card extends Model
         self::execute("UPDATE Card SET `column` = :column, position = :position WHERE id= :id",
             array("column"=>$column, "id"=>$id, "position"=>$position));
     }
+
+    public static function update_dueDate_card_calendar_js($dueDate,$id){
+        self::execute("UPDATE Card SET dueDate = :dueDate WHERE id = :id",
+            array("dueDate" => $dueDate, "id" => $id));
+    }
 }
 ?>

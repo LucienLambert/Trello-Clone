@@ -382,6 +382,48 @@ class ControllerCard extends Controller {
             }
             exit('success');
         }
+    }
 
+    public function select_card_from_boards(){
+        $cards = [];
+        $color = $_POST["color"];
+        foreach($_POST["boardChecked"] as $idBoard){
+            $board = Board::select_board_by_id($idBoard);
+            $tablColumn = Column::select_all_column_by_id_board($board);
+            foreach($tablColumn as $column){
+                $cards []= Card::select_all_card_by_id_column_ASC($column->getId());
+            }
+        }
+
+        $cardsJSON = [];
+        foreach($cards as $card){
+            foreach($card as $c){
+                $cardsJSON [] = [
+                    'id' => $c->getId(),
+                    'start' => $c->getDueDate(),
+                    'end' => $c->getDueDate(),
+                    'title' => $c->getTitle(),
+                    'description' => $c->getBody(),
+                    'color' => $this->attribute_color_by_card($color,$_POST["boardChecked"]),
+                ];
+            }
+        }
+        echo json_encode($cardsJSON);
+    }
+
+    public function update_dueDate_card_calendar_js(){
+        $dueDate = $_POST["dueDate"];
+        $idCard = $_POST["idCard"];
+        Card::update_dueDate_card_calendar_js($dueDate,$idCard);
+    }
+
+    public function attribute_color_by_card($tablIdBoardColor, $tablBoard){
+        foreach($tablBoard as $idBoard){
+            foreach($tablIdBoardColor as $color){
+                if($color[0] == $idBoard){
+                    return $col = $color[1];
+                }
+            }
+        }
     }
 }

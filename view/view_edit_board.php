@@ -61,8 +61,8 @@
                 <?php echo $column->getTitle()?><br>
                 <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin") { ?>
                 <form action="board/edit_title_column/<?php echo $column->getBoard() ?>/<?php echo $column->getId() ?>"
-                data-form="<?php echo $column->getPosition()?>" id="<?php echo $column->getPosition().'modifTitleColumn';?>" method="post">
-                    <input type="text" name="newTitleColumn" data-id="<?php echo $column->getId()?>" id="<?php echo $column->getId() . 'TitleColumn';?>" size="15" placeholder="Enter a new Title">
+                data-form="<?php echo $column->getPosition()?>" id="<?php echo $column->getPosition().'modifTitleColumn';?>" data-position="<?php echo $column->getPosition()?>"method="post">
+                    <input type="text" name="newTitleColumn" data-id="<?php echo $column->getId()?>" id="<?php echo $column->getId() . 'TitleColumnData';?>" size="15" placeholder="Enter a new Title">
                     <input type="submit" name="modifTitle" id="<?php echo $board->getId() ?>" value="Apply">
                 </form>
                 <form action="column/delete_column/<?php echo $column->getId() ?>" method="post">
@@ -175,7 +175,7 @@
                 <tr>
                 <td>
                     <form action="board/add_card/<?php echo $column->getBoard()?>/<?php echo $column->getId()?>" method="post">
-                        <input type="text" name="titleCard" size="15" placeholder="Add Card">
+                        <input type="text" data-idColumn="<?php echo $column->getId()?>" id="<?php echo $column->getId().'inputAddCard';?>" name="titleCard" size="15" placeholder="Add Card">
                         <input class="add" type="submit" name="boutonAddCard" value="+">
                     </form>
                 </td>

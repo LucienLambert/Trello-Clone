@@ -90,8 +90,8 @@ class ControllerColumn extends Controller {
     
     public function title_available_service(){
         $res = "true";
-        if(isset($_POST["newTitleColumn"]) && $_POST["newTitleColumn"] !== "" && isset($_POST["board"]) && $_POST["board"] !== ""){
-            $board = Board::select_board_by_id($_POST["board"]);
+        if(isset($_POST["newTitleColumn"]) && $_POST["newTitleColumn"] !== "" && isset($_POST["id"]) && $_POST["id"] !== ""){
+            $board = Board::select_board_by_id($_POST["id"]);
             $column = Column::select_column_by_title_and_board($_POST["newTitleColumn"],$board->getId());
             if($column){
                 $res = "false";

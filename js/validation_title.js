@@ -14,6 +14,7 @@ $(function() {
         validateTitleCard();
     });
     validateTitleColumn();
+    validateAddCard();
 
 });
 
@@ -96,7 +97,7 @@ function validateTitleBoardAdd() {
     });
 };
 
-function validateTitleCard(idColumn) {
+function validateTitleCard() {
     var idColumn = $('#titleCard').attr('data-idColumn');
     $('#modifCard').validate({
         rules: {
@@ -123,30 +124,64 @@ function validateTitleCard(idColumn) {
     });
 }
 
+
 function validateTitleColumn() {
+    //input php form
     id = $('[name=modifTitle]').attr('id');
-    $('[id$=TitleColumn]').mousedown(function() {
-        idColumn = $(this).attr('data-id');
-        console.log(idColumn);
-        $('[id$=modifTitleColumn]').validate({
+    //on focus l'input (l'id de l'input)
+    $('[id$=TitleColumnData]').mousedown(function() {
+        //on fait l'appel ajax sur le parent de l'input (dans ce cas le form)
+        $(this).parent().validate({
             rules: {
-                newTitleColumn: {
+                newTitleColumn : {
                     remote: {
                         url: 'column/title_available_service',
                         type: 'post',
-                        data: {
-                            newTitleColumn: function() {
-                                return $('[id$=TitleColumn]').val();
-                            },
-                            board: id
+                        data : {
+                            id: id,
                         }
                     },
+                    required: true,
                     minlength: 3,
                 }
             },
             messages: {
                 newTitleColumn: {
                     remote: 'this title Column already exist',
+                    required: 'required',
+                    minlength: 'minimum 3 characters',
+                }
+            }
+        });
+    });
+}
+
+
+
+function validateAddCard() {    
+    //on focus l'input (l'id de l'input)
+    $('[id$=inputAddCard]').mousedown(function() {
+        let idColumn = ($(this).attr('data-idColumn'));
+        console.log(idColumn);
+        //on fait l'appel ajax sur le parent de l'input (dans ce cas le form)
+        $(this).parent().validate({
+            rules: {
+                titleCard : {
+                    remote: {
+                        url: 'card/title_available_service',
+                        type: 'post',
+                        data : {
+                            column: idColumn,
+                        }
+                    },
+                    required: true,
+                    minlength: 3,
+                }
+            },
+            messages: {
+                titleCard: {
+                    remote: 'this title card already exist',
+                    required: 'required',
                     minlength: 'minimum 3 characters',
                 }
             }

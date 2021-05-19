@@ -32,7 +32,6 @@ $(function() {
             });
             var functionName = 'card/move_card_js';
             saveNewPositions(functionName);
-
         }
     });
 });

@@ -51,13 +51,13 @@ function calendar(boardTitleColor) {
         },
         function(data) {
             evenements = JSON.parse(data);
-            viewCalendar(evenements,boardTitleColor);
+            viewCalendar(evenements);
         }
     );
 }
 
 //calendar option
-function viewCalendar(evenements,boardTitleColor) {
+function viewCalendar(evenements) {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         timeZone: 'Europe/paris',

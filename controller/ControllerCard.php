@@ -438,7 +438,7 @@ class ControllerCard extends Controller {
         if($dueDate < ($today->format("Y-m-d"))){
             return 'red';
         }
-        else{
+        else {
             return '';
         }
     }

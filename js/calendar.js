@@ -51,13 +51,13 @@ function calendar(boardTitleColor) {
         },
         function(data) {
             evenements = JSON.parse(data);
-            viewCalendar(evenements);
+            viewCalendar(evenements,boardTitleColor);
         }
     );
 }
 
 //calendar option
-function viewCalendar(evenements) {
+function viewCalendar(evenements,boardTitleColor) {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         timeZone: 'Europe/paris',
@@ -80,10 +80,8 @@ function viewCalendar(evenements) {
                 $.post('card/update_dueDate_card_calendar_js', {
                     dueDate: infos.event.startStr,
                     idCard: infos.oldEvent.id
-                }, function(data) {
-                    infos.event.textColor = data;
                 });
-
+                document.location.reload();
             }
         },
         eventClick: (infos) => {

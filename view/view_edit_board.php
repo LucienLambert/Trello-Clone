@@ -28,8 +28,7 @@
     <div id="confirmDialog" title="Delete" hidden>
         <p>do you really want to delete</p>
     </div>
-
-    <?php if (!$viewEditTitleBoard || $board->getOwner() != $user->getId()) : ?>
+    <?php if (!$viewEditTitleBoard) : ?>
         <form action="board/board/<?php echo $board->getId() ?>" method="post">
             <input type="submit" name="openViewModifTitle" id="openViewModifTitle" value="modify Board">
         </form>

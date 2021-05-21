@@ -92,6 +92,11 @@ class Card extends Model
         $this->dueDate = $dueDate;
     }
 
+    public function getParticipant(){
+        $tableParticipant = Participate::select_all_participate_from_card($this);
+        return $tableParticipant;
+    }
+
     public function insert_card(){
         self::execute("INSERT INTO Card(title,body,position,author,`column`) VALUES(:title,:body,:position,:author,:column)",
             array("title"=>$this->getTitle(), "body"=>$this->body,"position"=>$this->getPosition(),

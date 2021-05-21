@@ -49,6 +49,11 @@ class Board extends Model
         $this->title = $title;
     }
 
+    public function getCollabo(){
+        $boardCollabo = Collaborate::select_all_collaborator($this);
+        return $boardCollabo;
+    }
+
 
     //ajoute un board dans la DB
     public function insert_board($user)

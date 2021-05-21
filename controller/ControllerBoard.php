@@ -51,12 +51,24 @@ class ControllerBoard extends Controller
     //ouvre le board selectionné
     public function open_board()
     {
+        $error = [];
+        
         //check le boutonBoard pour voir si on selectionne un board.
         if (isset($_POST["boutonBoard"])) {
+            $user = $this->get_user_or_false();
+            $board = Board::select_board_by_id($_GET["param1"]);
+            $collabo = User::check_collaborator_board($user, $board);
             if (isset($_GET["param1"]) && $_GET["param1"] != 0) {
-                $this->redirect("board", "board", $_GET["param1"]);
+                if($user->getId() == $board->getOwner() || $collabo || $user->getRole() == "admin"){
+                    $this->redirect("board", "board", $_GET["param1"]);
+                } else{
+                    $error [] = "you do not have the right of access on this board";
+                    $this->list_board($error);
+                   
+                }
             }
         }
+        
     }
 
     //se chargera d'afficher les contenues du board sur le quel on est
@@ -95,6 +107,7 @@ class ControllerBoard extends Controller
         if (isset($_POST["openViewModifTitle"])) {
             $viewEditTitleBoard = true;
         }
+        $collabo = User::check_collaborator_board($user,$board);
         $dueDate = new DateTime("now");
         $dueDate = $dueDate->format('Y-m-d');
         try {
@@ -102,7 +115,7 @@ class ControllerBoard extends Controller
                 "diffDateModif" => $diffDateModif, "messageTimeModif" => $messageTimeModif,
                 "fullName" => $owner->getFullName(), "tableColumn" => $tableColumn,
                 "viewEditTitleBoard" => $viewEditTitleBoard, "modifDate" => $modifDate,
-                "tableCardColumn" => $tableCardColumn, "error" => $error, "user" => $user, "dueDate" => $dueDate));
+                "tableCardColumn" => $tableCardColumn, "error" => $error, "user" => $user, "dueDate" => $dueDate, "collabo" =>$collabo));
         } catch (Exception $e) {
             $e->getMessage();
         }
@@ -172,13 +185,7 @@ class ControllerBoard extends Controller
             //recup le board depuis son titre
             $board = Board::select_board_by_id($_GET["param1"]);
         }
-        //check si le user est admin ou collaborateur ou owner
-        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
-            if($user->getRole() != "admin"){
-                $this->redirect("board","index");
-            }
-        }
-        if ($user->getId() === $board->getOwner()) {
+        if ($user->getId() === $board->getOwner() || User::check_collaborator_board($user,$board) || $user->getRole() != "admin") {
             if (isset($_POST["modifTitle"])) {
                 $newTitle = $_POST["newTitleBoard"];
                 $board->setTitle($newTitle);

@@ -26,7 +26,7 @@
             </tr>
             <tr>
                 <td>&#x1F512;</td>
-                <td><input type="password" name="password" placeholder="Password"></td>
+                <td><input id="password" type="password" name="password" placeholder="Password"></td>
             </tr>
             <tr>
                 <td>&#x1F512;</td>

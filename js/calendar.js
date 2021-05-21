@@ -73,13 +73,17 @@ function viewCalendar(evenements) {
             console.log(infos);
             console.log(infos.event.startStr);
             console.log(infos.oldEvent.startStr);
-            if (!confirm("Etes vous sur de vouloir déplacer cette carte")) {
+            if (!confirm("Do you really want to move this card")) {
                 infos.revert();
             } else {
+                //à terminer pour la mise a jour de l'affichage du texte en rouge si dueDate < today
                 $.post('card/update_dueDate_card_calendar_js', {
                     dueDate: infos.event.startStr,
                     idCard: infos.oldEvent.id
+                }, function(data) {
+                    infos.event.textColor = data;
                 });
+
             }
         },
         eventClick: (infos) => {
@@ -104,7 +108,7 @@ function dialogBox(infos) {
         height: 250,
         width: 500,
         modal: true,
-        title: 'evenement',
+        title: 'Card',
         buttons: {
             Ok: function() {
                 $(this).dialog("close");

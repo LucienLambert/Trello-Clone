@@ -399,6 +399,7 @@ class ControllerCard extends Controller {
             foreach($cards as $card){
                 foreach($card as $c){
                     $col = $this->attribute_color_by_card($color,$c->getBoard());
+                    $dueDateDepasser = $this->perimer($c);
                     $cardsJSON [] = [
                         'id' => $c->getId(),
                         'start' => $c->getDueDate(),
@@ -406,6 +407,7 @@ class ControllerCard extends Controller {
                         'title' => $c->getTitle(),
                         'description' => $c->getBody(),
                         'idBoard' => $c->getBoard(),
+                        'textColor' => $dueDateDepasser,
                         'color' => $col 
                     ];
                 }
@@ -418,6 +420,8 @@ class ControllerCard extends Controller {
         $dueDate = $_POST["dueDate"];
         $idCard = $_POST["idCard"];
         Card::update_dueDate_card_calendar_js($dueDate,$idCard);
+        $card = Card::select_card_by_id($_POST["idCard"]);
+        echo $this->perimer($card);
     }
     
     public function attribute_color_by_card($tablIdBoardColor, $idBoard){
@@ -426,6 +430,16 @@ class ControllerCard extends Controller {
                     return $col = $color[1];
                 }
             }
-        
+    }
+
+    public function perimer($card){
+        $today = new DateTime('now');
+        $dueDate = $card->getDueDate();
+        if($dueDate < ($today->format("Y-m-d"))){
+            return 'red';
+        }
+        else{
+            return '';
+        }
     }
 }

@@ -398,13 +398,15 @@ class ControllerCard extends Controller {
             }
             foreach($cards as $card){
                 foreach($card as $c){
+                    $col = $this->attribute_color_by_card($color,$c->getBoard());
                     $cardsJSON [] = [
                         'id' => $c->getId(),
                         'start' => $c->getDueDate(),
                         'end' => $c->getDueDate(),
                         'title' => $c->getTitle(),
                         'description' => $c->getBody(),
-                        'color' => " " /*$colors*/
+                        'idBoard' => $c->getBoard(),
+                        'color' => $col 
                     ];
                 }
             }
@@ -417,16 +419,13 @@ class ControllerCard extends Controller {
         $idCard = $_POST["idCard"];
         Card::update_dueDate_card_calendar_js($dueDate,$idCard);
     }
-
-    // à revoir ??????????????????????????????????????
-    public function attribute_color_by_card($tablIdBoardColor, $tablBoard){
-        foreach($tablBoard as $idBoard){
-            foreach($tablIdBoardColor as $color){
-                var_dump($color[0] == $idBoard);
+    
+    public function attribute_color_by_card($tablIdBoardColor, $idBoard){
+        foreach($tablIdBoardColor as $color){
                 if($color[0] == $idBoard){
                     return $col = $color[1];
                 }
             }
-        }
+        
     }
 }

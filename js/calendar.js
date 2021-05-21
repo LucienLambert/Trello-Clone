@@ -51,7 +51,6 @@ function calendar(boardTitleColor) {
         },
         function(data) {
             evenements = JSON.parse(data);
-            console.log(evenements);
             viewCalendar(evenements);
         }
     );

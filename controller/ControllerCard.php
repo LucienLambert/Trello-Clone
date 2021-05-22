@@ -346,7 +346,8 @@ class ControllerCard extends Controller {
         $user = $this->get_user_or_false();
         $card = Card::select_card_by_id($_GET["param1"]);
         $board = Board::select_board_by_id($card->getBoard());
-        if ($user->getId() === $board->getOwner()) {
+        $collabo = User::check_collaborator_board($user,$board);
+        if($board->getOwner() === $user->getId() || $collabo || $user->getRole() == "admin"){
             $participant = new Participate($card->getAuthor(),$card->getId());
             $participant->delete_all_participants();
             $card->delete_card_by_id();

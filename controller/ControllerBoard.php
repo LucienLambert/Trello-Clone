@@ -392,7 +392,8 @@ class ControllerBoard extends Controller
     public function del_board_js(){
         $board = Board::select_board_by_id($_GET["param1"]);
         $user = $this->get_user_or_false();
-        if($board->getOwner() === $user->getId()){
+        $collabo = User::check_collaborator_board($user,$board);
+        if($board->getOwner() === $user->getId() || $collabo || $user->getRole() == "admin"){
             $board->delete_board_by_id();  
         }
     }

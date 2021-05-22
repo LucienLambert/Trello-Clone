@@ -288,42 +288,43 @@ class ControllerBoard extends Controller
             $board = Board::select_board_by_id($_GET["param1"]);
         }
         //check si user est admin ou collaborateur ou owner
-        if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
-            if($user->getRole() != "admin"){
-                $this->redirect("board","board",$_GET["param1"]);
+        if ($user->getId() === $board->getOwner() || $user->getRole() == "admin" || User::check_collaborator_board($user,$board)){
+            $tableCollaborator = Collaborate::select_all_collaborator($board);
+            $tableUser = $user->select_all_user($board);
+            $tableNotCollabo = [];
+            foreach ($tableUser as $u){
+                if(User::check_collaborator_board($u,$board) == false){
+                    $tableNotCollabo [] = $u;
+                }
             }
+            (new View("collaborator"))->show(array("user"=>$user, "board"=>$board, "tableNotCollabo"=>$tableNotCollabo, "tableCollaborator"=>$tableCollaborator));
         }
-        $tableCollaborator = Collaborate::select_all_collaborator($board);
-        $tableUser = $user->select_all_user($board);
-        $tableNotCollabo = [];
-        foreach ($tableUser as $u){
-            if(User::check_collaborator_board($u,$board) == false){
-                $tableNotCollabo [] = $u;
-            }
+        else{
+            $this->redirect("board","board",$_GET["param1"]);
         }
-        (new View("collaborator"))->show(array("user"=>$user, "board"=>$board, "tableNotCollabo"=>$tableNotCollabo, "tableCollaborator"=>$tableCollaborator));
     }
 
     public function add_collaborator(){
         if (isset($_GET["param1"]) && $_GET["param1"] != "") {
-            $board = Board::select_board_by_id($_GET["param1"]);
-            $userCollabo = $_POST["collaborator_select"];
-            if($_POST["collaborator_select"] != null){
-                $user = User::select_user_by_id($userCollabo);
-            //check si le user est admin ou collaborateur 
-                $userConnect = $this->get_user_or_redirect();
-                if($board->getOwner() != $userConnect->getId() || User::check_collaborator_board($userConnect,$board)){
-                    if($user->getRole() != "admin"){
-                        $this->redirect("board","index");
+                $board = Board::select_board_by_id($_GET["param1"]);
+                $userCollabo = $_POST["collaborator_select"];
+                if($_POST["collaborator_select"] != null){
+                    $user = User::select_user_by_id($userCollabo);
+                //check si le user est admin ou collaborateur 
+                    $userConnect = $this->get_user_or_redirect();
+                if ($this->get_user_or_false()->getId() === $board->getOwner() || $this->get_user_or_false()->getRole() == "admin" || User::check_collaborator_board($this->get_user_or_false(),$board)){    
+                    if(User::check_collaborator_board($user, $board) == false){
+                        $newCollaborator = new Collaborate($userCollabo, $board->getId());
+                        $newCollaborator->insert_collaborator();
                     }
                 }
-                if(User::check_collaborator_board($user, $board) == false){
-                    $newCollaborator = new Collaborate($userCollabo, $board->getId());
-                    $newCollaborator->insert_collaborator();
-                }
+                else{
+                    $this->redirect("board","board",$_GET["param1"]);
+                    }
             }
+            $this->redirect("board", "collaborators", $_GET["param1"]);
         }
-        $this->redirect("board", "collaborators", $_GET["param1"]);
+        
     }
 
     public function del_collaborator(){
@@ -331,28 +332,28 @@ class ControllerBoard extends Controller
             $board = Board::select_board_by_id($_GET["param1"]);
             $user = $this->get_user_or_redirect();
             //check si le user est admin ou collaborateur 
-            if($board->getOwner() != $user->getId() || User::check_collaborator_board($user,$board)){
-                if($user->getRole() != "admin"){
-                    $this->redirect("board","index");
+            if ($this->get_user_or_false()->getId() === $board->getOwner() || $this->get_user_or_false()->getId() == "admin" || User::check_collaborator_board($this->get_user_or_false(),$board)){
+                if (isset($_GET["param2"]) && $_GET["param2"] != "") {
+                    $idCollabo = $_GET["param2"];
+                    $collabo = Collaborate::select_collaborator_by_board($idCollabo, $board);
+                    $tableColumn = Column::select_all_column_by_id_board($board);
+                    foreach ($tableColumn as $column){
+                        $tableCard [] = Card::select_all_card_by_id_column_ASC($column->getId());
+                    }
+                    foreach ($tableCard as $card){
+                        foreach ($card as $c){
+                            if(Participate::check_participate($collabo->getUser(), $c)){
+                                $participate = new Participate($collabo->getIdCollaborator(), $c->getId());
+                                $participate->delete_participant();
+                            }
+                        }
+
+                    }
+                    $collabo->delete_collaborator();
                 }
             }
-            if (isset($_GET["param2"]) && $_GET["param2"] != "") {
-                $idCollabo = $_GET["param2"];
-                $collabo = Collaborate::select_collaborator_by_board($idCollabo, $board);
-                $tableColumn = Column::select_all_column_by_id_board($board);
-                foreach ($tableColumn as $column){
-                    $tableCard [] = Card::select_all_card_by_id_column_ASC($column->getId());
-                }
-                foreach ($tableCard as $card){
-                    foreach ($card as $c){
-                        if(Participate::check_participate($collabo->getUser(), $c)){
-                            $participate = new Participate($collabo->getIdCollaborator(), $c->getId());
-                            $participate->delete_participant();
-                        }
-                    }
-
-                }
-                $collabo->delete_collaborator();
+            else{
+                $this->redirect("board","board",$_GET["param1"]);
             }
         }
         $this->redirect("board", "collaborators", $_GET["param1"]);

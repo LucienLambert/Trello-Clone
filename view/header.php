@@ -7,7 +7,7 @@
         <a class="header" href="user/list_users">Manage Users</a>
     <?php } ?>
 
-    <?php if($_GET["action"] == "index"){?>
+    <?php if($_GET["action"] == "index" || $_GET["action"] == "open_Board"){?>
         <a class="header" href="calendar/index">Calendar</a>
         <a class="header">Boards</a>
     <?php } ?>

@@ -421,8 +421,6 @@ class ControllerCard extends Controller {
         $dueDate = $_POST["dueDate"];
         $idCard = $_POST["idCard"];
         Card::update_dueDate_card_calendar_js($dueDate,$idCard);
-        $card = Card::select_card_by_id($_POST["idCard"]);
-        echo $this->perimer($card);
     }
     
     public function attribute_color_by_card($tablIdBoardColor, $idBoard){

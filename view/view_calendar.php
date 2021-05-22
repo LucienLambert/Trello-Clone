@@ -16,7 +16,7 @@
         
     </head>
     <body>
-        <?php include("header.php")?></br>
+        <?php include("header.php")?><br>
         
         <div id="label_checkbox">
             <form>
@@ -28,9 +28,9 @@
         </div>
         <div id="calendar"></div>
         <div id="modalDialog" hidden>
-            <h5>TitleCard : <span id="title"> </span></h>
-            <h5>Body : <span id="body"> </span></h>
-            <h5>DueDate : <span id="dueDate"> </span></h>
+            <h5>TitleCard : <span id="title"> </span></h5>
+            <h5>Body : <span id="body"> </span></h5>
+            <h5>DueDate : <span id="dueDate"> </span></h5>
         </div>
     </body>
 </html>

@@ -6,6 +6,13 @@
     <base href="<?= $web_root ?>"/>
     <link href="css/styles.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui-1.12.1/jquery-ui.theme.min.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui-1.12.1/jquery-ui.structure.min.css" rel="stylesheet" type="text/css"/>
+    <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="js/conf_del.js" type="text/javascript"></script>
+    <script src="lib/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="lib/jquery-validation-1.19.3/dist/jquery.validate.min.js" type="text/javascript"></script>
 </head>
 
 <br/>
@@ -16,7 +23,8 @@
     <!-- formulaire pour supprimer la carte -->
     <?php if ($board->getOwner() == $user->getId() || $user->getRole() == "admin" || $card->getAuthor() == $user->getId()) { ?>
     <form class="FormColumn" action="card/delete_card/<?php echo $card->getId()?>" method="post">
-        <input type="submit" name="delCard" value="Delete Card">
+        <input id="<?php echo $card->getId().'delete_card';?>" type="button" value="Delete Card" hidden>
+        <input class="delOrignal" type="submit" name="delCard" value="Delete Card">
     </form>
     <?php } ?>
     <!-- formulaire pour afficher l'option modifier la carte -->
@@ -59,4 +67,7 @@
         <?php }?>
     </ul>
 </body>
+<div id="confirmDialog" title="Delete" hidden>
+        <p>do you really want to delete this card " <?php echo $card->getTitle()?>"</p>
+</div>
 </html>

@@ -11,7 +11,7 @@
         <a class="header" href="calendar/index">Calendar</a>
         <a class="header">Boards</a>
     <?php } ?>
-    <?php if($_GET["action"] == "board" || $_GET["action"] == "edit_title_board" || $_GET["action"] == "add_card"){?>
+    <?php if($_GET["action"] == "board" || $_GET["action"] == "edit_title_board" || $_GET["action"] == "add_card" || $_GET["action"] == "add_column"){?>
         <a class="header" href="board/index">Boards</a>
         <a class="header"><?php echo $board->getTitle()?></a>
     <?php } ?>

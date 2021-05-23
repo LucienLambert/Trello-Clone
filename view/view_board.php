@@ -28,7 +28,6 @@
             <td><input type="text" name="title" id="title" size="15" placeholder="add a board">
                 <input class="submitBoardUser" type="submit" name="boutonAdd" value="add">
             </td>
-            
         </tr>
         <div id="error">
         <?php if (count($error) > 0) { ?>

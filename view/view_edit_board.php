@@ -99,7 +99,7 @@
             <tr data-id="<?php echo $card->getId()?>" data-position="<?php echo $card->getPosition()?>" data-cardIdColumn="<?php echo $card->getColumn()?>">
                 <td id="<?php $card->getId();?>"<?php if($dueDate > $card->getDueDate() && $card->getDueDate() != null){ ?> class="RedDueDate" <?php }?>>
                     <form action="card/view_card/<?php echo $card->getId() ?>" method="post">
-                        <input type="submit" name="openCard" value="<?php echo $card->getTitle() ?>">
+                        <input type="submit" name="openCard" value="<?php echo $card->getTitle()?>">
                     </form>
                     <?php if ($board->getOwner() == $user->getId() || User::check_collaborator_board($user,$board) || $user->getRole() == "admin" || Participate::check_participate($user,$card)) { ?>
                         <form action="card/delete_card/<?php echo $card->getId() ?>" method="post">

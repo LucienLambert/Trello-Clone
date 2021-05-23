@@ -69,7 +69,6 @@ class ControllerSetup extends Controller
         } else {
             echo "<p>Erreur</p>";
             echo "<pre>";
-            var_dump($output);
             echo "</pre>";
         }
         echo "<a href='{$webroot}'>Retour à l'index</a>";

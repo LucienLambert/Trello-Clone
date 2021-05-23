@@ -2,7 +2,6 @@
 function inputchecked() {
     let boardChecked = [];
     let checkboxes = document.querySelectorAll('input[name="board"]:checked');
-    console.log(checkboxes);
     checkboxes.forEach((checkbox) => {
         boardChecked.push(checkbox.value);
     });
@@ -29,7 +28,6 @@ function colorBoard() {
 //premier affichage du calendar
 window.onload = () => {
     boardTitleColor = colorBoard();
-    console.log(boardTitleColor);
     calendar(boardTitleColor);
 }
 
@@ -43,7 +41,6 @@ $(function() {
 //récupération des carte(evenements) des inputs sélectionné et affichage calendar
 function calendar(boardTitleColor) {
     let checked = inputchecked();
-    console.log(checked);
     //récuperer les carte de tout les board 
     $.post("card/select_card_from_boards", {
             boardChecked: checked,
@@ -70,9 +67,6 @@ function viewCalendar(evenements) {
         height: 'auto',
         events: evenements,
         eventDrop: (infos) => {
-            console.log(infos);
-            console.log(infos.event.startStr);
-            console.log(infos.oldEvent.startStr);
             if (!confirm("Do you really want to move this card")) {
                 infos.revert();
             } else {
@@ -93,10 +87,6 @@ function viewCalendar(evenements) {
 
 //boite modal pour afficher la carte(evenement) 
 function dialogBox(infos) {
-    console.log(infos.event.title);
-    console.log(infos.event);
-    console.log(infos.event.extendedProps.description);
-    console.log(infos.event.startStr);
     $('#title').html(infos.event.title);
     $('#body').html(infos.event.extendedProps.description);
     $('#dueDate').html(infos.event.startStr);

@@ -15,7 +15,6 @@ $(function() {
     });
     validateTitleColumn();
     validateAddCard();
-
 });
 
 function validateTitleBoard() {
@@ -162,7 +161,6 @@ function validateAddCard() {
     //on focus l'input (l'id de l'input)
     $('[id$=inputAddCard]').mousedown(function() {
         let idColumn = ($(this).attr('data-idColumn'));
-        console.log(idColumn);
         //on fait l'appel ajax sur le parent de l'input (dans ce cas le form)
         $(this).parent().validate({
             rules: {

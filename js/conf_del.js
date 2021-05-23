@@ -26,7 +26,6 @@ $(function () {
             })
         }
         const closeFunction = function () {
-            console.log("Entre dans closeFunction"+ this);
             $('#confirmDialog').dialog("close");
         }
         dialogBox(delFunction, closeFunction);
@@ -41,7 +40,6 @@ $(function () {
             })
         }
         const closeFunction = function () {
-            console.log("Entre dans closeFunction");
             $('#confirmDialog').dialog("close");
         }
         dialogBox(delFunction, closeFunction);

@@ -132,11 +132,11 @@ function validateTitleColumn() {
         //on fait l'appel ajax sur le parent de l'input (dans ce cas le form)
         $(this).parent().validate({
             rules: {
-                newTitleColumn : {
+                newTitleColumn: {
                     remote: {
                         url: 'column/title_available_service',
                         type: 'post',
-                        data : {
+                        data: {
                             id: id,
                         }
                     },
@@ -157,18 +157,18 @@ function validateTitleColumn() {
 
 
 
-function validateAddCard() {    
+function validateAddCard() {
     //on focus l'input (l'id de l'input)
     $('[id$=inputAddCard]').mousedown(function() {
         let idColumn = ($(this).attr('data-idColumn'));
         //on fait l'appel ajax sur le parent de l'input (dans ce cas le form)
         $(this).parent().validate({
             rules: {
-                titleCard : {
+                titleCard: {
                     remote: {
                         url: 'card/title_available_service',
                         type: 'post',
-                        data : {
+                        data: {
                             column: idColumn,
                         }
                     },

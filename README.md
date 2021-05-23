@@ -23,6 +23,15 @@ Ajout d'un onglet dans la barre du menu nomé "Mannage Users" pour les admins af
 
 ## Notes de livraison itération 3
 
+#MODIFICATION
+DB Lucien:
+user : Lucien@gmail.com 
+mdp : Password1,
+
+DB Victor:
+user : victor@epfc.eu
+       vic@gmail.com
+mdp : Password1,
 
 ## Installation
 

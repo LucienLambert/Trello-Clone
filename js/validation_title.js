@@ -15,6 +15,7 @@ $(function() {
     });
     validateTitleColumn();
     validateAddCard();
+
 });
 
 function validateTitleBoard() {

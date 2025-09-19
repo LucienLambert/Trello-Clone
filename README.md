@@ -37,7 +37,7 @@ Il permet de créer des tableaux de projet, gérer des listes et des cartes, et 
 ### Frontend
 - **Langages** : HTML, CSS, JavaScript  
 - **Structure** : Pages statiques générées par PHP  
-- **Librairies** : à compléter si tu as utilisé Bootstrap ou autre  
+- **Librairies** : Bootstrap
 
 ---
 
